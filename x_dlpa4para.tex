@@ -19,8 +19,10 @@ very thick,inner sep=1pt,color=#1!60}
 }
 \newcommand{\progStore}{\mathsf{store}}
 \newcommand{\progOkChange}{\mathsf{check}}
+\newcommand{\progClean}{\mathsf{clean}}
 \newcommand{\progsplit}{\mathsf{split}}
 \newcommand{\progmerge}{\mathsf{merge}}
+\newcommand{\progFlatten}{\mathsf{flatten}}
 
 
 %%% local to paper
@@ -81,6 +83,7 @@ very thick,inner sep=1pt,color=#1!60}
 \renewcommand{\phi}{\varphi}
 \newcommand{\propset}{\mathbb P}
 \newcommand{\propsetOf}[1]{\propset_{#1}}
+\newcommand{\modinter}{\cap}
 %\newcommand{\propsetOf}[1]{\propset(#1)}
 \newcommand{\seqseq}[1]{ \text{\Large ;}_{#1} ~ }
 \newcommand{\set}[1]{\{#1\}}
@@ -93,15 +96,11 @@ very thick,inner sep=1pt,color=#1!60}
 
 \title{Resource Separation in Dynamic Logic of Propositional Assignments }
 %\titlerunning{Resource separation in DL-PA}
-\author{Joseph Boudou$^1$, Andreas Herzig$^1$, Nicolas Troquard$^2$}
-\institute{IRIT, %\url{http://www.matabio.net/joseph.boudou} }
-	%{}%{Joseph.Boudou@irit.fr}
-	%{}%{https://orcid.org/0000-0002-1825-0097}
-	%{}%{(Optional) author-specific funding acknowledgements}
-CNRS, France \and %\url{http://www.irit.fr/~Andreas.Herzig} }
-	%{}%{herzig@irit.fr}
-	%{http://orcid.org/0000-0003-0833-2782}
-Free University of Bozen-Bolzano, Italy 
+\author{Joseph Boudou$^1$, Andreas Herzig$^2$, Nicolas Troquard$^3$}
+\institute{
+  IRIT, University of Toulouse, France \and
+  IRIT, CNRS, France \and
+  Free University of Bozen-Bolzano, Italy 
 }
 %\and \url{http://www.inf.unibz.it/~ntroquard/} }
 
@@ -687,7 +686,11 @@ $\tuple{\readset,\writeset,
 (\valuset {\setminus} \writeset) \cup \valuset_1' {\cap} \writeset_1) \cup (\valuset_2' {\cap} \writeset_2) } \models \phi$ 
 \end{tabular}\end{center}
 
-The next lemma is standard and will be used several times in our soundness proof. 
+For any model $\modl = \tuple{\readset, \writeset, \valuset}$ and $P \subseteq \propset$, we write
+$\modl \modinter P$ for the model $\tuple{\readset \cap P, \writeset \cap P, \valuset \cap P}$.
+This notation along with the following standard lemma
+%The next lemma is standard and
+will be used several times in our soundness proof. 
 
 \begin{lemma}\label{theo:irrelevantVariables}
 Let $\phi$ be a formula such that $\propsetOf \phi \cap P = \emptyset$ and
@@ -847,10 +850,15 @@ denoting whether $\cp k p$ was respectively readable and writable just after the
 
 Let $P \subseteq \propset$ be some finite set of propositional variables. 
 Table~\ref{fig:useful_programs} lists programs and formulas that will be useful to concisely formulate the reduction axioms.
+%
+Observe that the order of the variables in the sequential compositions $ \seqseq{p \in P} ( \cdots ) $ occurring in the above programs does not matter. 
+Observe also that the only endogeneous tests on the right hand side occur in readability statements $\readable p$. 
+(Remember that $\readable p$ abbreviates $\ldia{ p \testendo} \top \lor \ldia{ \lnot p \testendo} \top $). 
 
 \begin{table}[t]
 \begin{align*}
-\progsplit(P) =&\ \seqseq{p \in P} \Big( 
+\progsplit(P) =&\ \seqseq{p \in P} \Big(
+  \assgntopW{\cp 1 p} ; \assgntopW{\cp 2 p} ;
 \Big(
   \big( p \testpdl ; \assgntopV{ \cp{1}{p} } ; \assgntopV{ \cp{2}{p} } \big) \ndet 
   \big( \lnot p \testpdl ; \assgnbotV{ \cp{1}{p} } ; \assgnbotV{ \cp{2}{p} } \big) 
@@ -866,6 +874,8 @@ Table~\ref{fig:useful_programs} lists programs and formulas that will be useful 
 \Big)
 \\
 \progStore(P) =&\ \seqseq{p \in P} \seqseq{k \in \{1, 2\}} \Big(
+  \assgntopW{\cpr k p} ; \assgntopW{\cpw k p} ;
+\\& ~~~~~~~~~~~ 
   \big( \assgnpropV{\readable{\cp k p}}{\cpr k p} \big) ; \big( \assgnpropV{\writable{\cp k p}}{\cpw k p} \big)
 \Big)
 \\
@@ -884,8 +894,23 @@ Table~\ref{fig:useful_programs} lists programs and formulas that will be useful 
 \big(	(\writable{ \cp{1}{p} } \land \lnot \cp{1}{p}) \lor 
 		(\writable{ \cp{2}{p} } \land \lnot \cp{2}{p}) \testpdl ; \assgnbotV p \big) 
 \Big)
+\\
+\progClean(P) =&\ \seqseq{p \in P} \seqseq{k \in \{1, 2\}} \Big(
+  \assgnbotV{\cpr k p} ; \assgnbotV{\cpw k p} ; \assgntopW{\cp k p} ; \assgnbotV{\cp k p} ;
+  \assgnbotR{\cpr k p} ; \assgnbotR{\cpw k p} ; \assgnbotR{\cp k p}
+\Big)
+\\
+\progFlatten(\pi_1, \pi_2) =&\ %
+  \progsplit\left(\propsetOf{\pi_1 \pll \pi_2}\right) ;
+  \progStore\left(\propsetOf{\pi_1 \pll \pi_2}\right) ;
+\\&\ %
+  \cp 1 {\pi_1} ; \cp 2 {\pi_2} ;
+\\&\ %
+  \progOkChange\left(\propsetOf{\pi_1 \pll \pi_2}\right) \testpdl ;
+  \progmerge\left(\propsetOf{\pi_1 \pll \pi_2}\right) ;
+  \progClean\left(\propsetOf{\pi_1 \pll \pi_2}\right)
 \end{align*}
-\caption{Useful programs, for $P \subseteq \propset$ %and $\mathbf{k} \in \set{1,2}$
+\caption{Useful programs, for all $P \subseteq \propset$ and all programs $\pi_1$ and $\pi_2$.
 \label{fig:useful_programs}
 }
 \end{table}
@@ -896,6 +921,16 @@ The $\progsplit(P)$ program simulates the split operation by
 two copies of each read and write variable in a way such that a counterpart of the RW-disjointness condition
 $\writeset_1 \cap \readset_2 = \writeset_2 \cap \readset_1 = \emptyset$ is guaranteed.  
 Note that the assignments $\assgntopW{ \cp{k}{p} }$ also make $\cp{k}{p} $ readable.
+
+\begin{lemma}\label{lem:progsplit}
+For all $P \subseteq \propset$, and all models $\modl$, $\modl_1$ and $\modl_2$ such that
+$\readset \cup \valuset \subseteq P$,
+$\splt \modl {\modl_1} {\modl_2}$ if and only if
+$\modl \intPgm{\progsplit(P)} \modl'$ with
+$\readset' = \readset \cup \cp 1 {\readset_1} \cup \cp 2 {\readset_2}$,
+$\writeset' = \writeset \cup \cp 1 {\writeset_1} \cup \cp 2 {\writeset_2}$, and
+$\valuset' = \valuset \cup \cp 1 {\valuset_1} \cup \cp 2 {\valuset_2}$.
+\end{lemma}
 
 The $\progStore(P)$ program stores the readability and writability states of the
 copies of the propositional variable into some fresh variables.
@@ -910,25 +945,41 @@ It is true if and only if
 The $\progmerge(P)$ program simulates the merge operation by reinstating all those 
 read- and write-atoms that had been allocated to the first subprogram in the sequentialisation. 
 
-Observe that the order of the variables in the sequential compositions $ \seqseq{p \in P} ( \cdots ) $ occurring in the above programs does not matter. 
-Observe also that the only endogeneous tests on the right hand side occur in readability statements $\readable p$. 
-(Remember that $\readable p$ abbreviates $\ldia{ p \testendo} \top \lor \ldia{ \lnot p \testendo} \top $). 
+The $\progClean(P)$ program discards read and write access to copies and auxiliary variables.
+It is needed for the following lemma, which can be seen as an adaptation of lemma~\ref{theo:irrelevantVariables}
+to the $\progFlatten$ program.
 
-%\begin{lemma}
-%For all models $\modl$ and $\modl'$ and all sets of propositional variables $P$, 
-%the following three are equivalent:
-%\begin{enumerate}
-%\item
-%$\modl \intPgm{ \progsplit(P) } \modl' $; %if and only if
-%\end{enumerate}
-%\end{lemma}
-%
-%\begin{lemma}
-%$\modl \intPgm{ \progmerge(P) } \modl'$ if and only if:
-%\begin{itemize}
-%\item
-%\end{itemize}
-%\end{lemma}
+\begin{lemma}\label{lem:progClean}
+For all models $\modl$ and $\modl'$, and all programs $\pi_1$ and $\pi_2$,
+$$
+\modl \intPgm{\progFlatten(\pi_1,\pi_2)} \modl' \text{ iff }
+(\modl \modinter \propsetOf{\pi_1 \pll \pi_2}) \intPgm{\progFlatten(\pi_1, \pi_2)} (\modl' \modinter \propsetOf{\pi_1 \pll \pi_2}).
+$$
+\end{lemma}
+\begin{proof}[sketch]
+It suffices to observe that all variables in $\propsetOf{\progFlatten(\pi_1, \pi_2)} \setminus \propsetOf{\pi_1 \pll \pi_2}$ are 
+(1) made writable and initialized by $\progsplit$ or $\progStore$, and 
+(2) set to false and made unreadable by $\progClean$.
+\end{proof}
+
+Finally, the $\progFlatten(\pi_1, \pi_2)$ program emulates the execution of the program $\pi_1 \pll \pi_2$ by
+a sequential composition of the previous program.
+Notice that there is no occurence in $\progFlatten(\pi_1, \pi_2)$ of the parallel composition operator,
+except inside $\pi_1$ and $\pi_2$.
+The following lemma states that the emulation is faithful. This the main lemma of our soundness proofs.
+
+\begin{lemma}\label{lem:pllequivalence}
+Let $\modl$ and $\modl^{\sharp}$ be two models, $\pi_1$ and $\pi_2$ two programs, and $P = \propsetOf{\pi_1 \pll \pi_2}$.
+The following statements are equivalent:
+\begin{enumerate}
+  \item \label{item:pllequivalence:par} There is a model $\modl'$ such that
+        $\modl \intPgm{\pi_1 \pll \pi_2} \modl'$
+        and $\modl' \modinter P = \modl^\sharp$.
+  \item \label{item:pllequivalence:seq} There is a model $\modl''$ such that
+        $\modl \intPgm{\progFlatten(\pi_1, \pi_2)} \modl''$
+        and $\modl'' \modinter P = \modl^\sharp$.
+\end{enumerate}
+\end{lemma}
 
 %----------------------------------------------------------%
 \subsection{Reduction Axioms for Program Operators}\label{sec:redax_pgmop} 
@@ -958,13 +1009,7 @@ and finally executes $\pi_2$ followed by the same checks for $\pi_2$.
 \\
 \ldia{\pi^\ast}  \phi \leqv &\ \ldia{\pi^{\leq 2^{\card{\propsetOf{\phi}}}} }  \phi   
 \\
-\ldia{\pi_1 \pll \pi_2}  \phi \leqv &\ \ldia{ 
-\progsplit( \propsetOf{\pi_1 \pll \pi_2} ) ; 
-\progStore( \propsetOf{\pi_1 \pll \pi_2} ) ;
-\cp 1 {\pi_1} ; \cp 2 {\pi_2} ; 
-\progOkChange \big(\propsetOf{\pi_1 \pll \pi_2} \big) \testpdl ;
-\progmerge \big(\propsetOf{\pi_1 \pll \pi_2} \big)
-} ~ \phi 
+\ldia{\pi_1 \pll \pi_2}  \phi \leqv &\ \ldia{ \progFlatten(\pi_1, \pi_2) } ~ \phi 
 \end{align*}
 \caption{Reduction axioms for program operators
 \label{fig:redax_pgmops}
@@ -983,7 +1028,7 @@ $\progsplit( \propsetOf{\pi_1 \pll \pi_2} ) $ are fresh.
 %
 One may also note that the length of the right hand side can be shortened by restricting 
 $\propsetOf{\pi_1 \pll \pi_2}$ to the propositional variables that are assigned by $\propsetOf{\pi_1 \pll \pi_2}$, i.e., 
-to elements $p \in \propset$ such that $\assgntopV p$ or $\assgnbotV p$ occurs in $\propsetOf{\pi_1 \pll \pi_2}$. 
+to elements $p \in \propset$ such that $\assgntopV p$ or $\assgnbotV p$ occurs in $\propsetOf{\pi_1 \pll \pi_2}$.
 
 The exhaustive application of the equivalences of Table~\ref{fig:redax_pgmops} from the left to the right 
 results in formulas whose program operators are either endogeneous tests occurring in a readability statement
@@ -997,6 +1042,14 @@ $\assgntopV p $, or $\assgnbotV p $.
 
 %----------------------------------------------------------%
 \subsection{Reduction Axioms for Boolean Operators}\label{sec:redax_atmpgm_bool} 
+
+We now turn to modal operators $\ldia \pi$ where $\pi$ is an atomic assignment, i.e., $\pi$ is of the form 
+$\assgntopR p $, $\assgnbotR p $,
+$\assgntopW p $, $\assgnbotW p $, 
+$\assgntopV p $, or $\assgnbotV p $. 
+%(We will consider the special atomic formulas $\readable p$ in the next step.)
+They are deterministic and can therefore be distributed over the boolean operators.
+The corresponding reduction axioms are in Table~\ref{fig:redax_booleanops}.
 
 \begin{table}[t]
 \begin{align*}
@@ -1039,14 +1092,6 @@ $\assgntopV p $, or $\assgnbotV p $.
 \label{fig:redax_booleanops}
 }
 \end{table}
-
-We now turn to modal operators $\ldia \pi$ where $\pi$ is an atomic assignment, i.e., $\pi$ is of the form 
-$\assgntopR p $, $\assgnbotR p $,
-$\assgntopW p $, $\assgnbotW p $, 
-$\assgntopV p $, or $\assgnbotV p $. 
-%(We will consider the special atomic formulas $\readable p$ in the next step.)
-They are deterministic and can therefore be distributed over the boolean operators.
-The corresponding reduction axioms are in Table~\ref{fig:redax_booleanops}.
 
 In the first equivalence $\ldia{\assgntopV p} \top \leqv \  \writable p$, 
 the right hand side is nothing but an abbreviation of the left hand side. 
@@ -1158,13 +1203,7 @@ We have to show that the inference rules preserve validity and the axioms are va
 The only delicate case is the reduction axiom for parallel composition.
 We prove that for every model $\tuple{\readset,\writeset,\valuset}$,
 $$ \tuple{\readset,\writeset,\valuset} \models \ldia{\pi_1 \pll \pi_2}  \phi \leqv  
-\ldia{ 
-\progsplit( \propsetOf{\pi_1 \pll \pi_2} ) ; 
-\progStore( \propsetOf{\pi_1 \pll \pi_2} ) ;
-\cp 1 {\pi_1} ; \cp 2 {\pi_2} ; 
-\progOkChange \big(\propsetOf{\pi_1 \pll \pi_2} \big) \testpdl ;
-\progmerge \big(\propsetOf{\pi_1 \pll \pi_2} \big)
-} ~ \phi . $$
+\ldia{ \progFlatten(\pi_1, \pi_2) } ~ \phi . $$
 %We are going to make a hypothesis that is similar to that of Lemma \ref{theo:copies} and
 %exclude that a variable and its copy occur in the model or the formula: 
 %we suppose that if $p \in \readset \cup \writeset \cup \valuset \cup \propsetOf \pi$ then 
