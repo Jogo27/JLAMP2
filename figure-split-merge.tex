@@ -1,0 +1,23 @@
+\begin{tikzpicture}[>=latex', join=bevel, initial text = , every node/.style=, scale=0.9]
+  % States
+  \node (tosplit) at (0bp, 0bp) [draw] {$\tuple{ \set{p,q,r} , \set{p,q} , \set{p,q,r} } $};
+
+  \node (split1) at (80bp, 30bp) [draw] {$\tuple{ \set{p,r} , \set{p} , \set{p,q,r} } $};
+  \node (split2) at (80bp, -30bp) [draw] {$\tuple{ \set{q,r} , \set{q} , \set{p,q,r} } $};
+
+
+  \node (tomerge1) at (200bp, 30bp) [draw] {$\tuple{ \set{p,r} , \set{p} , \set{q,r} } $};
+  \node (tomerge2) at (200bp, -30bp) [draw] {$\tuple{ \set{q,r} , \set{q} , \set{p,r} } $};
+  \node (merged) at (280bp, 0bp) [draw] {$\tuple{ \set{p,q,r} , \set{p,q} , \set{r} } $};
+  
+  % Edges
+  % \draw[->] (0) to node [above] {$-1$} (1);
+  \draw[thick, dashed, ->] (tosplit) to node [] {} (split1.west);
+  \draw[thick, dashed, ->] (tosplit) to node [] {} (split2.west);
+
+  \draw[thick, dotted, ->] (tomerge1.east) to node [] {} (merged);
+  \draw[thick, dotted, ->] (tomerge2.east) to node [] {} (merged);  
+  
+  % Selfloops
+  % \draw (0) edge [loop above] node [above] {$+1$} (0);
+\end{tikzpicture}

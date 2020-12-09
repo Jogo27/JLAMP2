@@ -1,0 +1,37 @@
+\begin{tikzpicture}[>=latex', join=bevel, initial text = , every node/.style=, scale=1.2]
+  % States
+  \node (m) at (0bp, 0bp) {$\modl$};
+
+  \node (m1) at (10bp, 30bp) {$\modl_1$};
+  \node (mast) at (10bp, -30bp) {$\modl_*$};
+
+  \node (m1prime) at (100bp, 30bp) {$\modl'_1$};
+  \node (m2) at (20bp, -5bp) {$\modl_2$};  
+  \node (m3) at (20bp, -55bp) {$\modl_3$};  
+
+  \node (mastprime) at (100bp, -30bp) {$\modl'_*$};
+  \node (m2prime) at (90bp, -5bp) {$\modl'_2$};  
+  \node (m3prime) at (90bp, -55bp) {$\modl'_3$};  
+
+  \node (mprime) at (110bp, 0bp) {$\modl'$};
+  % Edges
+  % \draw[->] (0) to node [above] {$-1$} (1);
+  \draw[thick, dashed, ->] (m) to node [] {} (m1);
+  \draw[thick, dashed, ->] (m) to node [] {} (mast);
+
+  \draw[thick, dashed, ->] (mast) to node [] {} (m2);
+  \draw[thick, dashed, ->] (mast) to node [] {} (m3);
+
+  \draw[thick, ->] (m1) to node [below] {$\pi_1$} (m1prime);  
+  \draw[thick, ->] (m2) to node [below] {$\pi_2$} (m2prime);  
+  \draw[thick, ->] (m3) to node [above] {$\pi_3$} (m3prime);  
+
+  \draw[thick, dotted,->] (m2prime) to node [] {} (mastprime);
+  \draw[thick, dotted,->] (m3prime) to node [] {} (mastprime);
+
+  \draw[thick, dotted, ->] (m1prime) to node [] {} (mprime);  
+  \draw[thick, dotted,->] (mastprime) to node [] {} (mprime);  
+  
+  % Selfloops
+  % \draw (0) edge [loop above] node [above] {$+1$} (0);
+\end{tikzpicture}

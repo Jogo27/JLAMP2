@@ -1,0 +1,387 @@
+\documentclass{article}
+\usepackage{xcolor}
+
+%%% local to paper
+\newcommand{\atm}{x}	
+\newcommand{\atmb}{y}	
+\newcommand{\atmset}{\mathtt{\mathbb X}}	% set of atoms: p, \readable p, \writable{p}
+\newcommand{\cp}[2]{{#2}^\mathbf{#1}}
+%\newcommand{\cp}[2]{{\small(}{#2}{\small)}^\mathbf{#1}}
+%\newcommand{\cp}[2]{(#2)^{#1}}
+\newcommand{\modl}{\mathsf m}	
+\newcommand{\mrg}[3]{ ^{#2}_{#3} \triangleright \, #1 }
+\newcommand{\pll}{ {||} }							% parallel composition
+\newcommand{\splt}[3]{ #1 \triangleleft \, ^{#2}_{#3} }
+\newcommand{\readOf}[1]{\mathbb{R}_{#1}}
+\newcommand{\readable}[1]{\mathtt{r}_{#1}}
+\newcommand{\readset}{\mathsf{Rd}}
+\newcommand{\valuset}{\mathsf{V}}
+\newcommand{\writable}[1]{\mathtt{w}_{#1}}
+\newcommand{\writeset}{\mathsf{Wr}}
+\newcommand{\testendo}{?\!\!?}			% endogeneous test
+\newcommand{\testpdl}{?}				% PDL test
+\newcommand{\writeOf}[1]{\mathbb{W}_{#1}}
+
+\newcommand{\Dlpa}{\ensuremath{\mathsf{DL\n{-}PA}}\xspace}
+\newcommand{\DlpaPll}{\ensuremath{\mathsf{DL\text{-}PA}^\pll}\xspace}
+\newcommand{\Pdl}{\ensuremath{\mathsf{PDL}}\xspace}
+
+%%% standard macros
+\newcommand{\ah}[1]{\footnote{\textbf{AH:} #1}}
+\newcommand{\assgn}[2]{{#1 {:=} #2}}
+\newcommand{\assgntop}[1]{{\mathtt {+} #1}}
+\newcommand{\assgnbot}[1]{{\mathtt {-} #1}}
+%\newcommand{\assgntopV}[1]{\assgn{#1}{\top}}
+%\newcommand{\assgnbotV}[1]{\assgn{#1}{\bot}}
+\newcommand{\assgntopR}[1]{{\mathtt r {+} #1}}
+\newcommand{\assgnbotR}[1]{{\mathtt r {-} #1}}
+\newcommand{\assgntopW}[1]{{\mathtt w {+} #1}}
+\newcommand{\assgnbotW}[1]{{\mathtt w {-} #1}}
+\newcommand{\assgntopV}[1]{{\mathtt {+} #1}}
+\newcommand{\assgnbotV}[1]{{\mathtt {-} #1}}
+%\newcommand{\assgntopbotR}[1]{{\mathtt r {\pm} #1}}
+%\newcommand{\assgntopbotW}[1]{{\mathtt w {\pm} #1}}
+%\newcommand{\assgntopbotV}[1]{{\mathtt v {\pm} #1}}
+\newcommand{\assgnpm}[1]{{\pm #1}}
+\newcommand{\card}[1]{|#1|}
+\newcommand{\eqdef}{\stackrel{\text{def}}{=}}
+\newcommand{\ifthen}[2]{\mathbf{if}\ #1 \ \mathbf{then}\ #2}
+\newcommand{\intPgm}[1]{\llbracket #1 \rrbracket}
+%\newcommand{\intPgm}[1]{ \, \big|\!\big| #1 \big|\!\big| \, }				% interpretation of formulas, programs
+\newcommand{\lbox}[1]{ \big[ #1 \big] }
+\newcommand{\ldia}[1]{ \big\langle #1 \big\rangle}
+\newcommand{\leqv}{ \leftrightarrow }
+\newcommand{\limp}{ \rightarrow }
+\newcommand{\ndet}{\,{\cup}\,}
+\renewcommand{\phi}{\varphi}
+\newcommand{\propset}{\mathbb P}
+\newcommand{\propsetOf}[1]{\propset_{#1}}
+%\newcommand{\propsetOf}[1]{\propset(#1)}
+\newcommand{\seqseq}[1]{ \text{\Large ;}_{#1} ~ }
+\newcommand{\set}[1]{\{#1\}}
+\newcommand{\suchthat}{~ : ~}
+\newcommand{\tuple}[1]{ \langle #1 \rangle}
+
+\newcommand{\REVIEWERCOMMENT}[1]{{\medskip\color{red}#1}}
+
+\title{
+JLAMP-D-20-00011 
+(Resource Separation in Dynamic Logic of Propositional Assignments): 
+Responses to the three reviews
+}
+\author{ Joseph Boudou, Andreas Herzig, Nicolas Troquard
+}
+\date{}
+
+\begin{document}
+\maketitle
+
+%I have completed my evaluation of your manuscript. The reviewers recommend reconsideration of your manuscript following major revision. I invite you to resubmit your manuscript after addressing the comments below. Please resubmit your revised manuscript by Dec 11, 2020.
+%
+%When revising your manuscript, please consider all issues mentioned in the reviewers' comments carefully: please outline every change made in response to their comments and provide suitable rebuttals for any comments not addressed. Please note that your revised submission may need to be re-reviewed. 
+%
+%Kind regards, Luis Barbosa (Special Issue Managing Guest Editor) 
+%Journal of Logical and Algebraic Methods in Programming 
+
+We thank the three reviewers for their thorough and detailed comments. 
+Below we recall their comments (in red) and answer each of the questions and suggestions. 
+
+
+%--------------------------------------%
+\section*{Reviewer \#1}
+%--------------------------------------%
+
+\REVIEWERCOMMENT{
+The paper extends Dynamic logic of propositional assignments with a parallel composition operator based on ideas from separation logic:
+more specifically, the operator relies on notions of 'splitting' and 'merging' of models, where the former partitions in a sensible way readable/writable variables and the latter merges the valuations of
+two models under certain compatibility conditions.
+}
+
+\REVIEWERCOMMENT{
+The paper then provides an axiomatisation via reduction axioms to propositional logic, and thus establishes decidability of the proposed logic. 
+It should be noted that the reduction process may result in formulae exponentially longer than the original ones. 
+The paper then shows how to translate formulae of the proposed logic to Dynamic logic of propositional assignments. 
+Via this result the authors show that satisfiability and model-checking stays within PSPACE.
+}
+
+\REVIEWERCOMMENT{
+The paper is well-written and well-illustrated.
+}
+
+\REVIEWERCOMMENT{
+It would be great to see further discussion on the consequences of discarding "race conditions"; and whether other parallel composition operators in dynamic logic support these "race conditions" (in particular for
+[BdFV11,VVB14,BB18]).%
+}
+
+Dynamic logics with parallel composition usually have abstract actions, hence the "race condition
+issue" does not arise because race condition is a semantic detail of each model. We have added a
+paragraph in the introduction discussing this point.
+
+\REVIEWERCOMMENT{
+With respect to the workshop version, I don't see any significant changes: 
+there are some text reformulations, there are also some discussions concerning complaints from the reviewers, and more details in the proofs. 
+But that is about it, as far I can see. 
+So I would suggest adding a discussion of significant changes between the two versions. 
+This would help clarify in what ways the new paper extends the former (which is important not only for the reviewer but also for the general reader).
+}
+
+Your description of the changes wrt the workshop version is correct. 
+In the meanwhile we have extended the journal version: we have added a proof of associativity of parallel composition. Contrarily to commutativity this is a non-trivial property. 
+It is known that adding associativity to a modal logic with a binary modal operator may cause undecidability. 
+We have also added more motivation by describing the application to parallel planning. 
+
+
+%--------------------------------------%
+\section*{Reviewer \#2} 
+%--------------------------------------%
+
+\REVIEWERCOMMENT{
+The paper introduces the logic DL-PA$^{||}$, an extension of the logic DL-PA with a constructor for parallel execution of programs. This constructor was inspired by operators from separation logic. DL-PA is, in essence, a variation of Propositional Dynamic Logic (PDL) interpreted over propositional valuations instead of being interpreted on Kripke models. In order to model parallel composition, the authors enrich DL-PA models with information about readable variables and writable variables. 
+}
+
+\REVIEWERCOMMENT{
+The extension presented in this paper is quite natural, since there is a lot of literature exploring different alternatives in the context of PDL. More interestingly, as argued by the authors, there is no consensus about the right way to logically represent parallel execution. Therefore, this new proposal brings a new possibility into the picture.
+}
+
+\REVIEWERCOMMENT{
+From a technical point of view, the main contributions are:
+\begin{enumerate}
+\item
+The presentation of the language itself, including parallel composition of programs, and the endogenous test that is conditional to the readability of variables.
+\item
+An axiomatization of the logic via reduction axioms from DL-PA$^{||}$ into propositional logic. As a corollary, the satisfiability and model checking problems for DL-PA$^{||}$ are decidable (but suboptimal, since the reduction produces an exponential blow up in the size of the input formula).
+\item
+The satisfiability and model checking problems for DL-PA$^{||}$ are PSpace complete, via a polynomial translation into DL-PA.
+\end{enumerate}
+
+
+Overall evaluation: 
+the logic presented is interesting, as well as the technical results. As far as I could check, all the results are sound (modulo the lack of some proofs). The paper is very nicely written and easy to follow. I didn't find any presentation issues. I recommend accepting the paper, subject to take into account the detailed comments below.
+}
+
+%--------------------------------------%
+\paragraph{Detailed comments.}
+\begin{enumerate}
+\item\REVIEWERCOMMENT{
+I appreciate the simplicity of the framework, as I can see e.g. how PDL program executions are resorted here into actual transformations in the valuations. However, the comparison with Separation Logics is not fair, since: 
+a) the current framework  lacks some information about memory states, more precisely about pointers; 
+b) there are some separation logics with good expressivity and complexity properties (see e.g. the standard example of propositional separation logic without magic wand which is PSpace-complete (see [CHY01] below), or  the modal separation logics from [DF18] below, in which two NP-complete logics are presented. 
+}
+
+Whereas Separation Logic is PSpace-complete, some separation logics are undecidable because the
+separation operator is an associative binary modality (see Kurucz, Németi, Sain and Simon, Journal
+of Logic, Language and Information, 1995). Most notably, Boolean BI is undecidable (Brotherston and
+Kanovich, LICS 2010 and Larchey-Wendling and Galmiche, LICS 2010). Anyway, you are right that the
+comparison is not fair. We now compare our result only to other dynamic logics with a parallel
+composition based on separation.
+
+\item\REVIEWERCOMMENT{
+Several results are presented without a formal proof, and I understand that some of them can be justified by only giving the main intuition. However, in some cases a proof should be included. For instance, this is the case for the formulas in Table 1, since they are instrumental for the axiomatization.
+}
+
+Generally speaking, we have added proofs or sketches of proofs to each of the lemmas and propositions. 
+Specifically, we have added lemmas characterising what each of the abbreviations of Table 1 does. 
+
+\item\REVIEWERCOMMENT{
+It is not obvious that translation t in section 6 is polynomial. A proof of this fact should be given.
+}
+
+We have stated and proved this formally. 
+
+\item
+\REVIEWERCOMMENT{
+I am not sure whether an axiomatization for DL-PA has been introduced before or not.  In case there exists an axiomatization for DL-PA, what is the point of reducing the full logic DL-PA$^{||}$ into propositional logic, instead of directly using the more direct reduction from section 6?
+}
+
+An axiomatisation of DL-PA exists [BHT13]. %Balbiani et al., LICS 2013]. 
+Our axiomatisation of DL-PPA in terms of reduction axioms establishes that it has the same expressivity as propositional logic. 
+Our reduction of Section 6 only proves satisfiability-equivalence. 
+
+\item\REVIEWERCOMMENT{
+It should be clarified that the paper is an extension of a workshop paper published in a formal proceedings (which is not even cited). Also be specific about what material is new, and what are the improvements with respect to the workshop version.
+}
+
+(recopier la reponse au Reviewer 1)
+
+\end{enumerate}
+
+
+
+\REVIEWERCOMMENT{
+\noindent
+Mentioned references: 
+
+\noindent
+[CHY01] C. Calcagno, P. O'Hearn, and H. Yang. Computability and complexity results for a spatial assertion language for data structures. In FSTTCS'01, volume 2245 of Lecture Notes in Computer Science, pages 108-119. Springer, 2001
+
+\noindent
+[DF18] S. Demri, R. Fervari. On the Complexity of Modal Separation Logics. Advances in Modal Logic 2018: 179-198.
+}
+
+%--------------------------------------%
+\paragraph{Minor comments: } \REVIEWERCOMMENT{[\ldots]}
+%\begin{itemize}
+%\item
+%Footnote 6: please remove that long footnote, perhaps including it as a lemma in the text. It really disturbs the reading flow.
+%\item
+%Proof of Theorem 1, lines exceed the margin limits.
+%\end{itemize}
+
+We have corrected the two issues as recommended. 
+
+
+
+%--------------------------------------%
+\section*{Reviewer \#3 }
+%--------------------------------------%
+
+%--------------------------------------%
+\subsection*{Summary and Recommendation}
+
+\REVIEWERCOMMENT{
+This work extends dynamic logic of propositional assignments with a parallel composition operator based on separation logics. They provide an axiomatization and prove its soundness. Cofimpleteness is proved via reduction axioms. They also establish the PSPACE-completeness for the computational complexity of model checking and satisability problems. 
+}
+
+\REVIEWERCOMMENT{
+I think the motivation for this work is quite interesting. The idea of extending Propositional Dynamic Logic of Propositional Assignments with parallel composition operator is quite nice and it may have interesting applications. Although the results presented, as far as I could check, seem to be sound, the paper lacks motivations, some explanations and even proofs. 
+}
+
+We have added more motivation, in particular an application to planning in Section xxxx. 
+We have added proofs or proof sketches for all lemmas and propositions. 
+
+\REVIEWERCOMMENT{
+The main drawback of this work is the lack of motivation. The examples illustrate some logical properties but there is not one example or even one paragraph explaining some application of the logic DL-PA$^{||}$.
+}
+
+We have added material on this in Section xxxx: 
+as we explain there, parallel planning provides an interesting application of DL-PPA. 
+
+%--------------------------------------%
+\subsection*{Specific Comments}
+
+\REVIEWERCOMMENT{\noindent
+Page 2,3: Why do we need writable and readable variables? More motivation should be provided.
+
+\noindent
+Page 2,3: Why are some variables not writable or not readable? Why do we need such distinction between variables?
+}
+
+The concept of writability is a way of implementing the very idea of separation logic: resources have to be separated in some way, and qualifying variables as being writable materialises this idea. 
+The paper [Her13] %(WoLLIC 13) 
+had tried to do without that concept but basically failed. 
+We now say this more precisely in the introduction. 
+
+%Related to that is the question whether one can do without 
+%The paper [Herzig et al., IJCAI 2019] does so. 
+We now also provide a better motivation of the concept of readability. 
+We have improved the discussion of the issues at stake. 
+We illustrate it by the execution of the program $\assgntop p \pll \mathtt{toggle}(p)$ at the valuation $\emptyset$.
+Both subprograms read $p$ and can therefore not be merged according to our definition. 
+This is a reasonable requirement when one supposes that the two subprograms do not work on copies but share a common `workspace' of variables to be read and written. 
+
+\REVIEWERCOMMENT{\noindent
+Page 2,3: It is not clear to me why program $ (\assgntop p \pll \assgntop p) $ % $(p+ \pll p+)$ 
+is not executable? It does not seem reasonable.
+}
+
+As we say in the introduction, this is a very restrictive version of parallel composition. 
+It could however be relaxed easily in our framework by allowing both subprograms in $ (\assgntop p \pll \assgntop p) $ to modify the same variable, under the condition that they do so in the same way. 
+This choice was made in [HMV19]. %Herzig et al., IJCAI 2019]. 
+We have added a paragraph discussing the differences in the ``Discussion and Conclusion'' section:
+
+%\begin{quote}
+The semantics of DL-PA$^\pll$ could be adapted to that $ (\assgntop p \pll \assgntop p) $ becomes executable. 
+both subprograms in to modify the same variable, under the condition that they do so in the same way. 
+This choice was made in [HMV19]. %Herzig et al., IJCAI 2019]. 
+It suffices to modify the definition of split and merge 
+\begin{center}\begin{tabular}{lll}
+$\splt{\modl}{\modl_1} {\modl_2} $ & iff & $\modl_1$ and $\modl_2$ are RW-disjoint, 
+$\readset = \readset_1 \cup \readset_2 $, $\writeset = \writeset_1 \cup \writeset_2$,  \\&&  and $\valuset = \valuset_1 = \valuset_2$;
+%\writeset_1 \cap \readset_2  = \writeset_2 \cap \readset_1  = \emptyset , \text{ and } $ \\&& $\valuset = \valuset_1 = \valuset_2$ 
+\\
+$\mrg{\modl}{\modl_1} {\modl_2} $ & iff  & $\modl_1$ and $\modl_2$ are RW-disjoint, 
+$\readset = \readset_1 \cup \readset_2$, $\writeset = \writeset_1 \cup \writeset_2$,  \\&&
+$\valuset_1 \setminus \writeset = \valuset_2 \setminus \writeset $, and 
+$\valuset = (\valuset_1 \cap \writeset_1) \cup (\valuset_2 \cap \writeset_2) \cup (\valuset_1 \cap \valuset_2) $. 
+\end{tabular}\end{center}
+by dropping the RW-disjointness condition and checking instead that the variables that are modified by both subprograms got assigned the same truth value:
+\begin{center}\begin{tabular}{lll}
+$\splt{\modl}{\modl_1} {\modl_2} $ & iff & 
+$\readset = \readset_1 \cup \readset_2 $, $\writeset = \writeset_1 \cup \writeset_2$, and $\valuset = \valuset_1 = \valuset_2$;
+%\writeset_1 \cap \readset_2  = \writeset_2 \cap \readset_1  = \emptyset , \text{ and } $ \\&& $\valuset = \valuset_1 = \valuset_2$ 
+\\
+$\mrg{\modl}{\modl_1} {\modl_2} $ & iff  & 
+$\readset = \readset_1 \cup \readset_2$, $\writeset = \writeset_1 \cup \writeset_2$, \\&&
+$\valuset_1 \cap \writeset_1 \cap \writeset_2  = \valuset_2 \cap \writeset_1 \cap \writeset_2 $, \\&&
+$\valuset_1 \setminus \writeset = \valuset_2 \setminus \writeset $, and 
+$\valuset = (\valuset_1 \cap \writeset_1) \cup (\valuset_2 \cap \writeset_2) \cup (\valuset_1 \cap \valuset_2) $. 
+\end{tabular}\end{center}
+
+It seems however a matter of debate whether this is the right semantics. 
+Consider the execution of the program $\mathtt{toggle}(p) \pll \mathtt{toggle}(p)$ at the empty valuation $\emptyset$, where $\mathtt{toggle}(p)$ abbreviates 
+$ (p ? ; \assgnbot p) \ndet (\lnot p ? ; \assgntop p)$. 
+If one considers that $ \assgntop p \pll \assgntop p$ should be executable then one should also accept that $\mathtt{toggle}(p) \pll \mathtt{toggle}(p)$ is so, too, and that the result is the valuation $\{p\}$. 
+This contrasts with the result of interleaving, which is the valuation $\emptyset$. 
+The result $\{p\}$ may be defendable if parallel composition associates separate `workspaces' to the two subprograms at the start of the execution. % then the result is the valuation $\{p\}$. 
+It is however problematic otherwise. 
+Our---as we say in the introduction---admittedly radical solution avoids any ambiguity here: 
+both subprograms assign $p$ and, according to our definition, cannot be merged for that reason. 
+The benefit of such a constrained semantics is a clear-cut semantics. 
+%\end{quote}
+
+\REVIEWERCOMMENT{\noindent
+Page 2,3: some discussion should be provided about limit cases, for instance, when all variables are writable and readable.
+}
+
+We have added these cases as examples, as well as the case when the set of writable variables is empty: 
+then parallel compositions can only be executed if its subprograms do not contain any assignment. 
+
+\REVIEWERCOMMENT{\noindent
+Section 5.1: Why do you need copies?
+}
+
+Variables allow us to simulate in DL-PA that each subprogram works on `its' variables after the global state got split. 
+We have improved the explanation in the first paragraph of Section 5.1.
+
+\REVIEWERCOMMENT{\noindent
+Section 5.1: Lemma 2.: I understand that the proof of this lemma is straightforward but if it is "instrumental" it deserves some explanation.
+}
+
+We have added a comment. 
+
+\REVIEWERCOMMENT{\noindent
+Section 5.1: it is a bit disappointing that the parallel composition is translated as a sequential composition. You should provide more motivation why this is reasonable.
+}
+
+This is related to your above question ``Section 5.1: Why do you need copies?''. 
+
+It is the fact that each subprogram is executed on `its' copies that makes sequentialisation possible. 
+It is important to have a `reserve army' of countably many propositional variables. 
+
+\REVIEWERCOMMENT{\noindent
+Page 14: Why don't you prove theorems 3 and 4. In my opinion, they are the most interesting results of this work. As you have space, you should provide more details about these results. By the way, why don't you use this reduction as proof of completeness? This is a nicer reduction.
+}
+
+(see the response to the comments of Reviewer 2, item 4)
+
+%--------------------------------------%
+\subsection*{Recommendation}
+
+\REVIEWERCOMMENT{
+The paper does not convince the reader that DL-PA$^{||}$ is an interesting extension of DL-PA. The latter has been used in many applications of knowledge representation. The Authors must provide some discussion why it is interesting to use their extension of DL-PA and in which application domain. I strongly recommend that Authors provide some applications of the usage of DL-PA$^{||}$ or at least some good discussion where it can be applied.
+}
+
+We now discuss parallel planning as an interesting application. 
+
+\REVIEWERCOMMENT{
+Once, by theorems 3 and 4, DL-PA$^{||}$ formulae can be translated to DL-PA formulae with polynomial size, Why do we need DL-PA$^{||}$? I am not saying that DL-PA$^{||}$ is not useful. What I am saying is that, you must convince the reader that it is worth to use DL-PA$^{||}$.
+}
+
+While having the same expressivity as DL-PA and as propositional calculus, we believe that DL-PPA provides an interesting language to talk about parallel composition of programs. 
+Everything could indeed be done in DL-PA and even in propositional calculus, but it would be more difficult to describe things. 
+
+\REVIEWERCOMMENT{
+Although the results presented in this work seem to be sound. The paper lacks motivation as exposed above. I recommend the paper to be accepted if the comments described above are incorporated into the paper.
+}
+
+\end{document}
