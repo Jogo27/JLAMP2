@@ -19,7 +19,6 @@ very thick,inner sep=1pt,color=#1!60}
 }
 \newcommand{\progStore}{\mathsf{store}}
 \newcommand{\progOkChange}{\mathsf{check}}
-\newcommand{\progClean}{\mathsf{clean}}
 \newcommand{\progsplit}{\mathsf{split}}
 \newcommand{\progmerge}{\mathsf{merge}}
 \newcommand{\progFlatten}{\mathsf{flatten}}
@@ -47,6 +46,7 @@ very thick,inner sep=1pt,color=#1!60}
 \newcommand{\testendo}{?\!\!?}			% endogeneous test
 \newcommand{\testpdl}{?}				% PDL test
 \newcommand{\writeOf}[1]{\mathbb{W}_{#1}}
+\newcommand{\storeset}{\mathsf{St}}
 
 \newcommand{\Dlpa}{\ensuremath{\mathsf{DL\text{-}PA}}\xspace}
 \newcommand{\DlpaPll}{\ensuremath{\mathsf{DL\text{-}PA}^\pll}\xspace}
@@ -843,6 +843,9 @@ $$ \tuple{\readset,\writeset,\valuset} \intPgm{\pi} \tuple{\readset',\writeset',
 
 Moreover, in order to force the semantics of the parallel composition operator, we associate to each copie $\cp k p$ two fresh variables $\cpr k p$ and $\cpw k p$,
 denoting whether $\cp k p$ was respectively readable and writable just after the split.
+We define $\storeset(P) =
+\set{ \cpr k p \suchthat k \in \set{1,2}, p \in P} \cup
+\set{ \cpw k p \suchthat k \in \set{1,2}, p \in P}$ as the set of all these fresh variables.
 
 
 %----------------------------------------------------------%
@@ -885,30 +888,30 @@ Observe also that the only endogeneous tests on the right hand side occur in rea
 ( \lnot \cpw k {p} \limp (p \leqv \cp k {p}) )
 \Big)
 \\
-\progmerge(P) =&\ \seqseq{p \in P} \Big( 
+\progmerge(P) =&\ \seqseq{p \in P} \Big(\big( 
 \lnot \writable{p} \testpdl \ndet 
 \\& ~~~~~~~~~~~ 
 \big(	(\writable{ \cp{1}{p} } \land \cp{1}{p}) \lor 
 		(\writable{ \cp{2}{p} } \land \cp{2}{p}) \testpdl ; \assgntopV p \big) \ndet 
 \\& ~~~~~~~~~~~ 
 \big(	(\writable{ \cp{1}{p} } \land \lnot \cp{1}{p}) \lor 
-		(\writable{ \cp{2}{p} } \land \lnot \cp{2}{p}) \testpdl ; \assgnbotV p \big) 
-\Big)
-\\
-\progClean(P) =&\ \seqseq{p \in P} \seqseq{k \in \{1, 2\}} \Big(
+		(\writable{ \cp{2}{p} } \land \lnot \cp{2}{p}) \testpdl ; \assgnbotV p \big)
+\big) ;
+\\& ~~~~~~~~
+\seqseq{k \in \{1, 2\}} \big(
   \assgnbotV{\cpr k p} ; \assgnbotV{\cpw k p} ; \assgntopW{\cp k p} ; \assgnbotV{\cp k p} ;
   \assgnbotR{\cpr k p} ; \assgnbotR{\cpw k p} ; \assgnbotR{\cp k p}
+\big)
 \Big)
 \\
 \progFlatten(\pi_1, \pi_2) =&\ %
   \progsplit\left(\propsetOf{\pi_1 \pll \pi_2}\right) ;
   \progStore\left(\propsetOf{\pi_1 \pll \pi_2}\right) ;
-\\&\ %
+%\\&\ %
   \cp 1 {\pi_1} ; \cp 2 {\pi_2} ;
-\\&\ %
+%\\&\ %
   \progOkChange\left(\propsetOf{\pi_1 \pll \pi_2}\right) \testpdl ;
-  \progmerge\left(\propsetOf{\pi_1 \pll \pi_2}\right) ;
-  \progClean\left(\propsetOf{\pi_1 \pll \pi_2}\right)
+  \progmerge\left(\propsetOf{\pi_1 \pll \pi_2}\right)
 \end{align*}
 \caption{Useful programs, for all $P \subseteq \propset$ and all programs $\pi_1$ and $\pi_2$.
 \label{fig:useful_programs}
@@ -958,10 +961,10 @@ such that $\modl \modinter P = \modl$,
         $\valuset_1 \setminus \writeset = \valuset_2 \setminus \writeset$,
 $$\mrg \modl {\modl_1} {\modl_2} \text{ if and only if }
 \modl' \intPgm{\progmerge(P)} \modl$$ with
-$\readset' = \readset \cup \cp 1 {\readset_1} \cup \cp 2 {\readset_2}$,
-$\writeset' = \writeset \cup \cp 1 {\writeset_1} \cup \cp 2 {\writeset_2}$, and
+$\readset' = \readset \cup \cp 1 {\readset_1} \cup \cp 2 {\readset_2} \cup \storeset(P)$,
+$\writeset' = \writeset \cup \cp 1 {\writeset_1} \cup \cp 2 {\writeset_2} \cup \storeset(P)$, and
 $\valuset' = \valuset^\sharp \cup \cp 1 {\valuset_1} \cup \cp 2 {\valuset_2}$
-where $\valuset^\sharp$ is any subset of $P$ such that
+where $\valuset^\sharp$ is any subset of $P \cup \storeset(P)$ such that
 $\valuset^\sharp \setminus \writeset = \valuset \setminus \writeset$.
 \end{lemma}
 \begin{proof}[sketch]
@@ -971,9 +974,13 @@ $\valuset = (\valuset_1 \cap \writeset_1) \cup (\valuset_2 \cap \writeset_2) \cu
 which is straightforward.
 \end{proof}
 
-The $\progClean(P)$ program discards read and write access to copies and auxiliary variables.
-It is needed for the following lemma, which can be seen as an adaptation of lemma~\ref{theo:irrelevantVariables}
-to the $\progFlatten$ program.
+Finally, the $\progFlatten(\pi_1, \pi_2)$ program emulates the execution of the program $\pi_1 \pll \pi_2$ as
+a sequential composition of the previous programs.
+Notice that there is no occurence in $\progFlatten(\pi_1, \pi_2)$ of the parallel composition operator,
+except inside $\pi_1$ and $\pi_2$.
+Lemma~\ref{lem:pllequivalence} below states that the emulation is faithful.
+We first need Lemma~\ref{lem:progClean},
+which can be seen as an adaptation of lemma~\ref{theo:irrelevantVariables} to the $\progFlatten$ program.
 
 \begin{lemma}\label{lem:progClean}
 For all models $\modl$ and $\modl'$, and all programs $\pi_1$ and $\pi_2$,
@@ -985,14 +992,10 @@ $$
 \begin{proof}[sketch]
 It suffices to observe that all variables in $\propsetOf{\progFlatten(\pi_1, \pi_2)} \setminus \propsetOf{\pi_1 \pll \pi_2}$ are 
 (1) made writable and initialized by $\progsplit$ or $\progStore$, and 
-(2) set to false and made unreadable by $\progClean$.
+(2) set to false and made unreadable by $\progmerge$.
 \end{proof}
 
-Finally, the $\progFlatten(\pi_1, \pi_2)$ program emulates the execution of the program $\pi_1 \pll \pi_2$ as
-a sequential composition of the previous programs.
-Notice that there is no occurence in $\progFlatten(\pi_1, \pi_2)$ of the parallel composition operator,
-except inside $\pi_1$ and $\pi_2$.
-The following lemma states that the emulation is faithful.
+Now our main lemma.
 
 \begin{lemma}\label{lem:pllequivalence}
 For all models $\modl$ and $\modl'$, and all programs $\pi_1$ and $\pi_2$,
@@ -1002,9 +1005,8 @@ $$
 $$
 \end{lemma}
 \begin{proof}[sketch]
-\newcommand{\stored}{_\text{St}}
 Let $P = \propsetOf{\pi_1 \pll \pi_2}$. By Lemmas~\ref{theo:irrelevantVariables} and~\ref{lem:progClean},
-we can assume without loss of generality that $\modl \modinter P = \modl$ and $\modl' \modinter P = \modl'$.
+we can assume that $\modl \modinter P = \modl$ and $\modl' \modinter P = \modl'$.
 
 For the left-to-right direction, suppose there are models $\modl_1$, $\modl_2$, $\modl'_1$ and $\modl'_2$ such that
 $\splt{\modl}{\modl_1} {\modl_2} $, $\mrg{\modl'}{\modl'_1} {\modl'_2} $,
@@ -1022,16 +1024,75 @@ The following statements can be proved:
         The proof relies on Lemma~\ref{lem:progsplit}.
   \item\label{pllequivalence:ltr:store}
         $\modl^+_1 \intPgm{\progStore(P)} \modl^+_2$ with
-        $\readset^+_2 = \readset^+_1 \cup \writeset\stored$,
-        $\writeset^+_2 = \writeset^+_1 \cup \writeset\stored$,
-        $\valuset^+_2 = \valuset^+_1 \cup \valuset\stored$,
-        $\writeset\stored =
-          \set{ \cpr k p \suchthat k \in \set{1,2}, p \in P} \cup
-          \set{ \cpw k p \suchthat k \in \set{1,2}, p \in P}$, and
-        $\valuset\stored =
+        $\readset^+_2 = \readset^+_1 \cup \storeset(P)$,
+        $\writeset^+_2 = \writeset^+_1 \cup \storeset(P)$,
+        $\valuset^+_2 = \valuset^+_1 \cup \valuset_{\storeset}$, and
+        $\valuset_{\storeset} =
         \set{ \cpr k p \suchthat \cp k p \in \readset^+_1} \cup
         \set{ \cpw k p \suchthat \cp k p \in \writeset^+_1}$.
+        Notice that
+        $\valuset_{\storeset} =
+        \set{ \cpr k p \suchthat p \in \readset_k} \cup
+        \set{ \cpw k p \suchthat p \in \writeset_k}$.
+  \item\label{pllequivalence:ltr:pi1}
+        $\modl^+_2 \intPgm{\cp 1 {\pi_1}} \modl^+_3$ with
+        $\readset^+_3 = \readset \cup \cp 1 {\readset'_1} \cup \cp 2 {\readset_2} \cup \storeset(P)$,
+        $\writeset^+_3 = \writeset \cup \cp 1 {\writeset'_1} \cup \cp 2 {\writeset_2} \cup \storeset(P)$, and
+        $\valuset^+_3 = \valuset \cup \cp 1 {\valuset'_1} \cup \cp 2 {\valuset_2} \cup \valuset_{\storeset}$.
+        The proof relies on Lemmas~\ref{theo:irrelevantVariables} and~\ref{theo:copies}.
+  \item\label{pllequivalence:ltr:pi2}
+        $\modl^+_3 \intPgm{\cp 2 {\pi_2}} \modl^+_4$ with
+        $\readset^+_4 = \readset \cup \cp 1 {\readset'_1} \cup \cp 2 {\readset'_2} \cup \storeset(P)$,
+        $\writeset^+_4 = \writeset \cup \cp 1 {\writeset'_1} \cup \cp 2 {\writeset'_2} \cup \storeset(P)$, and
+        $\valuset^+_4 = \valuset \cup \cp 1 {\valuset'_1} \cup \cp 2 {\valuset'_2} \cup \valuset_{\storeset}$.
+  \item\label{pllequivalence:ltr:check}
+        $\modl^+_4 \models \progOkChange(P)$.
+  \item\label{pllequivalence:ltr:merge}
+        $\modl^+_4 \intPgm{\progmerge(P)} \modl'$.
+        The proof relies on Lemma~\ref{lem:progmerge}.
 \end{enumerate}
+\noindent{} We conclude that $\modl \intPgm{\progFlatten(\pi_1, \pi2)} \modl'$.
+
+For the right-to-left direction, let us suppose that there are
+models $\modl^+_1$, $\modl^+_2$, $\modl^+_3$ and $\modl^+_4$ such that
+$\modl \intPgm{\progsplit(P)} \modl^+_1 \intPgm{\progStore(P)} \modl^+_2 \intPgm{\pi_1} \modl^+_3
+\intPgm{\pi_2 ; \progOkChange(P)?} \modl^+_4 \intPgm{\progmerge(P)} \modl'$.
+The following statements can be proved:
+\begin{enumerate}
+  \item\label{pllequivalence:rtl:split}
+        $\splt{\modl}{\modl_1}{\modl_2}$ with
+        $\readset_1 = \set{ p \suchthat \cp 1 p \in \readset^+_1}$,
+        $\writeset_1 = \set{ p \suchthat \cp 1 p \in \writeset^+_1}$,
+        $\valuset_1 = \set{ p \suchthat \cp 1 p \in \valuset^+_1}$,
+        $\readset_2 = \set{ p \suchthat \cp 2 p \in \readset^+_1}$,
+        $\writeset_2 = \set{ p \suchthat \cp 2 p \in \writeset^+_1}$, and
+        $\valuset_2 = \set{ p \suchthat \cp 2 p \in \valuset^+_1}$.
+        The proof relies on Lemma~\ref{lem:progsplit}.
+  \item\label{pllequivalence:rtl:pi1}
+        $\modl_1 \intPgm{\pi_1} \modl'_1$ with
+        $\readset'_1 = \set{ p \suchthat \cp 1 p \in \readset^+_3}$,
+        $\writeset'_1 = \set{ p \suchthat \cp 1 p \in \writeset^+_3}$, and
+        $\valuset'_1 = \set{ p \suchthat \cp 1 p \in \valuset^+_3}$.
+        The proof relies on Lemmas~\ref{theo:irrelevantVariables} and~\ref{theo:copies}.
+  \item\label{pllequivalence:rtl:pi2}
+        $\modl_2 \intPgm{\pi_2} \modl'_2$ with
+        $\readset'_2 = \set{ p \suchthat \cp 2 p \in \readset^+_4}$,
+        $\writeset'_2 = \set{ p \suchthat \cp 2 p \in \writeset^+_4}$, and
+        $\valuset'_2 = \set{ p \suchthat \cp 2 p \in \valuset^+_4}$.
+  \item\label{pllequivalence:rtl:check}
+        $\readset_1 = \readset'_1 $, $\writeset_1 = \writeset'_1 $,
+        $\valuset_1 \setminus \writeset_1 = \valuset'_1 \setminus \writeset'_1$,
+        $\readset_2 = \readset'_2 $, $\writeset_2 = \writeset'_2 $, and
+        $\valuset_2 \setminus \writeset_2 = \valuset'_2 \setminus \writeset'_2$.
+        The proof relies on the fact that $\modl^+_4 \models \progOkChange(P)$, and
+        $\valuset^+_4 \cap \storeset(P) =
+        \set{ \cpr k p \suchthat p \in \readset_k} \cup
+        \set{ \cpw k p \suchthat p \in \writeset_k}$.
+  \item\label{pllequivalence:rtl:merge}
+        $\mrg{\modl'}{\modl'_1}{\modl'_2}$.
+        The proof relies on Lemma~\ref{lem:progmerge}.
+\end{enumerate}
+\noindent{} We conclude that $\modl \intPgm{\pi_1 \pll \pi2} \modl'$.
 \end{proof}
 
 %----------------------------------------------------------%
@@ -1251,219 +1312,10 @@ the rule of equivalence for the modal operator %$\text{RE} \big(\ldia \pi \Big)$
 The axiomatisation of \DlpaPll is sound:
 if $\phi$ is provable with the axiomatics of \DlpaPll then it is \DlpaPll valid.
 \end{theorem}
-\begin{proof}
+\begin{proof}[sketch]
 We have to show that the inference rules preserve validity and the axioms are valid. 
-The only delicate case is the reduction axiom for parallel composition.
-We prove that for every model $\tuple{\readset,\writeset,\valuset}$,
-$$ \tuple{\readset,\writeset,\valuset} \models \ldia{\pi_1 \pll \pi_2}  \phi \leqv  
-\ldia{ \progFlatten(\pi_1, \pi_2) } ~ \phi . $$
-%We are going to make a hypothesis that is similar to that of Lemma \ref{theo:copies} and
-%exclude that a variable and its copy occur in the model or the formula: 
-%we suppose that if $p \in \readset \cup \writeset \cup \valuset \cup \propsetOf \pi$ then 
-%$\cp k p \notin \readset \cup \writeset \cup \valuset \cup \propsetOf \pi$. 
-%This is without loss of generality because we can rename variables. 
-Let $P$ be the set of variables occurring in $\pi_1 \pll \pi_2$, i.e., $P = \propsetOf{\pi_1 \pll \pi_2}$.
-The following statements are all equivalent: % (relevant parts are underlined when expressions get bigger):
-\begin{enumerate}
-\item
-$ \tuple{\readset,\writeset,\valuset} \models \ldia{\pi_1 \pll \pi_2}  \phi $;
-
-\item
-there are 
-$\readset_1$, $\readset_2$, $\writeset_1$, $\writeset_2$, $\valuset_1'$, $\valuset_2'$ such that 
-$\readset_1 \cup \readset_2 = \readset$, $\writeset_1 \cup \writeset_2 = \writeset$, 
-$\readset_1 \cap \writeset_2 = \readset_2 \cap \writeset_1 = \emptyset$, and
- \begin{enumerate}
- \item
-$\tuple{\readset_1,\writeset_1,\valuset} \intPgm{\pi_1} \tuple{\readset_1,\writeset_1,\valuset_1'}$,
- \item
-$\tuple{\readset_2,\writeset_2,\valuset} \intPgm{\pi_2} \tuple{\readset_2,\writeset_2,\valuset_2'}$,
- \item
-$\valuset_1' \setminus \writeset_1 = \valuset \setminus \writeset_1 $,
-$\valuset_2' \setminus \writeset_2 = \valuset \setminus \writeset_2 $,
- \item
-$\tuple{\readset,\writeset, 
-(\valuset {\setminus} \writeset) \cup (\valuset_1' {\cap} \writeset_1) \cup (\valuset_2' {\cap} \writeset_2) } \models \phi$ 
-\end{enumerate}
-(see the truth condition for $\ldia{\pi_1 \pll \pi_2}  \phi $ in Section \ref{sec:interpretation});
-
-\item
-there are 
-$\readset_1$, $\readset_2$, $\writeset_1$, $\writeset_2$, $\valuset_1'$, $\valuset_2'$ such that 
-$\readset_1 \cup \readset_2 = \readset$, $\writeset_1 \cup \writeset_2 = \writeset$, 
-$\readset_1 \cap \writeset_2 = \readset_2 \cap \writeset_1 = \emptyset$, and
- \begin{enumerate}
- \item
-$\tuple{\readset_1{\cap} P,\writeset_1{\cap} P,\valuset{\cap} P} \intPgm{\pi_1} \tuple{\readset_1{\cap} P,\writeset_1{\cap} P,\valuset_1'{\cap} P}$,
- \item
-$\tuple{\readset_2{\cap} P,\writeset_2{\cap} P,\valuset{\cap} P} \intPgm{\pi_2} \tuple{\readset_2{\cap} P,\writeset_2{\cap} P,\valuset_2'{\cap} P}$,
- \item
-$\valuset_1' \setminus \writeset_1 = \valuset \setminus \writeset_1 $,
-$\valuset_2' \setminus \writeset_2 = \valuset \setminus \writeset_2 $,
- \item
-$\tuple{\readset,\writeset, 
-(\valuset {\setminus} \writeset) \cup (\valuset_1' {\cap} \writeset_1) \cup (\valuset_2' {\cap} \writeset_2) } \models \phi$ 
-\end{enumerate}
-(by Lemma \ref{theo:irrelevantVariables});
-
-\item
-there are 
-$\readset_1$, $\readset_2$, $\writeset_1$, $\writeset_2$, $\valuset_1'$, $\valuset_2'$ such that 
-$\readset_1 \cup \readset_2 = \readset$, $\writeset_1 \cup \writeset_2 = \writeset$, 
-$\readset_1 \cap \writeset_2 = \readset_2 \cap \writeset_1 = \emptyset$, and
- \begin{enumerate}
- \item
-$\tuple{\cp 1 {(\readset_1{\cap} P)},\cp 1 {(\writeset_1{\cap} P)},\cp 1 {(\valuset{\cap} P)}} \intPgm{\cp 1 {\pi_1}} \tuple{\cp 1 {(\readset_1{\cap} P)},\cp 1 {(\writeset_1{\cap} P)},\cp 1 {(\valuset_1'{\cap} P)}}$,
- \item
-$\tuple{\cp 2 {(\readset_2{\cap} P)},\cp 2 {(\writeset_1{\cap} P)},\cp 2 {(\valuset{\cap} P)}} \intPgm{\cp 2 {\pi_2}} \tuple{\cp 2 {(\readset_2{\cap} P)},\cp 2 {(\writeset_2{\cap} P)},\cp 2 {(\valuset_2'{\cap} P)}}$,
- \item
-$\valuset_1' \setminus \writeset_1 = \valuset \setminus \writeset_1 $,
-$\valuset_2' \setminus \writeset_2 = \valuset \setminus \writeset_2 $,
- \item
-$\tuple{\readset,\writeset, 
-(\valuset {\setminus} \writeset) \cup (\valuset_1' {\cap} \writeset_1) \cup (\valuset_2' {\cap} \writeset_2) } \models \phi$ 
- \end{enumerate}
-(by Lemma \ref{theo:copies});
-
-\item
-there are 
-$\readset_1$, $\readset_2$, $\writeset_1$, $\writeset_2$, $\valuset_1'$, $\valuset_2'$ such that 
-$\readset_1 \cup \readset_2 = \readset$, $\writeset_1 \cup \writeset_2 = \writeset$, 
-$\readset_1 \cap \writeset_2 = \readset_2 \cap \writeset_1 = \emptyset$, and
-{\footnotesize
- \begin{enumerate}
- \item
-$\tuple{
-\readset  {\cup} \cp 1 {(\readset_1{\cap} P)} {\cup} \cp 2 {(\readset_2{\cap} P)} , 
-\writeset {\cup} \cp 1 {(\writeset_1{\cap} P)} {\cup} \cp 2 {(\writeset_2{\cap} P)} , 
-\valuset  {\cup} \cp 1 {(\valuset{\cap} P)} {\cup} \cp 2 {(\valuset{\cap} P)}
-} 
-\intPgm{\cp 1 {\pi_1}} $\\$
-\tuple{
-\readset  {\cup} \cp 1 {(\readset_1{\cap} P)} {\cup} \cp 2 {(\readset_2{\cap} P)} , 
-\writeset {\cup} \cp 1 {(\writeset_1{\cap} P)} {\cup} \cp 2 {(\writeset_2{\cap} P)} , 
-\valuset  {\cup} \cp 1 {(\valuset_1'{\cap} P)} {\cup} \cp 2 {(\valuset{\cap} P)}
-}$,
- \item
-$\tuple{
-\readset  {\cup} \cp 1 {(\readset_1{\cap} P)} {\cup} \cp 2 {(\readset_2{\cap} P)} , 
-\writeset {\cup} \cp 1 {(\writeset_1{\cap} P)} {\cup} \cp 2 {(\writeset_2{\cap} P)} , 
-\valuset  {\cup} \cp 1 {(\valuset_1'{\cap} P)} {\cup} \cp 2 {(\valuset{\cap} P)}
-} 
-\intPgm{\cp 2 {\pi_2}} $\\$
-\tuple{
-\readset  {\cup} \cp 1 {(\readset_1{\cap} P)} {\cup} \cp 2 {(\readset_2{\cap} P)} , 
-\writeset {\cup} \cp 1 {(\writeset_1{\cap} P)} {\cup} \cp 2 {(\writeset_2{\cap} P)} , 
-\valuset  {\cup} \cp 1 {(\valuset_1'{\cap} P)} {\cup} \cp 2 {(\valuset_2'{\cap} P)}
-}$,
- \item
-$\valuset_1' \setminus \writeset_1 = \valuset \setminus \writeset_1 $,
-$\valuset_2' \setminus \writeset_2 = \valuset \setminus \writeset_2 $,
- \item
-$\tuple{
-\readset  {\cup} \cp 1 {(\readset_1{\cap} P)} {\cup} \cp 2 {(\readset_2{\cap} P)} , 
-\writeset {\cup} \cp 1 {(\writeset_1{\cap} P)} {\cup} \cp 2 {(\writeset_2{\cap} P)} , 
-(\valuset {\setminus} \writeset) \cup (\valuset_1' {\cap} \writeset_1) \cup (\valuset_2' {\cap} \writeset_2) } \models \phi$ 
- \end{enumerate}
-}%{\footnotesize
-(by Lemma \ref{theo:irrelevantVariables});
-
-\item
-there are 
-$\readset_1$, $\readset_2$, $\writeset_1$, $\writeset_2$, $\valuset_1'$, $\valuset_2'$ such that 
-{\footnotesize
- \begin{enumerate}
- \item
-$\tuple{\readset,\writeset,\valuset} \intPgm{ \progsplit(P) } 
- \tuple{
-\readset  {\cup} \cp 1 {(\readset_1{\cap} P)} {\cup} \cp 2 {(\readset_2{\cap} P)} , 
-\writeset {\cup} \cp 1 {(\writeset_1{\cap} P)} {\cup} \cp 2 {(\writeset_2{\cap} P)} , 
-\valuset  {\cup} \cp 1 {(\valuset{\cap} P)} {\cup} \cp 2 {(\valuset{\cap} P)}
-}$,
- \item
-$\tuple{
-\readset  {\cup} \cp 1 {(\readset_1{\cap} P)} {\cup} \cp 2 {(\readset_2{\cap} P)} , 
-\writeset {\cup} \cp 1 {(\writeset_1{\cap} P)} {\cup} \cp 2 {(\writeset_2{\cap} P)} , 
-\valuset  {\cup} \cp 1 {(\valuset{\cap} P)} {\cup} \cp 2 {(\valuset{\cap} P)}
-} 
-\intPgm{\cp 1 {\pi_1} ; \cp 2 {\pi_2}} $\\$
-\tuple{
-\readset  {\cup} \cp 1 {(\readset_1{\cap} P)} {\cup} \cp 2 {(\readset_2{\cap} P)} , 
-\writeset {\cup} \cp 1 {(\writeset_1{\cap} P)} {\cup} \cp 2 {(\writeset_2{\cap} P)} , 
-\valuset  {\cup} \cp 1 {(\valuset_1'{\cap} P)} {\cup} \cp 2 {(\valuset_2'{\cap} P)}
-}$,
- \item
-$\tuple{
-\readset  {\cup} \cp 1 {(\readset_1{\cap} P)} {\cup} \cp 2 {(\readset_2{\cap} P)} , 
-\writeset {\cup} \cp 1 {(\writeset_1{\cap} P)} {\cup} \cp 2 {(\writeset_2{\cap} P)} , 
-\valuset  {\cup} \cp 1 {(\valuset_1'{\cap} P)} {\cup} \cp 2 {(\valuset_2'{\cap} P)}
-} \models \progOkChange(P) $,
- \item\label{item:lastbutone}
-$\tuple{
-\readset  {\cup} \cp 1 {(\readset_1{\cap} P)} {\cup} \cp 2 {(\readset_2{\cap} P)} , 
-\writeset {\cup} \cp 1 {(\writeset_1{\cap} P)} {\cup} \cp 2 {(\writeset_2{\cap} P)} , 
-\valuset  {\cup} \cp 1 {(\valuset_1'{\cap} P)} {\cup} \cp 2 {(\valuset_2'{\cap} P)}
-} \intPgm{\progmerge(P)} $\\$
-\langle %\tuple{
-\readset  {\cup} \cp 1 {(\readset_1{\cap} P)} {\cup} \cp 2 {(\readset_2{\cap} P)} , 
-\writeset {\cup} \cp 1 {(\writeset_1{\cap} P)} {\cup} \cp 2 {(\writeset_2{\cap} P)} , %$\\$~~~~
-(\valuset{\setminus}P) {\cup} ((\valuset{\cap}P){\setminus}\writeset) {\cup} 
-  (\valuset_1'{\cap}P{\cap}\writeset_1) {\cup} (\valuset_2'{\cap}P{\cap}\writeset_2) 
-  {\cup} \cdots %\cp 1 {(\valuset_1'{\cap} P)} {\cup} \cp 2 {(\valuset_2'{\cap} P)}
-\rangle$, %}$,
- \item\label{item:last}
-$\tuple{
-\readset  {\cup} \cp 1 {(\readset_1{\cap} P)} {\cup} \cp 2 {(\readset_2{\cap} P)} , 
-\writeset {\cup} \cp 1 {(\writeset_1{\cap} P)} {\cup} \cp 2 {(\writeset_2{\cap} P)} , 
-(\valuset {\setminus} \writeset) \cup (\valuset_1' {\cap} \writeset_1) \cup (\valuset_2' {\cap} \writeset_2) } \models \phi$ 
- \end{enumerate}
-}%{\footnotesize
-where the ``$ {\cup} \cdots$'' in the last but one line (item (\ref{item:lastbutone})) stands for 
-``${\cup} \cp 1 {(\valuset_1'{\cap} P)} {\cup} \cp 2 {(\valuset_2'{\cap} P)}$'',
-which is irrelevant thanks to Lemma \ref{theo:irrelevantVariables}. 
-\end{enumerate}
-The valuation 
-$(\valuset{\setminus}P) {\cup} ((\valuset{\cap}P){\setminus}\writeset) {\cup} 
-  (\valuset_1'{\cap}P{\cap}\writeset_1) {\cup} (\valuset_2'{\cap}P{\cap}\writeset_2) $
-of item (\ref{item:lastbutone})
-equals the valuation 
-$(\valuset {\setminus} \writeset) \cup (\valuset_1' {\cap} \writeset_1) \cup (\valuset_2' {\cap} \writeset_2) $
-of the last item (\ref{item:last}).\footnote{%
-We have:
-\begin{align*}
-&(\valuset {\setminus} \writeset) \cup (\valuset_1' {\cap} \writeset_1) \cup (\valuset_2' {\cap} \writeset_2) 
-\\&=
-(\valuset {\cap} \overline\writeset {\cap} P) \cup (\valuset {\cap} \overline\writeset {\cap} \overline P) \cup 
-(\valuset_1' {\cap} \writeset_1 {\cap} \overline P) \cup (\valuset_1' {\cap} \writeset_1 {\cap} P) \cup 
-(\valuset_2' {\cap} \writeset_2 {\cap} \overline P) \cup (\valuset_2' {\cap} \writeset_2 {\cap} P) 
-\\&=
-(\valuset {\cap} \overline\writeset {\cap} P) \cup (\valuset {\cap} \overline\writeset {\cap} \overline P) \cup 
-(\valuset {\cap} \writeset_1 {\cap} \overline P) \cup (\valuset_1' {\cap} \writeset_1 {\cap} P) \cup 
-(\valuset {\cap} \writeset_2 {\cap}\overline P) \cup (\valuset_2' {\cap} \writeset_2 {\cap} P) 
-\\&=
-(\valuset {\cap} \overline\writeset {\cap} P) \cup 
-(\valuset {\cap} \overline\writeset {\cap} \overline P) \cup 
-(\valuset {\cap} \writeset {\cap}\overline P) \cup 
-(\valuset_1' {\cap} \writeset_1 {\cap} P) \cup 
-(\valuset_2' {\cap} \writeset_2 {\cap} P) 
-\\&=
-(\valuset {\cap} \overline\writeset {\cap} P) \cup 
-(\valuset {\cap} \overline P) \cup 
-(\valuset_1' {\cap} \writeset_1 {\cap} P) \cup 
-(\valuset_2' {\cap} \writeset_2 {\cap} P) 
-\\&=
-(\valuset{\setminus}P) {\cup} ((\valuset{\cap}P){\setminus}\writeset) {\cup} 
-  (\valuset_1'{\cap}P{\cap}\writeset_1) {\cup} (\valuset_2'{\cap}P{\cap}\writeset_2) 
-\end{align*}
-The 2nd and the 3rd line are equal because 
-$\valuset_1' {\cap} \overline P = \valuset_2' {\cap} \overline P = \valuset {\cap} \overline P $.
-} %\footnote{%
-With Lemma~\ref{theo:irrelevantVariables}, item (\ref{item:last}) is then equivalent to
-$\tuple{
-\readset   , 
-\writeset  , 
-(\valuset {\setminus} \writeset) \cup (\valuset_1' {\cap} \writeset_1) \cup (\valuset_2' {\cap} \writeset_2) } \models \phi$. 
-This concludes the proof.
+The only delicate case is the reduction axiom for parallel composition,
+which is handled by Lemma~\ref{lem:pllequivalence}.
 \end{proof}
 
 \begin{theorem}
