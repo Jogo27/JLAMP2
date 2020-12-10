@@ -665,32 +665,30 @@ In practice, parallel programs should only contain endogeneous tests in order to
 Actually we have kept PDL tests for technical reasons only:
 we could not formulate some of the reduction axioms without them. 
 
-Let us put together the interpretation of parallel composition and of the modal operator:
-\begin{center}\begin{tabular}{lll}
-$\tuple{\readset,\writeset,\valuset} \models \ldia{ \pi_1 \pll \pi_2 } \phi$ & iff & 
-there are 
-$\readset_1$, $\readset_2$, $\writeset_1$, $\writeset_2$, $\valuset_1'$, $\valuset_2'$ such that 
-\\&&
-$\readset_1 \cup \readset_2 = \readset$, $\writeset_1 \cup \writeset_2 = \writeset$, 
-\\&&
-$\readset_1 \cap \writeset_2 = \readset_2 \cap \writeset_1 = \emptyset$,
-\\&&
-$\tuple{\readset_1,\writeset_1,\valuset} \intPgm{\pi_1} \tuple{\readset_1,\writeset_1,\valuset_1'}$,
-\\&&
-$\tuple{\readset_2,\writeset_2,\valuset} \intPgm{\pi_2} \tuple{\readset_2,\writeset_2,\valuset_2'}$,
-\\&&
-$\valuset_1' \setminus \writeset_1 = \valuset \setminus \writeset_1 $,
-$\valuset_2' \setminus \writeset_2 = \valuset \setminus \writeset_2 $,
-\\&&
-$\tuple{\readset,\writeset, 
-(\valuset {\setminus} \writeset) \cup \valuset_1' {\cap} \writeset_1) \cup (\valuset_2' {\cap} \writeset_2) } \models \phi$ 
-\end{tabular}\end{center}
+Satisfiability and validity of formulas are defined in the expected way.
 
-For any model $\modl = \tuple{\readset, \writeset, \valuset}$ and $P \subseteq \propset$, we write
+\begin{example}
+The formulas 
+$\phi \limp \lbox{ \top \testendo \pll \top \testendo } \phi$, 
+$\lbox{ \assgntopV p \pll \assgnbotV p } \bot$,
+$\lbox{ \assgntopV p \pll \assgntopV p } \bot$ and 
+$\lbox{ p \testendo \pll \assgntopV p } \bot$ 
+whose programs were mentioned in the introduction are all valid. 
+\end{example}
+
+The formulas $\ldia{ \assgntopV p } \top $ and $\ldia{ \assgnbotV p } \top $ both express that $p$ is writable. 
+Moreover, $\ldia{ p \testendo} \top $ expresses that $p$ is true and readable, and 
+$\ldia{ \lnot p \testendo} \top $ expresses that $p$ is false and readable;
+therefore $\ldia{ p \testendo} \top \lor \ldia{ \lnot p \testendo} \top $ 
+%the nondeterministic composition $\ldia{ p \testendo \ndet \lnot p \testendo} \top $ 
+expresses that $p$ is readable. 
+This will be instrumental in our axiomatisation. 
+
+Finally, for any model $\modl = \tuple{\readset, \writeset, \valuset}$ and $P \subseteq \propset$, we write
 $\modl \modinter P$ for the model $\tuple{\readset \cap P, \writeset \cap P, \valuset \cap P}$.
 This notation along with the following standard lemma
-%The next lemma is standard and
-will be used several times in our soundness proof. 
+will be used several times in the remainder of this work.
+%The next result says that the interpretation of formulas and programs is not sensitive to the values of propositional variables that do not occur in them, where `values' not only refers to the truth value but also to the readability and writability value. 
 
 \begin{lemma}\label{theo:irrelevantVariables}
 Let $\phi$ be a formula such that $\propsetOf \phi \cap P = \emptyset$ and
@@ -724,42 +722,6 @@ $\writeset'\setminus P$ and $\valuset'\setminus P$.
 \end{proof}
 
 
-Satisfiability and validity of formulas are defined in the expected way.
-
-\begin{example}
-The formulas 
-$\phi \limp \lbox{ \top \testendo \pll \top \testendo } \phi$, 
-$\lbox{ \assgntopV p \pll \assgnbotV p } \bot$,
-$\lbox{ \assgntopV p \pll \assgntopV p } \bot$ and 
-$\lbox{ p \testendo \pll \assgntopV p } \bot$ 
-whose programs were mentioned in the introduction are all valid. 
-\end{example}
-
-%The next result says that the interpretation of formulas and programs is not sensitive to the values of propositional variables that do not occur in them, where `values' not only refers to the truth value but also to the readability and writability value. 
-%
-%\begin{proposition}
-%Let $\modl $ and $\modl'$ be models and $P \subseteq \propset $ 
-%such that 
-%$(\readset \setminus \readset') \cup (\readset' \setminus \readset) \subseteq P$, 
-%$(\writeset \setminus \writeset') \cup (\writeset' \setminus \writeset) \subseteq P$, and
-%$(\valuset \setminus \valuset') \cup (\valuset' \setminus \valuset) \subseteq P$. Then:
-%\begin{itemize}
-%\item
-%If $P \cap \propsetOf \phi = \emptyset$ 
-%then $\modl \models \phi$ iff $\modl' \models \phi$; 
-%\item
-%If $P \cap \propsetOf \pi = \emptyset$ 
-%then $\modl \intPgm \pi n$ iff $\modl' \intPgm \pi n$, for every model $n$.
-%\end{itemize}
-%\end{proposition}
-
-The formulas $\ldia{ \assgntopV p } \top $ and $\ldia{ \assgnbotV p } \top $ both express that $p$ is writable. 
-Moreover, $\ldia{ p \testendo} \top $ expresses that $p$ is true and readable, and 
-$\ldia{ \lnot p \testendo} \top $ expresses that $p$ is false and readable;
-therefore $\ldia{ p \testendo} \top \lor \ldia{ \lnot p \testendo} \top $ 
-%the nondeterministic composition $\ldia{ p \testendo \ndet \lnot p \testendo} \top $ 
-expresses that $p$ is readable. 
-This will be instrumental in our axiomatisation. 
 
 %----------------------------------------------------------%
 \section{Axiomatisation via Reduction Axioms}\label{sec:axiomatisation}
@@ -924,6 +886,7 @@ The $\progsplit(P)$ program simulates the split operation by
 two copies of each read and write variable in a way such that a counterpart of the RW-disjointness condition
 $\writeset_1 \cap \readset_2 = \writeset_2 \cap \readset_1 = \emptyset$ is guaranteed.  
 Note that the assignments $\assgntopW{ \cp{k}{p} }$ also make $\cp{k}{p} $ readable.
+The following lemma formaly states the main property of $\progsplit(P)$.
 
 \begin{lemma}\label{lem:progsplit}
 For all $P \subseteq \propset$, and all models $\modl$, $\modl_1$ and $\modl_2$ such that
@@ -947,7 +910,7 @@ It is true if and only if
 
 The $\progmerge(P)$ program simulates the merge operation by reinstating all those 
 read- and write-atoms that had been allocated to the first subprogram in the sequentialisation.
-The following lemma states formaly the important property of $\progmerge(P)$.
+The following lemma formaly states the main property of $\progmerge(P)$.
 This lemma is weaker than Lemma~\ref{lem:progsplit} for $\progsplit(P)$.
 The additional hypotheses are guaranteed to hold by the interplay of programs $\progsplit(P)$ and $\progStore(P)$,
 and formula $\progOkChange(P)$.
@@ -980,7 +943,7 @@ Notice that there is no occurence in $\progFlatten(\pi_1, \pi_2)$ of the paralle
 except inside $\pi_1$ and $\pi_2$.
 Lemma~\ref{lem:pllequivalence} below states that the emulation is faithful.
 We first need Lemma~\ref{lem:progClean},
-which can be seen as an adaptation of lemma~\ref{theo:irrelevantVariables} to the $\progFlatten$ program.
+which can be seen as an adaptation of lemma~\ref{theo:irrelevantVariables} to $\progFlatten(P)$.
 
 \begin{lemma}\label{lem:progClean}
 For all models $\modl$ and $\modl'$, and all programs $\pi_1$ and $\pi_2$,
@@ -1050,8 +1013,8 @@ The following statements can be proved:
   \item\label{pllequivalence:ltr:merge}
         $\modl^+_4 \intPgm{\progmerge(P)} \modl'$.
         The proof relies on Lemma~\ref{lem:progmerge}.
+  \item $\modl \intPgm{\progFlatten(\pi_1, \pi2)} \modl'$.
 \end{enumerate}
-\noindent{} We conclude that $\modl \intPgm{\progFlatten(\pi_1, \pi2)} \modl'$.
 
 For the right-to-left direction, let us suppose that there are
 models $\modl^+_1$, $\modl^+_2$, $\modl^+_3$ and $\modl^+_4$ such that
@@ -1091,8 +1054,8 @@ The following statements can be proved:
   \item\label{pllequivalence:rtl:merge}
         $\mrg{\modl'}{\modl'_1}{\modl'_2}$.
         The proof relies on Lemma~\ref{lem:progmerge}.
+  \item $\modl \intPgm{\pi_1 \pll \pi2} \modl'$.
 \end{enumerate}
-\noindent{} We conclude that $\modl \intPgm{\pi_1 \pll \pi2} \modl'$.
 \end{proof}
 
 %----------------------------------------------------------%
