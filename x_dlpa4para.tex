@@ -924,9 +924,9 @@ Note that the assignments $\assgntopW{ \cp{k}{p} }$ also make $\cp{k}{p} $ reada
 
 \begin{lemma}\label{lem:progsplit}
 For all $P \subseteq \propset$, and all models $\modl$, $\modl_1$ and $\modl_2$ such that
-$\readset \cup \valuset \subseteq P$,
-$\splt \modl {\modl_1} {\modl_2}$ if and only if
-$\modl \intPgm{\progsplit(P)} \modl'$ with
+$\modl \modinter P = \modl$,
+$$ \splt \modl {\modl_1} {\modl_2} \text{ if and only if }
+\modl \intPgm{\progsplit(P)} \modl'$$ with
 $\readset' = \readset \cup \cp 1 {\readset_1} \cup \cp 2 {\readset_2}$,
 $\writeset' = \writeset \cup \cp 1 {\writeset_1} \cup \cp 2 {\writeset_2}$, and
 $\valuset' = \valuset \cup \cp 1 {\valuset_1} \cup \cp 2 {\valuset_2}$.
@@ -943,7 +943,33 @@ It is true if and only if
 (3)~truth values are identical for non-writable variables.
 
 The $\progmerge(P)$ program simulates the merge operation by reinstating all those 
-read- and write-atoms that had been allocated to the first subprogram in the sequentialisation. 
+read- and write-atoms that had been allocated to the first subprogram in the sequentialisation.
+The following lemma states formaly the important property of $\progmerge(P)$.
+This lemma is weaker than Lemma~\ref{lem:progsplit} for $\progsplit(P)$.
+The additional hypotheses are guaranteed to hold by the interplay of programs $\progsplit(P)$ and $\progStore(P)$,
+and formula $\progOkChange(P)$.
+
+\begin{lemma}\label{lem:progmerge}
+For all models $\modl$, $\modl_1$ and $\modl_2$, all $P \subseteq \propset$ and all $\valuset^\sharp \subseteq P$,
+such that $\modl \modinter P = \modl$,
+        $\modl_1$ and $\modl_2$ are RW-disjoint,
+        $\readset = \readset_1 \cup \readset_2$,
+        $\writeset = \writeset_1 \cup \writeset_2$, and
+        $\valuset_1 \setminus \writeset = \valuset_2 \setminus \writeset$,
+$$\mrg \modl {\modl_1} {\modl_2} \text{ if and only if }
+\modl' \intPgm{\progmerge(P)} \modl$$ with
+$\readset' = \readset \cup \cp 1 {\readset_1} \cup \cp 2 {\readset_2}$,
+$\writeset' = \writeset \cup \cp 1 {\writeset_1} \cup \cp 2 {\writeset_2}$, and
+$\valuset' = \valuset^\sharp \cup \cp 1 {\valuset_1} \cup \cp 2 {\valuset_2}$
+where $\valuset^\sharp$ is any subset of $P$ such that
+$\valuset^\sharp \setminus \writeset = \valuset \setminus \writeset$.
+\end{lemma}
+\begin{proof}[sketch]
+It suffices to prove that
+$\modl' \intPgm{\progmerge(P)} \modl$ if and only if
+$\valuset = (\valuset_1 \cap \writeset_1) \cup (\valuset_2 \cap \writeset_2) \cup (\valuset_1 \cap \valuset_2) $,
+which is straightforward.
+\end{proof}
 
 The $\progClean(P)$ program discards read and write access to copies and auxiliary variables.
 It is needed for the following lemma, which can be seen as an adaptation of lemma~\ref{theo:irrelevantVariables}
@@ -962,24 +988,51 @@ It suffices to observe that all variables in $\propsetOf{\progFlatten(\pi_1, \pi
 (2) set to false and made unreadable by $\progClean$.
 \end{proof}
 
-Finally, the $\progFlatten(\pi_1, \pi_2)$ program emulates the execution of the program $\pi_1 \pll \pi_2$ by
-a sequential composition of the previous program.
+Finally, the $\progFlatten(\pi_1, \pi_2)$ program emulates the execution of the program $\pi_1 \pll \pi_2$ as
+a sequential composition of the previous programs.
 Notice that there is no occurence in $\progFlatten(\pi_1, \pi_2)$ of the parallel composition operator,
 except inside $\pi_1$ and $\pi_2$.
-The following lemma states that the emulation is faithful. This the main lemma of our soundness proofs.
+The following lemma states that the emulation is faithful.
 
 \begin{lemma}\label{lem:pllequivalence}
-Let $\modl$ and $\modl^{\sharp}$ be two models, $\pi_1$ and $\pi_2$ two programs, and $P = \propsetOf{\pi_1 \pll \pi_2}$.
-The following statements are equivalent:
-\begin{enumerate}
-  \item \label{item:pllequivalence:par} There is a model $\modl'$ such that
-        $\modl \intPgm{\pi_1 \pll \pi_2} \modl'$
-        and $\modl' \modinter P = \modl^\sharp$.
-  \item \label{item:pllequivalence:seq} There is a model $\modl''$ such that
-        $\modl \intPgm{\progFlatten(\pi_1, \pi_2)} \modl''$
-        and $\modl'' \modinter P = \modl^\sharp$.
-\end{enumerate}
+For all models $\modl$ and $\modl'$, and all programs $\pi_1$ and $\pi_2$,
+$$
+\modl \intPgm{\pi_1 \pll \pi_2} \modl' \text{ if and only if }
+\modl \intPgm{\progFlatten(\pi_1, \pi_2)} \modl' \text{.}
+$$
 \end{lemma}
+\begin{proof}[sketch]
+\newcommand{\stored}{_\text{St}}
+Let $P = \propsetOf{\pi_1 \pll \pi_2}$. By Lemmas~\ref{theo:irrelevantVariables} and~\ref{lem:progClean},
+we can assume without loss of generality that $\modl \modinter P = \modl$ and $\modl' \modinter P = \modl'$.
+
+For the left-to-right direction, suppose there are models $\modl_1$, $\modl_2$, $\modl'_1$ and $\modl'_2$ such that
+$\splt{\modl}{\modl_1} {\modl_2} $, $\mrg{\modl'}{\modl'_1} {\modl'_2} $,
+$\modl_1 \intPgm{ \pi_1 } \modl'_1$, 
+$\modl_2 \intPgm{ \pi_2 } \modl'_2$, 
+$\readset_1 = \readset'_1 $, $\writeset_1 = \writeset'_1 $, $\valuset_1 \setminus \writeset_1 = \valuset'_1 \setminus \writeset'_1 , $
+$\readset_2 = \readset'_2 $, $\writeset_2 = \writeset'_2 $, and $\valuset_2 \setminus \writeset_2 = \valuset'_2 \setminus \writeset'_2 $.
+The following statements can be proved:
+\begin{enumerate}
+  \item\label{pllequivalence:ltr:split}
+        $\modl \intPgm{\progsplit(P)} \modl^+_1$ with
+        $\readset^+_1 = \readset \cup \cp 1 {\readset_1} \cup \cp 2 {\readset_2}$,
+        $\writeset^+_1 = \writeset \cup \cp 1 {\writeset_1} \cup \cp 2 {\writeset_2}$, and
+        $\valuset^+_1 = \valuset \cup \cp 1 {\valuset_1} \cup \cp 2 {\valuset_2}$.
+        The proof relies on Lemma~\ref{lem:progsplit}.
+  \item\label{pllequivalence:ltr:store}
+        $\modl^+_1 \intPgm{\progStore(P)} \modl^+_2$ with
+        $\readset^+_2 = \readset^+_1 \cup \writeset\stored$,
+        $\writeset^+_2 = \writeset^+_1 \cup \writeset\stored$,
+        $\valuset^+_2 = \valuset^+_1 \cup \valuset\stored$,
+        $\writeset\stored =
+          \set{ \cpr k p \suchthat k \in \set{1,2}, p \in P} \cup
+          \set{ \cpw k p \suchthat k \in \set{1,2}, p \in P}$, and
+        $\valuset\stored =
+        \set{ \cpr k p \suchthat \cp k p \in \readset^+_1} \cup
+        \set{ \cpw k p \suchthat \cp k p \in \writeset^+_1}$.
+\end{enumerate}
+\end{proof}
 
 %----------------------------------------------------------%
 \subsection{Reduction Axioms for Program Operators}\label{sec:redax_pgmop} 
