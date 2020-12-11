@@ -777,6 +777,10 @@ that will allow us to formulate the reduction axioms more concisely.
 \subsection{Copies of Atomic Propositions}\label{sec:copyVars}
 
 We are going to need fresh copies of each propositional variable, one per occurrence of the parallel composition operator. 
+In parallel composition based on separation, each concurrent program operates on its own model.
+The introduced copies emulates this separation of models,
+each concurrent program operating on a set of copies of propositional variables.
+
 In order to keep things readable we neglect that the copies should be indexed by programs
 and denote the copies of the variable $p$ by $\cp k p$, where $\mathbf{k}$ is some integer. 
 In principle we should introduce a bijection between the indexes $\mathbf{k}$ and the subprogram they are attached to;
@@ -1370,7 +1374,7 @@ $\assgnbot{ \writable{p}}$.
 Moreover, we have to `spell out' that 
 $\assgnbot{ \writable p }$ has side effect $\assgnbot{ \readable p }$ and that  
 $\assgntop{ \readable p }$ has side effect $\assgntop{ \writable p }$. 
-So the `split' programs of Table~\ref{fig:useful_programs} becomes the following \Dlpa program:
+So the programs and formulas of Table~\ref{fig:useful_programs} become the following \Dlpa programs and formulas:
 \begin{align*}
 \progsplit(P) =&\ \seqseq{p \in P} \Big( 
 \Big(
@@ -1389,29 +1393,39 @@ So the `split' programs of Table~\ref{fig:useful_programs} becomes the following
 (\assgntop{ \readable{\cp 1 {p}}}  ; \assgntop{ \readable{\cp 2 {p}}}) \big) \big) 
 \Big)
 \Big)
-%\\
-%\progmerge(P) =&\ \seqseq{p \in P} \Big( 
-%\lnot \writable{p} \testpdl \ndet 
-%\\& ~~~~~~~~~~~ 
-%\big(	(\writable{ \cp{1}{p} } \land \cp{1}{p}) \lor 
-%		(\writable{ \cp{2}{p} } \land \cp{2}{p}) \testpdl ; \assgntopV p \big) \ndet 
-%\\& ~~~~~~~~~~~ 
-%\big(	(\writable{ \cp{1}{p} } \land \lnot \cp{1}{p}) \lor 
-%		(\writable{ \cp{2}{p} } \land \lnot \cp{2}{p}) \testpdl ; \assgnbotV p \big) 
-%\Big)
-%\\
-%\progOkChange(P) =&\ \bigwedge_{p \in P} \Big(
-%( \readable{p} \leqv \readable{ \cp 1 {p} } ) 	\land 
-%( \writable{p} \leqv \writable{ \cp 1 {p} } ) 	\land 	
-%( \lnot \writable{p} \limp (p \leqv \cp 1 {p}) ) \ \land
-%\\& ~~~~~~~~~~ 
-%( \readable{p} \leqv \readable{ \cp 2 {p} } ) 	\land 
-%( \writable{p} \leqv \writable{ \cp 2 {p} } ) 	\land 	
-%( \lnot \writable{p} \limp (p \leqv \cp 2 {p}) ) 
-%\Big)
+\\ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\progStore(P) =&\ \seqseq{p \in P} \seqseq{k \in \{1, 2\}} \Big(
+  \big( \assgnpropV{\readable{\cp k p}}{\cpr k p} \big) ;
+  \\& ~~~~~~~~~~~~~
+  \big( \assgnpropV{\writable{\cp k p}}{\cpw k p} \big)
+\Big)
+\\ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\progOkChange(P) =&\ \bigwedge_{p \in P} \bigwedge_{k \in \{1, 2\}} \Big(
+( \cpr k p \leqv \readable{ \cp k {p} } ) 	\land 
+( \cpw k p \leqv \writable{ \cp k {p} } ) 	\land 	
+( \lnot \cpw k {p} \limp (p \leqv \cp k {p}) )
+\Big)
+\\ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\progmerge(P) =&\ \seqseq{p \in P} \Big(
+\lnot \writable{p} \testpdl \ndet 
+\\& ~~~~~~~~~~~ 
+\big(	(\writable{ \cp{1}{p} } \land \cp{1}{p}) \lor 
+		(\writable{ \cp{2}{p} } \land \cp{2}{p}) \testpdl ; \assgntopV p \big) \ndet 
+\\& ~~~~~~~~~~~ 
+\big(	(\writable{ \cp{1}{p} } \land \lnot \cp{1}{p}) \lor 
+		(\writable{ \cp{2}{p} } \land \lnot \cp{2}{p}) \testpdl ; \assgnbotV p \big)
+\Big)
+\\ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\progFlatten(\pi_1, \pi_2) =&\ %
+  \progsplit\left(\propsetOf{\pi_1 \pll \pi_2}\right) ;
+  \progStore\left(\propsetOf{\pi_1 \pll \pi_2}\right) ;
+%\\&\ %
+  \cp 1 {\pi_1} ; \cp 2 {\pi_2} ;
+%\\&\ %
+  \progOkChange\left(\propsetOf{\pi_1 \pll \pi_2}\right) \testpdl ;
+  \progmerge\left(\propsetOf{\pi_1 \pll \pi_2}\right)
 \end{align*}
-The programs $\progStore(P)$ and $\progmerge(P)$ and the formula $\progOkChange(P)$
-of Section \ref{sec:usefulFml} remain unchanged, except that 
+Notice that
 readability and writability statements are no longer \DlpaPll abbreviations, but are now \Dlpa propositional variables. 
 
 Given a \DlpaPll program or formula, its translation into \Dlpa basically follows the reduction axiom for endogeneous tests $\testendo$ and parallel composition $ \pll $ of Table~\ref{fig:redax_pgmops}. 
@@ -1419,16 +1433,11 @@ We replace:
 \begin{enumerate}
 \item
 all occurrences of $\phi \testendo $ with 
-$\left(\seqseq{p \in \propsetOf \phi} \Big(
+$\left[\seqseq{p \in \propsetOf \phi} \Big(
 \readable{p} \testpdl \ndet \big( \lnot \readable{p} \testpdl ; (\assgntopV{p} \ndet \assgnbotV{p}) \big) 
-\Big)\right) ; \phi \testpdl $,
+\Big)\right] \phi \testpdl $,
 \item
-all occurrences of $ \pi_1 \pll \pi_2 $ with
-$\progsplit( \propsetOf{\pi_1 \pll \pi_2} ) ; 
-\progStore( \propsetOf{\pi_1 \pll \pi_2} ) ; 
-\cp 1 {\pi_1} ; \cp 2 {\pi_2} ; 
-\progOkChange \big(\propsetOf{\pi_1 \pll \pi_2} \big) \testpdl ;
-\progmerge \big(\propsetOf{\pi_1 \pll \pi_2} \big) $,
+all occurrences of $ \pi_1 \pll \pi_2 $ with $\progFlatten(\pi_1, \pi_2)$,
 \item
 all occurrences of $\assgntopV p$ with $\writable p ? ; \assgntopV p$,
 \item
