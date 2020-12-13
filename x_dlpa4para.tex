@@ -777,7 +777,7 @@ that will allow us to formulate the reduction axioms more concisely.
 \subsection{Copies of Atomic Propositions}\label{sec:copyVars}
 
 We are going to need fresh copies of each propositional variable, one per occurrence of the parallel composition operator. 
-In parallel composition based on separation, each concurrent program operates on its own model.
+With parallel compositions based on separation, each concurrent program operates on its own model.
 The introduced copies emulates this separation of models,
 each concurrent program operating on a set of copies of propositional variables.
 
@@ -806,6 +806,12 @@ Then
 $$ \tuple{\readset,\writeset,\valuset} \intPgm{\pi} \tuple{\readset',\writeset',\valuset'} \text{ iff } 
 \tuple{ \cp k {\readset},\cp k {\writeset},\cp k {\valuset}} \intPgm{\cp k \pi} \tuple{\cp k {\readset'},\cp k {\writeset'},\cp k {\valuset'}} . $$
 \end{lemma}
+\begin{proof}[sketch]
+The proof relies on the fact that \DlpaPll satisfies the substitution rule.
+The lemma can also be proved, like Lemma~\ref{theo:irrelevantVariables}, by simultaneous induction with the fact that
+$\tuple{\readset, \writeset, \valuset} \models \phi$ if and only if
+$\tuple{\cp k \readset, \cp k \writeset, \cp k \valuset} \models \cp k \phi$.
+\end{proof}
 
 Moreover, in order to force the semantics of the parallel composition operator, we associate to each copie $\cp k p$ two fresh variables $\cpr k p$ and $\cpw k p$,
 denoting whether $\cp k p$ was respectively readable and writable just after the split.
