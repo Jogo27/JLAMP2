@@ -712,10 +712,10 @@ $\tuple{\readset\setminus P,\writeset\setminus P,\valuset\setminus P} \intPgm \p
 \end{enumerate}
 \end{lemma}
 \begin{proof}[sketch]
-\ref{item:addValuationFormula} and \ref{item:addValuationProgram} are proven by simultaneous
+\ref{item:addValuationFormula} and \ref{item:addValuationProgram} are proved by simultaneous
 induction on the size of $\phi$ and $\pi$.
-\ref{item:addAllFormula} and \ref{item:addAllProgram} are proven similarly.
-\ref{item:subAllProgram} is proven from \ref{item:addAllProgram} by instanciating $\readset$,
+\ref{item:addAllFormula} and \ref{item:addAllProgram} are proved similarly.
+\ref{item:subAllProgram} is proved from \ref{item:addAllProgram} by instanciating $\readset$,
 $\writeset$, $\valuset$, $\readset'$, $\writeset'$ and $\valuset'$ with respectively
 $\readset\setminus P$, $\writeset\setminus P$, $\valuset\setminus P$, $\readset'\setminus P$,
 $\writeset'\setminus P$ and $\valuset'\setminus P$.
@@ -897,6 +897,7 @@ two copies of each read and write variable in a way such that a counterpart of t
 $\writeset_1 \cap \readset_2 = \writeset_2 \cap \readset_1 = \emptyset$ is guaranteed.  
 Note that the assignments $\assgntopW{ \cp{k}{p} }$ also make $\cp{k}{p} $ readable.
 The following lemma formaly states the main property of $\progsplit(P)$.
+It can easily be proved by following the previous observations.
 
 \begin{lemma}\label{lem:progsplit}
 For all $P \subseteq \propset$, and all models $\modl$, $\modl_1$ and $\modl_2$ such that
@@ -1399,18 +1400,21 @@ So the programs and formulas of Table~\ref{fig:useful_programs} become the follo
 (\assgntop{ \readable{\cp 1 {p}}}  ; \assgntop{ \readable{\cp 2 {p}}}) \big) \big) 
 \Big)
 \Big)
+\displaybreak[0]
 \\ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \progStore(P) =&\ \seqseq{p \in P} \seqseq{k \in \{1, 2\}} \Big(
   \big( \assgnpropV{\readable{\cp k p}}{\cpr k p} \big) ;
   \\& ~~~~~~~~~~~~~
   \big( \assgnpropV{\writable{\cp k p}}{\cpw k p} \big)
 \Big)
+\displaybreak[0]
 \\ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \progOkChange(P) =&\ \bigwedge_{p \in P} \bigwedge_{k \in \{1, 2\}} \Big(
 ( \cpr k p \leqv \readable{ \cp k {p} } ) 	\land 
 ( \cpw k p \leqv \writable{ \cp k {p} } ) 	\land 	
 ( \lnot \cpw k {p} \limp (p \leqv \cp k {p}) )
 \Big)
+\displaybreak[0]
 \\ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \progmerge(P) =&\ \seqseq{p \in P} \Big(
 \lnot \writable{p} \testpdl \ndet 
@@ -1421,6 +1425,7 @@ So the programs and formulas of Table~\ref{fig:useful_programs} become the follo
 \big(	(\writable{ \cp{1}{p} } \land \lnot \cp{1}{p}) \lor 
 		(\writable{ \cp{2}{p} } \land \lnot \cp{2}{p}) \testpdl ; \assgnbotV p \big)
 \Big)
+\displaybreak[0]
 \\ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \progFlatten(\pi_1, \pi_2) =&\ %
   \progsplit\left(\propsetOf{\pi_1 \pll \pi_2}\right) ;
