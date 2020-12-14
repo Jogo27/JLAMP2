@@ -847,19 +847,19 @@ Observe also that the only endogeneous tests on the right hand side occur in rea
 																			  (\assgntopR{\cp 1 {p}}  ; \assgntopR{\cp 2 {p}}) \big) \big) 
 \Big)
 \Big)
-\\
+\\ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \progStore(P) =&\ \seqseq{p \in P} \seqseq{k \in \{1, 2\}} \Big(
   \assgntopW{\cpr k p} ; \assgntopW{\cpw k p} ;
 \\& ~~~~~~~~~~~ 
   \big( \assgnpropV{\readable{\cp k p}}{\cpr k p} \big) ; \big( \assgnpropV{\writable{\cp k p}}{\cpw k p} \big)
 \Big)
-\\
+\\ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \progOkChange(P) =&\ \bigwedge_{p \in P} \bigwedge_{k \in \{1, 2\}} \Big(
 ( \cpr k p \leqv \readable{ \cp k {p} } ) 	\land 
 ( \cpw k p \leqv \writable{ \cp k {p} } ) 	\land 	
 ( \lnot \cpw k {p} \limp (p \leqv \cp k {p}) )
 \Big)
-\\
+\\ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \progmerge(P) =&\ \seqseq{p \in P} \Big(\big( 
 \lnot \writable{p} \testpdl \ndet 
 \\& ~~~~~~~~~~~ 
@@ -875,7 +875,7 @@ Observe also that the only endogeneous tests on the right hand side occur in rea
   \assgnbotR{\cpr k p} ; \assgnbotR{\cpw k p} ; \assgnbotR{\cp k p}
 \big)
 \Big)
-\\
+\\ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \progFlatten(\pi_1, \pi_2) =&\ %
   \progsplit\left(\propsetOf{\pi_1 \pll \pi_2}\right) ;
   \progStore\left(\propsetOf{\pi_1 \pll \pi_2}\right) ;
@@ -1282,14 +1282,17 @@ the rule of equivalence for the modal operator %$\text{RE} \big(\ldia \pi \Big)$
 ``from $\phi \leqv \psi$ infer $\ldia \pi \phi \leqv \ldia \pi \psi $''.
 \end{itemize}
 
-\begin{theorem}
+\begin{theorem}\label{theo:axiomatisationsound}
 The axiomatisation of \DlpaPll is sound:
 if $\phi$ is provable with the axiomatics of \DlpaPll then it is \DlpaPll valid.
 \end{theorem}
 \begin{proof}[sketch]
 We have to show that the inference rules preserve validity and the axioms are valid. 
-The only delicate case is the reduction axiom for parallel composition,
-which is handled by Lemma~\ref{lem:pllequivalence}.
+For the reduction axiom for endogeneous test, it suffices to observe that
+$\modl \intPgm{\assgntopV p \ndet \assgnbotV p} \modl'$ if and only if $\modl \sim \modl'$.
+The proof of validity of the reduction axiom for Kleene star can easily be adapted from the one in~\cite{BalbianiHerzigTroquard-Lics13}.
+The case of the reduction axiom for parallel composition is handled by Lemma~\ref{lem:pllequivalence}.
+All other cases are straightforward.
 \end{proof}
 
 \begin{theorem}
@@ -1416,7 +1419,7 @@ So the programs and formulas of Table~\ref{fig:useful_programs} become the follo
 \Big)
 \displaybreak[0]
 \\ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\progmerge(P) =&\ \seqseq{p \in P} \Big(
+\progmerge(P) =&\ \seqseq{p \in P} \Big(\big( 
 \lnot \writable{p} \testpdl \ndet 
 \\& ~~~~~~~~~~~ 
 \big(	(\writable{ \cp{1}{p} } \land \cp{1}{p}) \lor 
@@ -1424,6 +1427,12 @@ So the programs and formulas of Table~\ref{fig:useful_programs} become the follo
 \\& ~~~~~~~~~~~ 
 \big(	(\writable{ \cp{1}{p} } \land \lnot \cp{1}{p}) \lor 
 		(\writable{ \cp{2}{p} } \land \lnot \cp{2}{p}) \testpdl ; \assgnbotV p \big)
+\big) ;
+\\& ~~~~~~~~
+\seqseq{k \in \{1, 2\}} \big(
+  \assgnbotV{\cpr k p} ; \assgnbotV{\cpw k p} ; \assgnbotV{\cp k p} ;
+  \assgnbotV{\writable{\cp k p}} ; \assgnbotV{\readable{\cp k p}}
+\big)
 \Big)
 \displaybreak[0]
 \\ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1464,34 +1473,59 @@ all occurrences of $\assgnbotW{p}$ with $\assgnbot{ \writable{p}}$.
 %$\assgnbot{ \writable p }$ with $\assgnbot{ \writable p } ; \assgnbot{ \readable p }$ and all occurrences of 
 %$\assgntop{ \readable p }$ with $\assgntop{ \readable p } ; \assgntop{ \writable p }$, for $p \in \propset$.
 \end{enumerate}
-Let %$t(\pi)$ be the translation of the \DlpaPll program $\pi$ and let 
-$t(\phi)$ be the translation of the \DlpaPll formula $\phi$.
-Remember that when $t(\phi)$ is interpreted in \Dlpa, the variables $\readable p$ and $\writable{p}$ 
+Let $t(\pi)$ be the translation of the \DlpaPll program $\pi$ and
+$t(\phi)$ the translation of the \DlpaPll formula $\phi$.
+Remember that when $t(\pi)$ and $t(\phi)$ are interpreted in \Dlpa, the variables $\readable p$ and $\writable{p}$ 
 are considered to be arbitrary propositional variables. 
+
+\begin{lemma}\label{lem:dlpatradcorrect}
+For all \DlpaPll programs $\pi$ and formula $\phi$, and all \DlpaPll models $\modl$ and $\modl'$ such that $\modl \modinter P = \modl$,
+\begin{align*}
+  \modl \intPgm{\pi} \modl' &\text{ if and only if } \valuset^+ \intPgm{t(\pi)}^{\Dlpa} \valuset'^+ \text{, and} \\
+  \modl \models \phi        &\text{ if and only if } \valuset^+ \models_{\Dlpa} t(\phi)
+\end{align*}
+where $\valuset^+  = \valuset  \cup \readOf{\readset } \cup \writeOf{\writeset }$
+and   $\valuset'^+ = \valuset' \cup \readOf{\readset'} \cup \writeOf{\writeset'}$.
+\end{lemma}
+\begin{proof}[sketch]
+The proof is by simultaneous induction on the size of $\pi$ or $\phi$.
+The cases for endogeneous tests and parallel compositions are similar to the ones in the proof of Theorem~\ref{theo:axiomatisationsound}.
+The other cases are straightforward.
+\end{proof}
+
+The following theorem is a direct corollary of the previous lemma.
 
 \begin{theorem}
 A \DlpaPll formula $\phi$ is \DlpaPll-satisfiable if and only if the \Dlpa formula
 $t(\phi) \land \bigwedge_{p \in \propsetOf \phi } (\writable{p} \limp \readable p)$ 
 is \Dlpa satisfiable.
 \end{theorem}
-%\begin{proof}
-%Let $\pi $ be a \DlpaPll program and let $\phi$ be a \DlpaPll formula.
-%\begin{enumerate}
-%\item
-%$\tuple{\readset,\writeset,\valuset} \intPgm{ \pi } \tuple{\readset',\writeset',\valuset'}$ if and only if 
-%$(\valuset \cup \readOf \readset \cup \writeOf \writeset) \intPgm{ t(\pi) }^\Dlpa  (\valuset' \cup \readOf{\readset'} \cup \writeOf{\writeset'} ) $;
-%\item
-%$\phi$ is \DlpaPll-satisfiable if and only if $t(\phi) \land \bigwedge_{p \in \propsetOf \phi } (\writable{p} \limp \readable p)$ 
-%is \Dlpa satisfiable.
-%\end{enumerate}
-%\end{proof}
 
-The next result folows from the fact that the length of $t(\phi)$ is polynomial in the length of $\phi$. 
+%The next result folows from the fact that the length of $t(\phi)$ is polynomial in the length of $\phi$. 
+We can now state our complexity results.
+
+\begin{lemma}\label{lem:polynomial}
+The translation $t$ is polynomial.
+\end{lemma}
+\begin{proof}
+It can easily be checked that for all $P$, $\progsplit(P)$, $\progStore(P)$, $\progOkChange(P)$ and $\progmerge(P)$ are linear in the size of $P$.
+Therefore, $\progFlatten(\pi_1, \pi_2)$ is linear in the size of $\pi_1$ plus the size of $\pi_2$.
+Similarly, 
+$\left[\seqseq{p \in \propsetOf \phi} \Big(
+\readable{p} \testpdl \ndet \big( \lnot \readable{p} \testpdl ; (\assgntopV{p} \ndet \assgnbotV{p}) \big) 
+\Big)\right] \phi \testpdl $ is linear in the size of $\phi$.
+All other translation expressions are clearly linear too.
+Hence, by applying $t$ from the root of the syntax tree to its leaves, $t(\phi)$ can be computed in time polynomial in the size of $\phi$.
+\end{proof}
 
 \begin{theorem}
 \DlpaPll model and satisfiability checking are both PSPACE complete.
 \end{theorem}
-
+\begin{proof}
+Since any \Dlpa formula is a \DlpaPll formula, and \Dlpa model and satisfiability checking has been proved in~\cite{BalbianiHST14} to be PSPACE complete,
+\DlpaPll model and satisfiability checking are PSPACE hard.
+By Lemmas~\ref{lem:dlpatradcorrect} and~\ref{lem:polynomial}, \DlpaPll model and satisfiability checking are also in PSPACE.
+\end{proof}
 
 %----------------------------------------------------------%
 \section{Conclusion}\label{sec:conclusion}
