@@ -295,10 +295,18 @@ We have not yet said what one should understand by a \Dlpa system state.
 A previous approach of ours only considered the separation of valuations, i.e., 
 of truth values of propositional variables \cite{Herzig-Wollic13}. 
 Two separating conjunctions in the style of separation logic were defined on such models. 
-This however did not allow us to define an adjoint implication as usually done in the separation logic literature, which was somewhat unsatisfactory. 
+This however did not allow us to define an adjoint implication as usually done in the separation logic literature, which was somewhat unsatisfactory.
 The paper \cite{HerzigEtal-Ijcai19} has richer models where valuations are supplemented by information about writability of variables, 
 supposing that a variable can only be assigned by a program when it is writable. 
 Splitting and merging of such models can be defined in a natural way, thus providing a meaningful interpretation of parallel composition. 
+When the parallel composition is based on separation, writability of variables permits to resolve merge conflicts.
+Consider for instance the execution of the programs $\top \testendo \pll \assgntopV p$ and $\assgnbotV p \pll \assgntopV p$ from a state in which $p$ is false.
+We argue it would be natural that the former program leads to a state in which $p$ is true
+whereas the latter program should not be executable or at least may undeterministically lead to a state where $p$ is false.
+However, without writability information, the states before the merge of each of these programs are the same:
+$p$ is false in the left branch but true in the right branch.
+Writability allows the merge to distinguish these two situations and to resolve the conflict in the former case.
+
 We here push this program further and consider models having moreover information about readability of variables. 
 We suppose that writability implies readability\footnote{%
 As suggested by one of the reviewers of DALI'19, this constraint may be relaxed 
@@ -311,6 +319,15 @@ executability depends on whether the relevant variables are readable. In particu
 $\ldia{ p \testendo } \top \limp p$, remains valid, its converse
 $p \limp \ldia{ p \testendo } \top $ becomes invalid in our logic: 
 it may be the case that $p$ is true but cannot be read.
+
+As for writability, separating the variables that can be tested is a natural way to separate the domain of actions of each branch of a parallel composition.
+Moreover, it permits additional usefull checks.
+Consider for instance the execution of the program $\left(\assgnbotV p ; q \testendo \right) \pll \left(\assgnbotV q ; p \testendo\right)$
+from a state in which both $p$ and $q$ are true.
+Without readability, this program can be executed and results in a state in which both $p$ and $q$ are false.
+However, no interleaving of this program can be executed.
+Adding readability of variables permits to detect this issue.
+In the present work, we enforce that a variable can not be readable in one branch of a parallel composition if it is writable in the other branch.
 
 The paper is organised as follows.
 In Section \ref{sec:models} we define models and the two ternary relations `split' and `merge' on models. 
@@ -577,6 +594,8 @@ Moreover,
 (4) the modifications are legal: $\pi_1$ and $\pi_2$ neither change readability nor writability, and 
 each of them only modifies variables that were allocated to it by the split. 
 
+Figure \ref{fig:ex:parallel} illustrates the interpretation of the parallel program $\assgnbotV p \pll \assgnbotV q$. 
+Some more examples follow. 
 
 \begin{figure}[t]
   \centering
@@ -602,9 +621,6 @@ each of them only modifies variables that were allocated to it by the split.
 }
 \label{fig:ex:parallel} 
 \end{figure}
-
-Figure \ref{fig:ex:parallel} illustrates the interpretation of the parallel program $\assgnbotV p \pll \assgnbotV q$. 
-Some more examples follow. 
 
 \begin{example}
 Suppose  
