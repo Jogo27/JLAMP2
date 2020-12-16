@@ -320,14 +320,14 @@ $\ldia{ p \testendo } \top \limp p$, remains valid, its converse
 $p \limp \ldia{ p \testendo } \top $ becomes invalid in our logic: 
 it may be the case that $p$ is true but cannot be read.
 
-As for writability, separating the variables that can be tested is a natural way to separate the domain of actions of each branch of a parallel composition.
+As for writability, distinguishing the variables that can be tested is a natural way to separate the domain of actions of each subprogram of a parallel composition.
 Moreover, it permits additional usefull checks.
 Consider for instance the execution of the program $\left(\assgnbotV p ; q \testendo \right) \pll \left(\assgnbotV q ; p \testendo\right)$
 from a state in which both $p$ and $q$ are true.
 Without readability, this program can be executed and results in a state in which both $p$ and $q$ are false.
 However, no interleaving of this program can be executed.
 Adding readability of variables permits to detect this issue.
-In the present work, we enforce that a variable can not be readable in one branch of a parallel composition if it is writable in the other branch.
+In the present work, we enforce that a variable can not be read by one subprogram of a parallel composition if it can be written by the other subprogram.
 
 The paper is organised as follows.
 In Section \ref{sec:models} we define models and the two ternary relations `split' and `merge' on models. 

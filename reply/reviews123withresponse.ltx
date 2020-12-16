@@ -275,9 +275,8 @@ We now say this more precisely in the introduction.
 %The paper [Herzig et al., IJCAI 2019] does so. 
 We now also provide a better motivation of the concept of readability. 
 We have improved the discussion of the issues at stake. 
-We illustrate it by the execution of the program $\assgntop p \pll \mathtt{toggle}(p)$ at the valuation $\emptyset$.
-Both subprograms read $p$ and can therefore not be merged according to our definition. 
-This is a reasonable requirement when one supposes that the two subprograms do not work on copies but share a common `workspace' of variables to be read and written. 
+We illustrate it by the execution of the program $\left(\assgnbotV p ; q \testendo \right) \pll \left(\assgnbotV q ; p \testendo\right)$ at the valuation $\set{p, q}$.
+This program is executable without readability whereas no interleaving of it is executable.
 
 \REVIEWERCOMMENT{\noindent
 Page 2,3: It is not clear to me why program $ (\assgntop p \pll \assgntop p) $ % $(p+ \pll p+)$ 
