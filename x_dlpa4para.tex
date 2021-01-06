@@ -351,6 +351,12 @@ The intuition is that $\readset$ is the set of readable variables, $\writeset$ i
 its elements are true, while those of its complement $\propset \setminus \valuset$ are false. 
 The constraint that $\writeset \subseteq \readset$ means that writability implies readability. 
 
+The special case when $\writeset = \propset$ is typical when checking the validity or the satisfiability of a formula $\phi$.
+Lemma~\ref{theo:irrelevantVariables} in Section~\ref{sec:interpretation} will prove that,
+as expected, this case is equivalent to the case when $\writeset$ and $\readset$ are the set of propositional variables occuring in $\phi$.
+In fact, the writability and readability sets are mostly useful for checking properties of subprograms of parallel compositions.
+On the other end of the spectrum, the case when $\writeset = \emptyset$ is of little interest since the only executable programs are the ones without assignements.
+
 Two models 
 $\modl_1 = \tuple{\readset_1,\writeset_1,\valuset_1}$ and 
 $\modl_2 = \tuple{\readset_2,\writeset_2,\valuset_2}$ are \emph{RW-disjoint} 
