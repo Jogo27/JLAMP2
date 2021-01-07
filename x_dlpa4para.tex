@@ -54,6 +54,7 @@ very thick,inner sep=1pt,color=#1!60}
 
 %%% standard macros
 \newcommand{\ah}[1]{\**\marginpar{\textbf{AH:} #1}}
+\newcommand{\jb}[1]{\**\marginpar{\textbf{JB:} #1}}
 \newcommand{\assgn}[2]{{#1 {:=} #2}}
 \newcommand{\assgntop}[1]{{\mathtt {+} #1}}
 \newcommand{\assgnbot}[1]{{\mathtt {-} #1}}
@@ -1610,13 +1611,19 @@ For example, in a world of blocks the actions
 \end{align*}
 of lifting block $b$ with the left robot arm and with the right robot arm have cross-interaction because 
 one of the effects of $\mathsf{liftLeft}(b)$ is $\lnot \mathsf{OnTable}(b)$, which destroys the precondition $ \mathsf{OnTable}(b)$ of $\mathsf{liftLeft}(b)$. 
-In other words, $\mathsf{liftLeft}(b)$ and $\mathsf{liftRight}(b) $ cannot be interleaved. 
+\jb{Supp. de la phrase sur l'interleaving~: tout interleaving com\-men\-çant par les deux tests est exécutable.
+Phrase suivante mo\-di\-fiée.}
+%In other words, $\mathsf{liftLeft}(b)$ and $\mathsf{liftRight}(b) $ cannot be interleaved. 
 %, and can therefore not be executed in parallel.  
-The more liberal semantics of \cite{HerzigEtal-Ijcai19} makes that interleavability of parallel actions in a parallel plan has to be ensured `by hand' when expressing parallel plans in the logic, namely by means of explicit tests.
-This is not necessary in our semantics where absence cross interaction between actions that are performed in parallel is `built-in'. 
+The more liberal semantics of \cite{HerzigEtal-Ijcai19} makes that the absence of cross-interactions of parallel actions %in a parallel plan
+has to be ensured `by hand' when expressing parallel plans in the logic,
+namely by means of explicit tests\jb{
+Des tests dans le langage de la logique ou des tests hors de la logique ?
+}.
+This is not necessary in our semantics where the absence of cross interaction between actions that are performed in parallel is `built-in'. 
 Indeed, the program
-$\ldia{ \mathsf{liftLeft}(b) \pll \mathsf{liftRight}(b) } \top $ 
-is unsatisfiable in our semantics: each subprogram requires writability of $\mathsf{OnTable}(b)$ to be executable. 
+$\mathsf{liftLeft}(b) \pll \mathsf{liftRight}(b)$ 
+is not executable in our semantics: each subprogram requires writability of $\mathsf{OnTable}(b)$ to be executable. 
 Our logic \DlpaPll can therefore be expected to provide a more appropriate base for parallel planning. 
 
 The mathematical properties of \DlpaPll compare favourably with 
