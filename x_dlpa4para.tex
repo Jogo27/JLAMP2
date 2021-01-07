@@ -53,7 +53,7 @@ very thick,inner sep=1pt,color=#1!60}
 \newcommand{\Pdl}{\ensuremath{\mathsf{PDL}}\xspace}
 
 %%% standard macros
-\newcommand{\ah}[1]{\footnote{\textbf{AH:} #1}}
+\newcommand{\ah}[1]{\**\marginpar{\textbf{AH:} #1}}
 \newcommand{\assgn}[2]{{#1 {:=} #2}}
 \newcommand{\assgntop}[1]{{\mathtt {+} #1}}
 \newcommand{\assgnbot}[1]{{\mathtt {-} #1}}
@@ -196,13 +196,13 @@ repair
 \cite{%HerzigPozosSchwarzentruber-Foiks14,%FeuilladeH14,FeuilladeHR18,
 FeuilladeHR19}, 
 %argumentation frameworks and their modifications \cite{DoutreHerzigPerrussel-Kr14}, 
-planning \cite{HerzigEtal-Ecai14},
-lightweight dynamic epistemic logics \cite{DBLP:conf/atal/CharrierS15,CooperHMMR16,DBLP:conf/atal/CharrierS17}, and
+lightweight dynamic epistemic logics \cite{DBLP:conf/atal/CharrierS15,CooperHMMR16,DBLP:conf/atal/CharrierS17},
+planning~\cite{HerzigEtal-Ecai14}, and
 judgment aggregation \cite{DBLP:journals/logcom/NovaroGH18}. 
 %, and simple forms of strategic reasoning \cite{HerzigEtal-Ijcai11}. 
 The mathematical properties of \Dlpa are simpler than those of PDL, in particular, 
 the Kleene star can be eliminated \cite{BalbianiHerzigTroquard-Lics13} and 
-satisfiability and model checking are both PSPACE complete \cite{BalbianiHST14}. 
+satisfiability and model checking are both PSPACE complete~\cite{BalbianiHST14}. 
 
 In this paper we investigate how dynamic logic can be extended with 
 a program operator of parallel composition $\pi_1 \pll \pi_2$ of two programs $\pi_1$ and $\pi_2$ 
@@ -306,9 +306,10 @@ Splitting and merging of such models can be defined in a natural way, thus provi
 When the parallel composition is based on separation, writability of variables permits to resolve merge conflicts.
 Consider for instance the execution of the programs $\top \testendo \pll \assgntopV p$ and $\assgnbotV p \pll \assgntopV p$ from a state in which $p$ is false.
 We argue that intuitively, the former program should lead to a state in which $p$ is true
-whereas the latter program should not be executable or at least may undeterministically lead to a state where $p$ is false.
+whereas the latter program should either not be executable or lead to a state where $p$ is undeterministically true or false.
 \ah{
 Je ne comprends pas le ``undeterministically'' : ca veut dire que ou bien c'est inexecutable, ou bien $p$ devient faux ? mais alors c'est la meme chose que rendre $p$ deterministiquement faux. 
+\textbf{JB} Est-ce mieux maintenant ?
 }
 However, without writability information, the states before the merge of each of these programs are the same:
 $p$ is false in the left branch but true in the right branch.
@@ -327,11 +328,8 @@ $\ldia{ p \testendo } \top \limp p$, remains valid, its converse
 $p \limp \ldia{ p \testendo } \top $ becomes invalid in our logic: 
 it may be the case that $p$ is true but cannot be read.
 
-\ah{
-Je ne comprends pas la phrase qui suit.
-}
-As for writability, distinguishing the variables that can be tested is a natural way to separate the domain of actions of each subprogram of a parallel composition.
-Moreover, it permits additional useful checks.
+Distinguishing the variables that can be tested %is a natural way to separate the domain of actions of each subprogram of a parallel composition.
+permits some useful checks.
 Consider for instance the execution of the program $\left(\assgnbotV p ; q \testendo \right) \pll \left(\assgnbotV q ; p \testendo\right)$
 from a state in which both $p$ and $q$ are true.
 Without readability, this program can be executed and results in a state in which both $p$ and $q$ are false.
@@ -975,16 +973,17 @@ The additional hypotheses are guaranteed to hold by the interplay of programs $\
 and formula $\progOkChange(P)$.
 
 \begin{lemma}\label{lem:progmerge}
-\ah{
-Pourquoi $\valuset^\sharp $ est contraint deux fois ? (dans la 1ere et dans la derniere ligne)
-En tout cas la phrase est tres longue, je propose de couper en deux, genre : ``Let .... Then ...''
-}
-For all models $\modl$, $\modl_1$ and $\modl_2$, all $P \subseteq \propset$ and all $\valuset^\sharp \subseteq P$
+%\ah{
+%Pourquoi $\valuset^\sharp $ est contraint deux fois ? (dans la 1ere et dans la derniere ligne)
+%En tout cas la phrase est tres longue, je propose de couper en deux, genre : ``Let .... Then ...''
+%}
+Let $\modl$, $\modl_1$ and $\modl_2$ be models, and $P$ a set of propositional variables
 such that $\modl \modinter P = \modl$,
         $\modl_1$ and $\modl_2$ are RW-disjoint,
         $\readset = \readset_1 \cup \readset_2$,
         $\writeset = \writeset_1 \cup \writeset_2$, and
-        $\valuset_1 \setminus \writeset = \valuset_2 \setminus \writeset$,
+        $\valuset_1 \setminus \writeset = \valuset_2 \setminus \writeset$.
+Then
 $$\mrg \modl {\modl_1} {\modl_2} \text{ if and only if }
 \modl' \intPgm{\progmerge(P)} \modl$$ with
 $\readset' = \readset \cup \cp 1 {\readset_1} \cup \cp 2 {\readset_2} \cup \storeset(P)$,
