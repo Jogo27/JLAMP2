@@ -199,7 +199,12 @@ Our reduction of Section 6 only proves satisfiability-equivalence.
 It should be clarified that the paper is an extension of a workshop paper published in a formal proceedings (which is not even cited). Also be specific about what material is new, and what are the improvements with respect to the workshop version.
 }
 
-(recopier la reponse au Reviewer 1)
+\ah{
+ajoute
+}
+We have clarified this and in particular now cite the workshop version. 
+Furthermore, we have extended the first version of the journal submission by new material, viz.\ a proof of associativity of parallel composition. This is a non-trivial property (contrarily to commutativity): it is known that adding associativity to a modal logic with a binary modal operator may cause undecidability. 
+We have also added more motivation by describing the application to parallel planning. 
 
 \end{enumerate}
 
@@ -244,14 +249,14 @@ This work extends dynamic logic of propositional assignments with a parallel com
 I think the motivation for this work is quite interesting. The idea of extending Propositional Dynamic Logic of Propositional Assignments with parallel composition operator is quite nice and it may have interesting applications. Although the results presented, as far as I could check, seem to be sound, the paper lacks motivations, some explanations and even proofs. 
 }
 
-We have added more motivation, in particular an application to planning in Section xxxx. 
+We have added more motivation, in particular an application to planning in the ``Discussion and Conclusion'' section. 
 We have added proofs or proof sketches for all lemmas and propositions. 
 
 \REVIEWERCOMMENT{
 The main drawback of this work is the lack of motivation. The examples illustrate some logical properties but there is not one example or even one paragraph explaining some application of the logic DL-PA$^{||}$.
 }
 
-We have added material on this in Section xxxx: 
+We have added material on this in the ``Discussion and Conclusion'' section:
 as we explain there, parallel planning provides an interesting application of DL-PPA. 
 
 %--------------------------------------%
@@ -281,10 +286,10 @@ Page 2,3: It is not clear to me why program $ (\assgntop p \pll \assgntop p) $ %
 is not executable? It does not seem reasonable.
 }
 
-As we say in the introduction, this is a very restrictive version of parallel composition. 
+As we say in the introduction, this is a indeed very restrictive version of parallel composition. 
 It could however be relaxed easily in our framework by allowing both subprograms in $ (\assgntop p \pll \assgntop p) $ to modify the same variable, under the condition that they do so in the same way. 
 This choice was made in [HMV19]. %Herzig et al., IJCAI 2019]. 
-We have added a paragraph discussing the differences in the ``Discussion and Conclusion'' section:
+We have added the following paragraph discussing the differences in the ``Discussion and Conclusion'' section:
 
 %\begin{quote}
 The semantics of DL-PA$^\pll$ could be adapted to that $ (\assgntop p \pll \assgntop p) $ becomes executable. 

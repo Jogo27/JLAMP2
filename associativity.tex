@@ -3,7 +3,7 @@
 \newcommand{\writeseta}{\mathsf {Wra}}
 \newcommand{\valuseta}{\mathsf {Va}}
 
-Alongside commutativity, associativity is a desirable property of a parallel composition operator. If the operator defined in Section~\ref{sec:interpretation} is clearly commutative, whether it is associative does not strike the eye. In fact, a detailed proof of it is rather cumbersome. We present it here.
+Alongside commutativity, associativity is a desirable property of a parallel composition operator. While the operator defined in Section~\ref{sec:interpretation} is clearly commutative, whether it is associative does not strike the eye. In fact, a detailed proof of it is rather cumbersome. We present it here.
 
 \begin{proposition}\label{prop:associativity}
 $\modl \intPgm{ \pi_1 \pll (\pi_2 \pll \pi_3) } \modl'$ iff $\modl \intPgm{ (\pi_1 \pll \pi_2) \pll \pi_3 } \modl'$.
@@ -76,39 +76,39 @@ There are $\modl_1, \modl_*, \modl'_1, \modl'_*$ such that (with, $\modl_1 = \tu
   and $\writeset_* = \writeset'_*$ 
   and $\valuset_* \setminus \writeset_* = \valuset'_* \setminus \writeset'_*$
 \end{enumerate}
-Item~\ref{i:pi2pi3} is equivalent to: there are $\modl_2, \modl_3, \modl'_2, \modl'_3$ such that  (with, $\modl_2 = \tuple{\readset_2, \writeset_2, \valuset_2}$, $\modl'_2 = \tuple{\readset'_2, \writeset'_2, \valuset'_2}$, $\modl_3 = \tuple{\readset_3, \writeset_3, \valuset_3}$, $\modl'_3 = \tuple{\readset'_3, \writeset'_3, \valuset'_3}$):
+Item~\ref{i:pi2pi3} is equivalent to: there are $\modl_2, \modl_3, \modl'_2, \modl'_3$ such that  (with $\modl_2 = \tuple{\readset_2, \writeset_2, \valuset_2}$, $\modl'_2 = \tuple{\readset'_2, \writeset'_2, \valuset'_2}$, $\modl_3 = \tuple{\readset_3, \writeset_3, \valuset_3}$, $\modl'_3 = \tuple{\readset'_3, \writeset'_3, \valuset'_3}$):
 \begin{enumerate}[resume]
-\item\label{i:split-merge2} $\splt{\modl_*}{\modl_2} {\modl_3} $ and $\mrg{\modl_*'}{\modl'_2} {\modl'_3} $
+\item\label{i:split-merge2} $\splt{\modl_*}{\modl_2} {\modl_3} $ and $\mrg{\modl_*'}{\modl'_2} {\modl'_3} $,
 \item $\modl_2 \intPgm{ \pi_2 } \modl'_2$, 
-\item $\readset_2 = \readset'_2 $ and $\writeset_2 = \writeset'_2 $ and $\valuset_2 \setminus \writeset_2 = \valuset'_2 \setminus \writeset'_2$
+\item $\readset_2 = \readset'_2 $ and $\writeset_2 = \writeset'_2 $ and $\valuset_2 \setminus \writeset_2 = \valuset'_2 \setminus \writeset'_2$,
 \item $\modl_3 \intPgm{ \pi_3 } \modl'_3$, 
-\item $\readset_3 = \readset'_3 $ and $\writeset_3 = \writeset'_3 $ and $\valuset_3 \setminus \writeset_3 = \valuset'_3 \setminus \writeset'_3$
+\item $\readset_3 = \readset'_3 $ and $\writeset_3 = \writeset'_3 $ and $\valuset_3 \setminus \writeset_3 = \valuset'_3 \setminus \writeset'_3$.
 \end{enumerate}
 Item~\ref{i:split-merge1} is $\splt{\modl}{\modl_1} {\modl_*} $ and $\mrg{\modl'}{\modl'_1} {\modl'_*} $ iff:
 \begin{enumerate}[resume]
 \item
   %%%% split
-  $\writeset_1 \cap \readset_* = \writeset_* \cap \readset_1 = \emptyset$ ($\modl_1$ and $\modl_*$ are RW-compatible)
+  $\writeset_1 \cap \readset_* = \writeset_* \cap \readset_1 = \emptyset$ ($\modl_1$ and $\modl_*$ are RW-compatible),
   \item 
-    $\readset = \readset_1 \cup \readset_* $, and $\writeset = \writeset_1 \cup \writeset_*$, and $\valuset = \valuset_1 = \valuset_*$
+    $\readset = \readset_1 \cup \readset_* $, and $\writeset = \writeset_1 \cup \writeset_*$, and $\valuset = \valuset_1 = \valuset_*$,
 
     %%%% merge
     
-    \item $\writeset'_1 \cap \readset'_* = \writeset'_* \cap \readset'_1 = \emptyset$ ($\modl'_1$ and $\modl'_*$ are RW-compatible)
-    \item $\readset' = \readset'_1 \cup \readset'_*$, $\writeset' = \writeset'_1 \cup \writeset'_*$, and $\valuset'_1 \setminus \writeset' = \valuset'_* \setminus \writeset'$, and $\valuset' = (\valuset'_1 \cap \writeset'_1) \cup (\valuset'_* \cap \writeset'_*) \cup (\valuset'_1 \cap \valuset'_*) $ 
+    \item $\writeset'_1 \cap \readset'_* = \writeset'_* \cap \readset'_1 = \emptyset$ ($\modl'_1$ and $\modl'_*$ are RW-compatible),
+    \item $\readset' = \readset'_1 \cup \readset'_*$, $\writeset' = \writeset'_1 \cup \writeset'_*$, and $\valuset'_1 \setminus \writeset' = \valuset'_* \setminus \writeset'$, and $\valuset' = (\valuset'_1 \cap \writeset'_1) \cup (\valuset'_* \cap \writeset'_*) \cup (\valuset'_1 \cap \valuset'_*) $. 
 \end{enumerate}
 Item~\ref{i:split-merge2} is $\splt{\modl}{\modl_2} {\modl_3} $ and $\mrg{\modl'}{\modl'_2} {\modl'_3} $ iff:
 \begin{enumerate}[resume]
 \item
   %%%% split
-  $\writeset_2 \cap \readset_3 = \writeset_3 \cap \readset_2 = \emptyset$ ($\modl_2$ and $\modl_3$ are RW-compatible)
+  $\writeset_2 \cap \readset_3 = \writeset_3 \cap \readset_2 = \emptyset$ ($\modl_2$ and $\modl_3$ are RW-compatible),
   \item 
-    $\readset_* = \readset_2 \cup \readset_3 $, and $\writeset_* = \writeset_2 \cup \writeset_3$, and $\valuset_* = \valuset_2 = \valuset_3$
+    $\readset_* = \readset_2 \cup \readset_3 $, and $\writeset_* = \writeset_2 \cup \writeset_3$, and $\valuset_* = \valuset_2 = \valuset_3$,
 
     %%%% merge
     
-    \item $\writeset'_2 \cap \readset'_3 = \writeset'_3 \cap \readset'_2 = \emptyset$ ($\modl'_2$ and $\modl'_3$ are RW-compatible)
-    \item\label{i:lhslast} $\readset_*' = \readset'_2 \cup \readset'_3$, $\writeset_*' = \writeset'_2 \cup \writeset'_3$, and $\valuset'_2 \setminus \writeset_*' = \valuset'_3 \setminus \writeset_*'$, and $\valuset_*' = (\valuset'_2 \cap \writeset'_2) \cup (\valuset'_3 \cap \writeset'_3) \cup (\valuset'_2 \cap \valuset'_3) $ 
+    \item $\writeset'_2 \cap \readset'_3 = \writeset'_3 \cap \readset'_2 = \emptyset$ ($\modl'_2$ and $\modl'_3$ are RW-compatible),
+    \item\label{i:lhslast} $\readset_*' = \readset'_2 \cup \readset'_3$, $\writeset_*' = \writeset'_2 \cup \writeset'_3$, and $\valuset'_2 \setminus \writeset_*' = \valuset'_3 \setminus \writeset_*'$, and $\valuset_*' = (\valuset'_2 \cap \writeset'_2) \cup (\valuset'_3 \cap \writeset'_3) \cup (\valuset'_2 \cap \valuset'_3) $. 
 \end{enumerate}
 
 
@@ -118,56 +118,56 @@ There are $\modla_\#, \modla_3, \modla_\#', \modla_3'$ such that
 (with, $\modla_\# = \tuple{\readseta_\#, \writeseta_\#, \valuseta_\#}$, $\modla'_\# = \tuple{\readseta'_\#, \writeseta'_\#, \valuseta'_\#}$, $\modla_3 = \tuple{\readseta_3, \writeseta_3, \valuseta_3}$, $\modla'_3 = \tuple{\readseta'_3, \writeseta'_3, \valuseta'_3}$):
 \begin{enumerate}[resume]
 \item\label{i:split-merge3}\label{i:rhsfirst} $\splt{\modl}{\modla_\#} {\modla_3}$
-  and $\mrg{\modl'}{\modla'_\#} {\modla'_3}$ 
-\item\label{i:pi1pi2} $\modla_\# \intPgm{ \pi_1 \pll \pi_2} \modla'_\#$
+  and $\mrg{\modl'}{\modla'_\#} {\modla'_3}$, 
+\item\label{i:pi1pi2} $\modla_\# \intPgm{ \pi_1 \pll \pi_2} \modla'_\#$,
 \item $\readseta_\# = \readseta'_\#$
   and $\writeseta_\# = \writeseta'_\#$
-  and $\valuseta_\# \setminus \writeseta_\# = \valuseta'_\# \setminus \writeseta'_\#$
-\item $\modla_3 \intPgm{ \pi_3 } \modla'_3$ 
+  and $\valuseta_\# \setminus \writeseta_\# = \valuseta'_\# \setminus \writeseta'_\#$,
+\item $\modla_3 \intPgm{ \pi_3 } \modla'_3$, 
 \item $\readseta_3 = \readseta'_3$
   and $\writeseta_3 = \writeseta'_3$ 
-  and $\valuseta_3 \setminus \writeseta_3 = \valuseta'_3 \setminus \writeseta'_3$
+  and $\valuseta_3 \setminus \writeseta_3 = \valuseta'_3 \setminus \writeseta'_3$.
 \end{enumerate}
 Item~\ref{i:pi1pi2} is equivalent to:
 there are $\modla_1, \modla_2, \modla'_1, \modla'_2$ such that 
 (with, $\modla_1 = \tuple{\readseta_1, \writeseta_1, \valuseta_1}$, $\modla'_1 = \tuple{\readseta'_1, \writeseta'_1, \valuseta'_1}$, $\modla_2 = \tuple{\readseta_2, \writeseta_2, \valuseta_2}$, $\modla'_2 = \tuple{\readseta'_2, \writeseta'_2, \valuseta'_2}$):
 \begin{enumerate}[resume]
 \item\label{i:split-merge4} $\splt{\modla_\#}{\modla_1} {\modla_2}$
-  and $\mrg{\modla'_\#}{\modla'_1} {\modla'_2}$ 
-\item $\modla_1 \intPgm{ \pi_1} \modla'_1$
-\item $\readseta_1 = \readseta'_1$
+  and $\mrg{\modla'_\#}{\modla'_1} {\modla'_2}$, 
+\item $\modla_1 \intPgm{ \pi_1} \modla'_1$,
+\item $\readseta_1 = \readseta'_1$,
   and $\writeseta_1 = \writeseta'_1$
-  and $\valuseta_1 \setminus \writeseta_1 = \valuseta'_1 \setminus \writeseta'_1$
-\item $\modla_2 \intPgm{ \pi_2 } \modla'_2$ 
+  and $\valuseta_1 \setminus \writeseta_1 = \valuseta'_1 \setminus \writeseta'_1$,
+\item $\modla_2 \intPgm{ \pi_2 } \modla'_2$, 
 \item $\readseta_2 = \readseta'_2$
   and $\writeseta_2 = \writeseta'_2$ 
-  and $\valuseta_2 \setminus \writeseta_2 = \valuseta'_2 \setminus \writeseta'_2$
+  and $\valuseta_2 \setminus \writeseta_2 = \valuseta'_2 \setminus \writeseta'_2$.
 \end{enumerate}
 Item~\ref{i:split-merge3} is $\splt{\modl}{\modla_\#} {\modla_3}$ and $\mrg{\modl'}{\modla'_\#} {\modla'_3}$ iff:
 \begin{enumerate}[resume]
 \item
   %%%% split
-  $\writeseta_\# \cap \readseta_3 = \writeseta_3 \cap \readseta_\# = \emptyset$ ($\modla_\#$ and $\modla_3$ are RW-compatible)
+  $\writeseta_\# \cap \readseta_3 = \writeseta_3 \cap \readseta_\# = \emptyset$ ($\modla_\#$ and $\modla_3$ are RW-compatible),
   \item 
-    $\readset = \readseta_\# \cup \readseta_3 $, and $\writeset = \writeseta_\# \cup \writeseta_3$, and $\valuset = \valuseta_\# = \valuseta_3$
+    $\readset = \readseta_\# \cup \readseta_3 $, and $\writeset = \writeseta_\# \cup \writeseta_3$, and $\valuset = \valuseta_\# = \valuseta_3$,
 
     %%%% merge
     
-    \item $\writeseta'_\# \cap \readseta'_3 = \writeseta'_3 \cap \readseta'_\# = \emptyset$ ($\modla'_\#$ and $\modla'_3$ are RW-compatible)
-    \item $\readset' = \readseta'_\# \cup \readseta'_3$, $\writeset' = \writeseta'_\# \cup \writeseta'_3$, and $\valuseta'_\# \setminus \writeset' = \valuseta'_3 \setminus \writeset'$, and $\valuset' = (\valuseta'_\# \cap \writeseta'_\#) \cup (\valuseta'_3 \cap \writeseta'_3) \cup (\valuseta'_\# \cap \valuseta'_3) $ 
+    \item $\writeseta'_\# \cap \readseta'_3 = \writeseta'_3 \cap \readseta'_\# = \emptyset$ ($\modla'_\#$ and $\modla'_3$ are RW-compatible),
+    \item $\readset' = \readseta'_\# \cup \readseta'_3$, $\writeset' = \writeseta'_\# \cup \writeseta'_3$, and $\valuseta'_\# \setminus \writeset' = \valuseta'_3 \setminus \writeset'$, and $\valuset' = (\valuseta'_\# \cap \writeseta'_\#) \cup (\valuseta'_3 \cap \writeseta'_3) \cup (\valuseta'_\# \cap \valuseta'_3) $. 
 \end{enumerate}
 Item~\ref{i:split-merge4} is $\splt{\modla_\#}{\modla_1} {\modla_2}$ and $\mrg{\modla'_\#}{\modla'_1} {\modla'_2}$ iff:
 \begin{enumerate}[resume]
 \item
   %%%% split
-  $\writeseta_1 \cap \readseta_2 = \writeseta_2 \cap \readseta_1 = \emptyset$ ($\modla_1$ and $\modla_2$ are RW-compatible)
+  $\writeseta_1 \cap \readseta_2 = \writeseta_2 \cap \readseta_1 = \emptyset$ ($\modla_1$ and $\modla_2$ are RW-compatible),
   \item 
-    $\readseta_\# = \readseta_1 \cup \readseta_2 $, and $\writeseta_\# = \writeseta_1 \cup \writeseta_2$, and $\valuseta_\# = \valuseta_1 = \valuseta_2$
+    $\readseta_\# = \readseta_1 \cup \readseta_2 $, and $\writeseta_\# = \writeseta_1 \cup \writeseta_2$, and $\valuseta_\# = \valuseta_1 = \valuseta_2$,
 
     %%%% merge
     
-    \item $\writeseta'_1 \cap \readseta'_2 = \writeseta'_2 \cap \readseta'_1 = \emptyset$ ($\modla'_1$ and $\modla'_2$ are RW-compatible)
-    \item\label{i:rhslast} $\readseta_\#' = \readseta'_1 \cup \readseta'_2$, $\writeseta_\#' = \writeseta'_1 \cup \writeseta'_2$, and $\valuseta'_1 \setminus \writeseta_\#' = \valuseta'_2 \setminus \writeseta_\#'$, and $\valuseta_\#' = (\valuseta'_1 \cap \writeseta'_1) \cup (\valuseta'_2 \cap \writeseta'_2) \cup (\valuseta'_1 \cap \valuseta'_2) $ 
+    \item $\writeseta'_1 \cap \readseta'_2 = \writeseta'_2 \cap \readseta'_1 = \emptyset$ ($\modla'_1$ and $\modla'_2$ are RW-compatible),
+    \item\label{i:rhslast} $\readseta_\#' = \readseta'_1 \cup \readseta'_2$, $\writeseta_\#' = \writeseta'_1 \cup \writeseta'_2$, and $\valuseta'_1 \setminus \writeseta_\#' = \valuseta'_2 \setminus \writeseta_\#'$, and $\valuseta_\#' = (\valuseta'_1 \cap \writeseta'_1) \cup (\valuseta'_2 \cap \writeseta'_2) \cup (\valuseta'_1 \cap \valuseta'_2) $. 
 \end{enumerate}
 
 
@@ -175,14 +175,14 @@ Item~\ref{i:split-merge4} is $\splt{\modla_\#}{\modla_1} {\modla_2}$ and $\mrg{\
 
 Suppose lhs. We define:
 \begin{itemize} 
-\item $\modla_\# = \tuple{\readseta_\#, \writeseta_\#, \valuseta_\#} = \tuple{\readset_1 \cup \readset_2, \writeset_1 \cup \writeset_2, \valuset}$
-\item $\modla_1 = \tuple{\readseta_1, \writeseta_1, \valuseta_1} = \modl_1 = \tuple{\readset_1, \writeset_1, \valuset}$
-\item $\modla_2 = \tuple{\readseta_2, \writeseta_2, \valuseta_2} = \modl_2 = \tuple{\readset_2, \writeset_2, \valuset}$
-\item $\modla_3 = \tuple{\readseta_3, \writeseta_3, \valuseta_3} = \modl_3 = \tuple{\readset_3, \writeset_3, \valuset}$
-\item $\modla'_\# = \tuple{\readseta'_\#, \writeseta'_\#, \valuseta'_\#} = \tuple{\readset'_1 \cup \readset'_2, \writeset'_1 \cup \writeset'_2, (\valuset'_1 \cap \writeset_1) \cup (\valuset'_2 \cap \writeset_2) \cup (\valuset'_1 \cap \valuset'_2)}$
-\item $\modla'_1 = \tuple{\readseta'_1, \writeseta'_1, \valuseta'_1) = \modl'_1 = (\readset'_1, \writeset'_1, \valuset'_1}$
-\item $\modla'_2 = \tuple{\readseta'_2, \writeseta'_2, \valuseta'_2} = \modl'_2 = \tuple{\readset'_2, \writeset'_2, \valuset'_2}$
-\item $\modla'_3 = \tuple{\readseta'_3, \writeseta'_3, \valuseta'_3} = \modl'_3 = \tuple{\readset'_3, \writeset'_3, \valuset'_3}$ 
+\item $\modla_\# = \tuple{\readseta_\#, \writeseta_\#, \valuseta_\#} = \tuple{\readset_1 \cup \readset_2, \writeset_1 \cup \writeset_2, \valuset}$,
+\item $\modla_1 = \tuple{\readseta_1, \writeseta_1, \valuseta_1} = \modl_1 = \tuple{\readset_1, \writeset_1, \valuset}$,
+\item $\modla_2 = \tuple{\readseta_2, \writeseta_2, \valuseta_2} = \modl_2 = \tuple{\readset_2, \writeset_2, \valuset}$,
+\item $\modla_3 = \tuple{\readseta_3, \writeseta_3, \valuseta_3} = \modl_3 = \tuple{\readset_3, \writeset_3, \valuset}$,
+\item $\modla'_\# = \tuple{\readseta'_\#, \writeseta'_\#, \valuseta'_\#} = \tuple{\readset'_1 \cup \readset'_2, \writeset'_1 \cup \writeset'_2, (\valuset'_1 \cap \writeset_1) \cup (\valuset'_2 \cap \writeset_2) \cup (\valuset'_1 \cap \valuset'_2)}$,
+\item $\modla'_1 = \tuple{\readseta'_1, \writeseta'_1, \valuseta'_1) = \modl'_1 = (\readset'_1, \writeset'_1, \valuset'_1}$,
+\item $\modla'_2 = \tuple{\readseta'_2, \writeseta'_2, \valuseta'_2} = \modl'_2 = \tuple{\readset'_2, \writeset'_2, \valuset'_2}$,
+\item $\modla'_3 = \tuple{\readseta'_3, \writeseta'_3, \valuseta'_3} = \modl'_3 = \tuple{\readset'_3, \writeset'_3, \valuset'_3}$. 
 \end{itemize}
 
 We must show that these models satisfy all the properties from~\ref{i:rhsfirst} through~\ref{i:rhslast}.
@@ -306,20 +306,20 @@ $\readseta_\# \cup \readseta_3 = (\readset_1 \cup \readset_2) \cup \readset_3 = 
 
 Suppose rhs. We define:
 \begin{itemize}
-\item $\modl_* = \tuple{\readset_*, \writeset_*, \valuset_*} = \tuple{\readseta_2 \cup \readseta_3, \writeseta_2 \cup \writeseta_3, \valuset}$
+\item $\modl_* = \tuple{\readset_*, \writeset_*, \valuset_*} = \tuple{\readseta_2 \cup \readseta_3, \writeseta_2 \cup \writeseta_3, \valuset}$,
 
-\item $\modl_1 = \tuple{\readset_1, \writeset_1, \valuset_1} = \modla_1 = \tuple{\readseta_1, \writeseta_1, \valuseta}$
-\item $\modl_2 = \tuple{\readset_2, \writeset_2, \valuset_2} = \modla_2 = \tuple{\readseta_2, \writeseta_2, \valuseta}$
-\item $\modl_3 = \tuple{\readset_3, \writeset_3, \valuset_3} = \modla_3 = \tuple{\readseta_3, \writeseta_3, \valuseta}$  
+\item $\modl_1 = \tuple{\readset_1, \writeset_1, \valuset_1} = \modla_1 = \tuple{\readseta_1, \writeseta_1, \valuseta}$,
+\item $\modl_2 = \tuple{\readset_2, \writeset_2, \valuset_2} = \modla_2 = \tuple{\readseta_2, \writeseta_2, \valuseta}$,
+\item $\modl_3 = \tuple{\readset_3, \writeset_3, \valuset_3} = \modla_3 = \tuple{\readseta_3, \writeseta_3, \valuseta}$,  
 
-\item $\modl'_* = \tuple{\readset'_*, \writeset'_*, \valuset'_*} = \tuple{\readseta'_2 \cup \readseta'_3, \writeseta'_2 \cup \writeseta'_3, (\valuseta'_2 \cap \writeseta_2) \cup (\valuseta'_3 \cap \writeseta_3) \cup (\valuseta'_2 \cap \valuseta'_3)}$
+\item $\modl'_* = \tuple{\readset'_*, \writeset'_*, \valuset'_*} = \tuple{\readseta'_2 \cup \readseta'_3, \writeseta'_2 \cup \writeseta'_3, (\valuseta'_2 \cap \writeseta_2) \cup (\valuseta'_3 \cap \writeseta_3) \cup (\valuseta'_2 \cap \valuseta'_3)}$,
   
-\item $\modl'_1 = \tuple{\readset'_1, \writeset'_1, \valuset'_1} = \modla'_1 = \tuple{\readseta'_1, \writeseta'_1, \valuseta'_1}$
-\item $\modl'_2 = \tuple{\readset'_2, \writeset'_2, \valuset'_2} = \modla'_2 = \tuple{\readseta'_2, \writeseta'_2, \valuseta'_2}$
-\item $\modl'_3 = \tuple{\readset'_3, \writeset'_3, \valuset'_3} = \modla'_3 = \tuple{\readseta'_3, \writeseta'_3, \valuseta'_3}$ 
+\item $\modl'_1 = \tuple{\readset'_1, \writeset'_1, \valuset'_1} = \modla'_1 = \tuple{\readseta'_1, \writeseta'_1, \valuseta'_1}$,
+\item $\modl'_2 = \tuple{\readset'_2, \writeset'_2, \valuset'_2} = \modla'_2 = \tuple{\readseta'_2, \writeseta'_2, \valuseta'_2}$,
+\item $\modl'_3 = \tuple{\readset'_3, \writeset'_3, \valuset'_3} = \modla'_3 = \tuple{\readseta'_3, \writeseta'_3, \valuseta'_3}$. 
 \end{itemize}
 
-We must show that these models satisfy all the properties from~\ref{i:lhsfirst} through~\ref{i:lhslast}. This is done routinely, analogously to the proof of the left-to-right direction above.
+We must show that these models satisfy all the properties from~\ref{i:lhsfirst} to~\ref{i:lhslast}. This is done routinely, analogously to the proof of the left-to-right direction above.
 \end{proof}
 
 %%% Local Variables:

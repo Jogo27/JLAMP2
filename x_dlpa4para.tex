@@ -196,7 +196,7 @@ repair
 \cite{%HerzigPozosSchwarzentruber-Foiks14,%FeuilladeH14,FeuilladeHR18,
 FeuilladeHR19}, 
 %argumentation frameworks and their modifications \cite{DoutreHerzigPerrussel-Kr14}, 
-planning \cite{HerzigEtal-Ecai14,HerzigEtal-Ijcai19},
+planning \cite{HerzigEtal-Ecai14},
 lightweight dynamic epistemic logics \cite{DBLP:conf/atal/CharrierS15,CooperHMMR16,DBLP:conf/atal/CharrierS17}, and
 judgment aggregation \cite{DBLP:journals/logcom/NovaroGH18}. 
 %, and simple forms of strategic reasoning \cite{HerzigEtal-Ijcai11}. 
@@ -221,19 +221,24 @@ Each of them therefore has a partial view of the global state.
 This entails that parallelism in itself does not modify the state of the system:
 the parallel execution of two programs that do nothing does not change the state. 
 The formula 
+$\phi \limp \lbox{ \top ? \pll \top ? } \phi$ 
+should therefore be valid, where ``$ \top ? $'' is the test that $\top$ is true (which always succeeds).
+\ah{
+avant (probablement parce qu'a l'epoque on n'avait pas `$?$') :
+``The formula 
 $\phi \limp \lbox{ \top \testendo \pll \top \testendo } \phi$ 
 %$\lbox{ \phi \testendo \pll \top \testendo } \phi$ 
-should therefore be valid, where ``$ \testendo $'' is the test operator.\footnote{%
-The notation ``$ \testendo $'' signals a difference with the standard PDL test ``$ \testpdl $'' 
+should therefore be valid, where ``$ \testendo $'' is the test operator.
+(The notation ``$ \testendo $'' signals a difference with the standard PDL test ``$ \testpdl $'' 
 that however does not matter here.
 %These tests $\phi \testendo$ differ from standard PDL tests;
 It will be explained in the end of the present section
-when we discuss what system states should look like.
+when we discuss what system states should look like.)''
 }
 \item
 The execution of a parallel program $\pi_1 \pll \pi_2$ should be insensitive to 
 the way the components of $\pi_1$ and $\pi_2$ are interleaved. 
-So ``race conditions'' \cite{BrookesO16} must be avoided: 
+Hence ``race conditions'' \cite{BrookesO16} must be avoided: 
 the execution should not depend on the order of execution of atomic programs in $\pi_1$ and $\pi_2$ 
 (where we consider tests to be atomic, too). 
 Here we interpret this requirement in a rather radical way: 
@@ -252,7 +257,7 @@ $$ \lbox{ (\pi_1 ; \phi_1 \testendo ) \pll (\pi_2 ; \phi_2 \testendo ) } (\phi_1
 should be valid. 
 If we replace $\phi_1$ by $p$ and $\phi_2$ by $\lnot p$ then the above tells us that 
 $(\pi_1 ; p \testendo ) \pll (\pi_2 ; \lnot p \testendo )$ is inexecutable. 
-So the program
+Hence the program
 $\pi_1 ; (p \testendo \pll \pi_2) ; \lnot p \testendo $ 
 %$(\pi_1 ; p \testendo ) \pll (\pi_2 ; \lnot p \testendo )$ 
 that is obtained from it by interleaving should be inexecutable, too. 
@@ -273,11 +278,10 @@ that is obtained from it by interleaving should be inexecutable, too.
 %$\pi_2 ; \lnot p \testendo ; \pi_1 ; p \testendo $ leads to $\lnot p $-states.''
 %}
 
-In formal frameworks for the verification of parallel programs, like the one proposed by Brookes
-and O'Hearn~\cite{Brookes04,OHearn04}, allowing race conditions is a necessary feature for the
-framework to be able to prove that programs are race-free.
-On the contrary, dynamic logics permit to prove properties of formulas.
-In most dynamic logics, atomic actions are even totally abstracted away.
+In formal frameworks for the verification of parallel programs such as the one proposed by Brookes 
+and O'Hearn~\cite{Brookes04,OHearn04}, allowing race conditions is a necessary feature for the 
+framework to be able to prove a property of programs, namely that they are race-free. 
+On the contrary, dynamic logics permit to prove properties of formulas, and atomic actions are actually even totally abstracted away in most dynamic logics. 
 In such abstract settings,
 whether two given atomic actions can be executed concurrently is a semantic detail of each model.
 For instance, in dynamic logics with a parallel composition based on separation (like in
@@ -285,57 +289,72 @@ For instance, in dynamic logics with a parallel composition based on separation 
 the separation relation of the model provides the possibility to forbid race conditions.
 The race condition issue arises in logics based on \Dlpa because atomic actions are concrete:
 basically, each atomic action potentially changes the valuation of exactly one propositional variable.
-Hence it is natural to consider access to the propositional variables as the main resources,
-and a decision has to be made on whether the separation of these resources is strict,
-i.e., whether race conditions are allowed.
-In the present work, we have chosen a strict separation semantic because it is the simplest solution satisfying
+Hence it is natural to consider access to the propositional variables as the main resource. 
+In this perspective, a decision has to be made on whether the separation of these resources is strict or not, 
+i.e., whether race conditions are allowed or not.
+In the present work, we have chosen a strict separation semantics because it is the simplest solution satisfying
 the two principles stated above.
 
 We have not yet said what one should understand by a \Dlpa system state. 
-A previous approach of ours only considered the separation of valuations, i.e., 
+A previous approach of one of us only considered the separation of valuations, i.e., 
 of truth values of propositional variables \cite{Herzig-Wollic13}. 
 Two separating conjunctions in the style of separation logic were defined on such models. 
-This however did not allow one to define an adjoint implication as usually done in the separation logic literature, which was somewhat unsatisfactory.
-The paper \cite{HerzigEtal-Ijcai19} has richer models where valuations are supplemented by information about writability of variables, 
-supposing that a variable can only be assigned by a program when it is writable. 
+This however did not allow one to define an adjoint implication as usually done in the separation logic literature, which was somewhat unsatisfactory. 
+%
+Another paper where one of us is involved has richer models where valuations are supplemented by information about writability of variables, supposing that a variable can only be assigned by a program when it is writable \cite{HerzigEtal-Ijcai19}. 
 Splitting and merging of such models can be defined in a natural way, thus providing a meaningful interpretation of parallel composition. 
 When the parallel composition is based on separation, writability of variables permits to resolve merge conflicts.
 Consider for instance the execution of the programs $\top \testendo \pll \assgntopV p$ and $\assgnbotV p \pll \assgntopV p$ from a state in which $p$ is false.
-We argue it would be natural that the former program leads to a state in which $p$ is true
+We argue that intuitively, the former program should lead to a state in which $p$ is true
 whereas the latter program should not be executable or at least may undeterministically lead to a state where $p$ is false.
+\ah{
+Je ne comprends pas le ``undeterministically'' : ca veut dire que ou bien c'est inexecutable, ou bien $p$ devient faux ? mais alors c'est la meme chose que rendre $p$ deterministiquement faux. 
+}
 However, without writability information, the states before the merge of each of these programs are the same:
 $p$ is false in the left branch but true in the right branch.
 Writability allows the merge to distinguish these two situations and to resolve the conflict in the former case.
 
 We here push this program further and consider models having moreover information about readability of variables. 
 We suppose that writability implies readability\footnote{%
-As suggested by one of the reviewers of DALI'19, this constraint may be relaxed 
-and one may suppose that a program can only modify a variable without being able to read its value. 
+As suggested by one of the reviewers of a previous version of the present paper \cite{DBLP:conf/tap/BoudouHT19}, this constraint may be relaxed 
+and one may suppose that a program can modify a variable without being able to read its value. 
 This would simplify the presentation of the logic; however, we believe that our inclusion constraint is natural in most applications.
 }
 and that a variable can only be tested if it is readable. 
-So our tests $\phi \testendo$ differ from standard PDL tests and also from \Dlpa tests in that their 
+Our tests $\phi \testendo$ therefore differ from the standard tests of PDL and \Dlpa in that their 
 executability depends on whether the relevant variables are readable. In particular, while 
 $\ldia{ p \testendo } \top \limp p$, remains valid, its converse
 $p \limp \ldia{ p \testendo } \top $ becomes invalid in our logic: 
 it may be the case that $p$ is true but cannot be read.
 
+\ah{
+Je ne comprends pas la phrase qui suit.
+}
 As for writability, distinguishing the variables that can be tested is a natural way to separate the domain of actions of each subprogram of a parallel composition.
 Moreover, it permits additional useful checks.
 Consider for instance the execution of the program $\left(\assgnbotV p ; q \testendo \right) \pll \left(\assgnbotV q ; p \testendo\right)$
 from a state in which both $p$ and $q$ are true.
 Without readability, this program can be executed and results in a state in which both $p$ and $q$ are false.
 However, no interleaving of this program can be executed.
-Adding readability of variables permits to detect this issue.
-In the present work, we enforce that a variable can not be read by one subprogram of a parallel composition if it can be written by the other subprogram.
+Adding readability of variables permits to detect this issue:
+we enforce that a variable cannot be read by one subprogram of a parallel composition if it can be written by the other subprogram.
 
 The paper is organised as follows.
-In Section \ref{sec:models} we define models and the two ternary relations `split' and `merge' on models. 
-In Section \ref{sec:language} we define the language of our logic and 
-in Section \ref{sec:interpretation} we give the interpretation of formulas and programs. 
-In Section \ref{sec:axiomatisation} we axiomatise the valid formulas by means of reduction axioms and
-in Section \ref{sec:complexity} we establish that the satisfiability problem is PSPACE complete. 
-Section \ref{sec:conclusion} concludes. 
+In Section~\ref{sec:models} we define models and the two ternary relations `split' and `merge' on models. 
+In Section~\ref{sec:language} we define the language of our logic and 
+in Section~\ref{sec:interpretation} we give the interpretation of formulas and programs. 
+In Section~\ref{sec:axiomatisation} we axiomatise the valid formulas by means of reduction axioms and
+in Section~\ref{sec:complexity} we establish that the satisfiability problem is PSPACE complete. 
+Section~\ref{sec:conclusion} sums up our contributions and discusses related work and the application to parallel planning. 
+\ah{
+reste ajoute
+}
+The annex contains a proof of associativity of parallel composition. 
+\footnote{
+The present paper is a more elaborate version of %a paper that was presented at DaL\'i 2019
+\cite{DBLP:conf/tap/BoudouHT19}. 
+It contains proofs of the results, more motivation and explanations, and furthermore proves that our operator of parallel composition is associative. 
+}
 
 
 %----------------------------------------------------------%
@@ -353,9 +372,9 @@ The constraint that $\writeset \subseteq \readset$ means that writability implie
 
 The special case when $\writeset = \propset$ is typical when checking the validity or the satisfiability of a formula $\phi$.
 Lemma~\ref{theo:irrelevantVariables} in Section~\ref{sec:interpretation} will prove that,
-as expected, this case is equivalent to the case when $\writeset$ and $\readset$ are the set of propositional variables occuring in $\phi$.
+as expected, this case is equivalent to the case where $\writeset$ and $\readset$ are the set of propositional variables occuring in $\phi$.
 In fact, the writability and readability sets are mostly useful for checking properties of subprograms of parallel compositions.
-On the other end of the spectrum, the case when $\writeset = \emptyset$ is of little interest since the only executable programs are the ones without assignements.
+On the other end of the spectrum, the case $\writeset = \emptyset$ is of little interest since the only executable programs will be those without assignments.
 
 Two models 
 $\modl_1 = \tuple{\readset_1,\writeset_1,\valuset_1}$ and 
@@ -364,7 +383,7 @@ if and only if the writable variables of one model and the readable variables of
 if and only if $\writeset_1 \cap \readset_2  = \writeset_2 \cap \readset_1  = \emptyset $. 
 For example, 
 $\modl_1 = \tuple{ \set p , \set p , \emptyset}$ and 
-$\modl_2 = \tuple{ \set p , \emptyset , \emptyset}$ are not RW-disjoint:
+$\modl_2 = \tuple{ \set p , \emptyset , \emptyset}$ fail to be RW-disjoint:
 % because $\modl_1 $ has write access to $p$ and $\modl_2$ has read access to $p$:
 in $\modl_1$, some program $\pi_1$ modifying the value of $p$ may be executable, while 
 for programs executed in $\modl_2$, the value of $p$ %(that is read-accessible there) 
@@ -482,9 +501,7 @@ where $p$ ranges over the set of propositional variables $\propset$:
 			\pi ; \pi \mid \pi \ndet \pi \mid 
 			\pi^\ast \mid \pi \pll \pi .
 \end{align*}
-
-The program $\assgntopV p$ makes $p$ true and $\assgnbotV p $ makes $p$ false. 
-The executability of these two programs is conditioned by the writability of $p$. 
+The program $\assgntopV p$ makes $p$ true and $\assgnbotV p $ makes $p$ false, where the executability of these two programs is conditioned by the writability of $p$. 
 %
 The program $\assgntopR p$ makes $p$ readable and 
 $\assgnbotR p $ makes $p$ unreadable; similarly,
@@ -532,55 +549,55 @@ For example, $\propsetOf{ p \lor \ldia{\assgntopV{q} } \lnot r } = \{p,q,r\}$.
 Let $\modl = \tuple{\readset,\writeset,\valuset}$ be a model. 
 Formulas are interpreted as sets of models: 
 \begin{center}\begin{tabular}{lll}
-$\modl \models \top$
+$\modl \models \top$;
 \\
-$\modl \models p $ & iff & $p \in \valuset, \text{ for } p \in \propset$
+$\modl \models p $ & iff & $p \in \valuset, \text{ for } p \in \propset$;
 \\
 %$\modl \models \writable{p} $ & iff & $p \in \writeset$
 %\\
 %$\modl \models \readable p $ & iff & $p \in \readset$
 %\\
-$\modl \models \lnot \phi $ & iff & $\modl \not \models \phi $ 
+$\modl \models \lnot \phi $ & iff & $\modl \not \models \phi $;
 \\
-$\modl \models \phi \lor \psi$ & iff & $\modl \models \phi $ or $\modl \models \psi$ 
+$\modl \models \phi \lor \psi$ & iff & $\modl \models \phi $ or $\modl \models \psi$;
 \\
-$\modl \models \ldia \pi \phi $ & iff & there is a model $\modl'$ such that $\modl \intPgm{ \pi } \modl' $ and $\modl' \models \phi$
+$\modl \models \ldia \pi \phi $ & iff & there is a model $\modl'$ such that $\modl \intPgm{ \pi } \modl' $ and $\modl' \models \phi$.
 \end{tabular}\end{center}
 Programs are interpreted as relations on the set of models: 
 \begin{center}\begin{tabular}{lll}
-$\modl \intPgm{ \assgntopV{p} } \modl'$ & iff & $\readset' = \readset$, $\writeset' = \writeset $, $\valuset' = \valuset \cup \{p\} $, and $p \in \writeset$
+$\modl \intPgm{ \assgntopV{p} } \modl'$ & iff & $\readset' = \readset$, $\writeset' = \writeset $, $\valuset' = \valuset \cup \{p\} $, and $p \in \writeset$;
 \\
-$\modl \intPgm{ \assgnbotV{p} } \modl'$ & iff & $\readset' = \readset$, $\writeset' = \writeset $, $\valuset' = \valuset \setminus \{p\} $, and $p \in \writeset$
+$\modl \intPgm{ \assgnbotV{p} } \modl'$ & iff & $\readset' = \readset$, $\writeset' = \writeset $, $\valuset' = \valuset \setminus \{p\} $, and $p \in \writeset$;
 \\
-$\modl \intPgm{ \assgntopR{p} } \modl'$ & iff & $\readset' = \readset \cup \{p\} $, $\writeset' = \writeset $, and $\valuset'= \valuset$
+$\modl \intPgm{ \assgntopR{p} } \modl'$ & iff & $\readset' = \readset \cup \{p\} $, $\writeset' = \writeset $, and $\valuset'= \valuset$;
 \\
-$\modl \intPgm{ \assgnbotR{p} } \modl'$ & iff & $\readset' = \readset \setminus \{p\} $, $\writeset' = \writeset \setminus \{p\}$, and $\valuset'= \valuset$
+$\modl \intPgm{ \assgnbotR{p} } \modl'$ & iff & $\readset' = \readset \setminus \{p\} $, $\writeset' = \writeset \setminus \{p\}$, and $\valuset'= \valuset$;
 \\
-$\modl \intPgm{ \assgntopW{p} } \modl'$ & iff & $\readset' = \readset \cup \{p\} $, $\writeset' = \writeset \cup \{p\} $, and $\valuset' = \valuset$ 
+$\modl \intPgm{ \assgntopW{p} } \modl'$ & iff & $\readset' = \readset \cup \{p\} $, $\writeset' = \writeset \cup \{p\} $, and $\valuset' = \valuset$;
 \\
-$\modl \intPgm{ \assgnbotW{p} } \modl'$ & iff & $\readset' = \readset$, $\writeset' = \writeset  \setminus \{p\} $, and $\valuset' = \valuset$ 
+$\modl \intPgm{ \assgnbotW{p} } \modl'$ & iff & $\readset' = \readset$, $\writeset' = \writeset  \setminus \{p\} $, and $\valuset' = \valuset$;
 \\
-$\modl \intPgm{ \phi \testpdl }\modl'$ & iff & $\modl = \modl'$ and $\modl \models \phi$ 
+$\modl \intPgm{ \phi \testpdl }\modl'$ & iff & $\modl = \modl'$ and $\modl \models \phi$;
 \\
-$\modl \intPgm{ \phi \testendo }\modl'$ & iff & $\modl = \modl'$ and $\modl'' \models \phi$ for every $\modl''$ such that $\modl'' \sim \modl$
+$\modl \intPgm{ \phi \testendo }\modl'$ & iff & $\modl = \modl'$ and $\modl'' \models \phi$ for every $\modl''$ such that $\modl'' \sim \modl$;
 %``$\modl \intPgm{ \phi \testpdl } \modl'$ iff $\modl \sim \modl'$ and $\modl' \models \phi$''
 %serait plus jolie, avec l'axiome de reduction
 %$\ldia{\phi \testpdl } \psi \leqv \ \ldia{ \mathit{varyIfNotreadable}(\propsetOf \psi ) } (\phi \land \psi )$. 
 %Mais plus difficile a justifer. 
 \\
 $\modl \intPgm{ \pi_1 ; \pi_2 } \modl'$ & iff & there is an $\modl''$ such that $\modl \intPgm{ \pi_1 } \modl''$ and 
-												$\modl'' \intPgm{ \pi_2 } \modl'$
+												$\modl'' \intPgm{ \pi_2 } \modl'$;
 \\
-$\modl \intPgm{ \pi_1 \ndet \pi_2 } \modl'$ & iff & $\modl \intPgm{ \pi_1 } \modl'$ or $\modl \intPgm{ \pi_2 } \modl'$ 
+$\modl \intPgm{ \pi_1 \ndet \pi_2 } \modl'$ & iff & $\modl \intPgm{ \pi_1 } \modl'$ or $\modl \intPgm{ \pi_2 } \modl'$;
 \\
-$\modl \intPgm{ \pi^\ast } \modl'$ & iff & there is an $n \geq 0 $ such that $\modl \intPgm{ \pi } ^n \modl'$ 
+$\modl \intPgm{ \pi^\ast } \modl'$ & iff & there is an $n \geq 0 $ such that $\modl \intPgm{ \pi } ^n \modl'$;
 \\
 $\modl \intPgm{ \pi_1 \pll \pi_2 } \modl'$ & iff & there are $\modl_1, \modl_2, \modl'_1, \modl'_2$ such that %\\&&
 $\splt{\modl}{\modl_1} {\modl_2} $, $\mrg{\modl'}{\modl'_1} {\modl'_2} $, \\&&
 $\modl_1 \intPgm{ \pi_1 } \modl'_1$, 
 $\readset_1 = \readset'_1 $, $\writeset_1 = \writeset'_1 $, $\valuset_1 \setminus \writeset_1 = \valuset'_1 \setminus \writeset'_1 , $ \\&&
 $\modl_2 \intPgm{ \pi_2 } \modl'_2$, 
-$\readset_2 = \readset'_2 $, $\writeset_2 = \writeset'_2 $, $\valuset_2 \setminus \writeset_2 = \valuset'_2 \setminus \writeset'_2 $ 
+$\readset_2 = \readset'_2 $, $\writeset_2 = \writeset'_2 $, $\valuset_2 \setminus \writeset_2 = \valuset'_2 \setminus \writeset'_2 $. 
 \end{tabular}\end{center}
 In the interpretation of assignments of atomic formulas we require 
 propositional variables to be modifiable, while 
@@ -589,8 +606,8 @@ When a variable is made writable then it is made readable, too,
 in order to guarantee the inclusion constraint on models; 
 similarly when a variable is made unreadable. 
 %
-The interpretation of parallel composition $\pi_1 \pll \pi_2$ is such that both $\pi_1$ and $\pi_2$ only modify `their' variables: 
-parallel composition $\pi_1 \pll \pi_2$ of two programs $\pi_1$ and $\pi_2$ 
+The interpretation of parallel composition $\pi_1 \pll \pi_2$ is such that both $\pi_1$ and $\pi_2$ only modify `their' variables. 
+More precisely, parallel composition $\pi_1 \pll \pi_2$ of two programs $\pi_1$ and $\pi_2$ 
 relates two models $\modl$ and $\modl'$ when the following conditions are satisfied:
 (1)~$\modl$ can be split into $\modl_1$ and $\modl_2$; 
 (2)~the execution of $\pi_1$ on $\modl_1$ may lead to $\modl_1'$ and 
@@ -600,7 +617,7 @@ Moreover,
 (4) the modifications are legal: $\pi_1$ and $\pi_2$ neither change readability nor writability, and 
 each of them only modifies variables that were allocated to it by the split. 
 
-Figure \ref{fig:ex:parallel} illustrates the interpretation of the parallel program $\assgnbotV p \pll \assgnbotV q$. 
+Figure~\ref{fig:ex:parallel} illustrates the interpretation of the parallel program $\assgnbotV p \pll \assgnbotV q$. 
 Some more examples follow. 
 
 \begin{figure}[t]
@@ -649,7 +666,7 @@ suppose $\assgntopV p$ is executed on $\modl_1$ and
 $\assgntopW p ; \assgnbotV p ; \assgnbotR p$ on $\modl_2$.
 For $\assgntopV p$ to be executable we must have $p \in \writeset_1$, and therefore
 $p \notin \writeset_2$ (and a fortiori $p \notin \readset_2$) because of the RW-disjointness condition. 
-So $\modl_1 = \tuple{ \{p\}, \{p\}, \{p\} }$ and $\modl_2 = \tuple{ \emptyset, \emptyset, \{p\} }$.
+Hence $\modl_1 = \tuple{ \{p\}, \{p\}, \{p\} }$ and $\modl_2 = \tuple{ \emptyset, \emptyset, \{p\} }$.
 Then 
 $\modl_1' = \modl_1$ is the only model such that $\modl_1 \intPgm{ \assgntopV p } \modl_1' $; and 
 $\modl_2' = \tuple{ \emptyset, \emptyset, \emptyset }$ is the only model such that $\modl_2 \intPgm{ \assgntopW p ; \assgnbotV p ; \assgnbotR p } \modl_2' $.
@@ -670,6 +687,13 @@ $\mrg
 { \tuple{\emptyset,\emptyset,\{p\}} }
 { \tuple{\{p\},\{p\},\{p\}} }$.
 \end{example}
+
+\ah{
+paragraphe ajoute
+}
+It is clear that parallel composition satisfies commutativity. 
+It is less obvious that it is also associative. 
+The proof is somewhat involved and can be found in the annex. 
 
 Let us finally illustrate the different semantics of the two test operators of our logic.
 %PDL tests $\phi \testpdl$ do not depend on the readability of the variables that are tested and may be called \emph{exogeneous}. 
@@ -695,7 +719,7 @@ $\phi \limp \lbox{ \top \testendo \pll \top \testendo } \phi$,
 $\lbox{ \assgntopV p \pll \assgnbotV p } \bot$,
 $\lbox{ \assgntopV p \pll \assgntopV p } \bot$ and 
 $\lbox{ p \testendo \pll \assgntopV p } \bot$ 
-whose programs were mentioned in the introduction are all valid. 
+whose parallel programs were discussed in the introduction are all valid. 
 \end{example}
 
 The formulas $\ldia{ \assgntopV p } \top $ and $\ldia{ \assgnbotV p } \top $ both express that $p$ is writable. 
@@ -734,10 +758,10 @@ $\tuple{\readset\setminus P,\writeset\setminus P,\valuset\setminus P} \intPgm \p
 \end{enumerate}
 \end{lemma}
 \begin{proof}[sketch]
-\ref{item:addValuationFormula} and \ref{item:addValuationProgram} are proved by simultaneous
+Items~\ref{item:addValuationFormula} and~\ref{item:addValuationProgram} are proved by simultaneous
 induction on the size of $\phi$ and $\pi$.
-\ref{item:addAllFormula} and \ref{item:addAllProgram} are proved similarly.
-\ref{item:subAllProgram} is proved from \ref{item:addAllProgram} by instantiating $\readset$,
+Items~\ref{item:addAllFormula} and~\ref{item:addAllProgram} are proved similarly.
+Item~\ref{item:subAllProgram} is proved from \ref{item:addAllProgram} by instantiating $\readset$,
 $\writeset$, $\valuset$, $\readset'$, $\writeset'$ and $\valuset'$ with respectively
 $\readset\setminus P$, $\writeset\setminus P$, $\valuset\setminus P$, $\readset'\setminus P$,
 $\writeset'\setminus P$ and $\valuset'\setminus P$.
@@ -756,25 +780,24 @@ $\ldia{ \assgntopV p } \top $ and
 $\ldia{ p \testendo} \top \lor \ldia{ \lnot p \testendo} \top $. 
 The former expresses that $p$ is writable: we abbreviate it by $\writable{p}$;
 the latter expresses that $p$ is readable: we abbreviate it by $\readable p$. 
-So we have:
+Hence we have:
 \begin{align*}
 \writable{p} &\eqdef \ldia{ \assgntopV p } \top 
 \\
 \readable p &\eqdef \ldia{ p \testendo} \top \lor \ldia{ \lnot p \testendo} \top 
 \end{align*}
-
-We start by eliminating all the program operators from formulas, where 
+The reduction starts by eliminating all the program operators from formulas, where 
 the elimination of parallel composition is done by sequentialising it while keeping track of the values of the atoms. 
 After that step, the only remaining program operators 
 either occur in formulas of the form $\readable p$ or $\writable p$, 
-or are assignments of the form
+or in modal operators of the form
 $\ldia{ \assgntopV p} $,
 $\ldia{ \assgnbotV p} $,
 $\ldia{ \assgntopR p} $,
 $\ldia{ \assgnbotR p} $,
 $\ldia{ \assgntopW p} $, or
 $\ldia{ \assgnbotW p} $. 
-The assignments can be distributed over the boolean operators, taking advantage of the fact that all of them are deterministic modal operators 
+All these modal operators can be distributed over the boolean operators, taking advantage of the fact that all of them are deterministic modal operators 
 (validating the Alt$_1$ axiom $\ldia \pi \phi \limp \lbox \pi \phi$). 
 Finally, sequences of such modalities facing a propositional variable can be transformed into 
 boolean combinations of readability and writability statements $\readable p$ and $\writable p$.
@@ -798,10 +821,9 @@ that will allow us to formulate the reduction axioms more concisely.
 %----------------------------------------------------------%
 \subsection{Copies of Atomic Propositions}\label{sec:copyVars}
 
-We are going to need fresh copies of each propositional variable, one per occurrence of the parallel composition operator. 
-With parallel compositions based on separation, each concurrent program operates on its own model.
-The introduced copies emulates this separation of models,
-each concurrent program operating on a set of copies of propositional variables.
+Our reduction axioms will introduce fresh copies of each propositional variable, one per occurrence of the parallel composition operator. 
+The interpretation of parallel composition being based on separation, each concurrent program operates on its own model.
+The copies emulate the separation of models: each concurrent program is executed on a set of copies of propositional variables.
 
 In order to keep things readable we neglect that the copies should be indexed by programs
 and denote the copies of the variable $p$ by $\cp k p$, where $\mathbf{k}$ is some integer. 
@@ -815,6 +837,8 @@ $\cp{k} P = \{ \cp{k} p \suchthat p \in P\}$.
 Similarly, we define copies of programs and formulas:
 the program $\cp{k} \pi$ and the formula $\cp{k} \phi$ are obtained by replacing all their occurrences of
 propositional variables $p$ by $\cp k p$. 
+For example, $\cp{k} {(\assgntopV p ; q \testendo )}$ equals 
+$ \assgntopV{ \cp{k} p } ; \cp{k} q \testendo $.
 
 The following lemma will be instrumental in the soundness proof. 
 
@@ -829,17 +853,19 @@ $$ \tuple{\readset,\writeset,\valuset} \intPgm{\pi} \tuple{\readset',\writeset',
 \tuple{ \cp k {\readset},\cp k {\writeset},\cp k {\valuset}} \intPgm{\cp k \pi} \tuple{\cp k {\readset'},\cp k {\writeset'},\cp k {\valuset'}} . $$
 \end{lemma}
 \begin{proof}[sketch]
-The proof relies on the fact that \DlpaPll satisfies the substitution rule.
-The lemma can also be proved, like Lemma~\ref{theo:irrelevantVariables}, by simultaneous induction with the fact that
+Just as for Lemma~\ref{theo:irrelevantVariables}, the proof is by simultaneous induction on the form of programs and formulas, where the induction hypothesis for the latter is that 
 $\tuple{\readset, \writeset, \valuset} \models \phi$ if and only if
 $\tuple{\cp k \readset, \cp k \writeset, \cp k \valuset} \models \cp k \phi$.
+It relies on the fact that \DlpaPll satisfies the substitution rule.
 \end{proof}
 
-Moreover, in order to force the semantics of the parallel composition operator, we associate to each copy $\cp k p$ two fresh variables $\cpr k p$ and $\cpw k p$,
+Moreover, in order to simulate the semantics of the parallel composition operator our reduction axioms associate to each copy $\cp k p$ two fresh variables $\cpr k p$ and $\cpw k p$,
 denoting whether $\cp k p$ was respectively readable and writable just after the split.
-We define $\storeset(P) =
+Given a set of propositional variables $P$, we define 
+$$\storeset(P) =
 \set{ \cpr k p \suchthat k \in \set{1,2}, p \in P} \cup
-\set{ \cpw k p \suchthat k \in \set{1,2}, p \in P}$ as the set of all these fresh variables.
+\set{ \cpw k p \suchthat k \in \set{1,2}, p \in P}$$ 
+as the set of all these fresh variables.
 
 
 %----------------------------------------------------------%
@@ -850,7 +876,7 @@ Table~\ref{fig:useful_programs} lists programs and formulas that will be useful 
 %
 Observe that the order of the variables in the sequential compositions $ \seqseq{p \in P} ( \cdots ) $ occurring in the above programs does not matter. 
 Observe also that the only endogenous tests on the right hand side occur in readability statements $\readable p$. 
-(Remember that $\readable p$ abbreviates $\ldia{ p \testendo} \top \lor \ldia{ \lnot p \testendo} \top $). 
+(Remember that $\readable p$ abbreviates $\ldia{ p \testendo} \top \lor \ldia{ \lnot p \testendo} \top $.)
 
 \begin{table}[t]
 \begin{align*}
@@ -907,7 +933,7 @@ Observe also that the only endogenous tests on the right hand side occur in read
   \progOkChange\left(\propsetOf{\pi_1 \pll \pi_2}\right) \testpdl ;
   \progmerge\left(\propsetOf{\pi_1 \pll \pi_2}\right)
 \end{align*}
-\caption{Useful programs, for all $P \subseteq \propset$ and all programs $\pi_1$ and $\pi_2$.
+\caption{Useful programs, for all finite $P \subseteq \propset$ and all programs $\pi_1$ and $\pi_2$.
 \label{fig:useful_programs}
 }
 \end{table}
@@ -949,7 +975,11 @@ The additional hypotheses are guaranteed to hold by the interplay of programs $\
 and formula $\progOkChange(P)$.
 
 \begin{lemma}\label{lem:progmerge}
-For all models $\modl$, $\modl_1$ and $\modl_2$, all $P \subseteq \propset$ and all $\valuset^\sharp \subseteq P$,
+\ah{
+Pourquoi $\valuset^\sharp $ est contraint deux fois ? (dans la 1ere et dans la derniere ligne)
+En tout cas la phrase est tres longue, je propose de couper en deux, genre : ``Let .... Then ...''
+}
+For all models $\modl$, $\modl_1$ and $\modl_2$, all $P \subseteq \propset$ and all $\valuset^\sharp \subseteq P$
 such that $\modl \modinter P = \modl$,
         $\modl_1$ and $\modl_2$ are RW-disjoint,
         $\readset = \readset_1 \cup \readset_2$,
@@ -973,10 +1003,10 @@ which is straightforward.
 Finally, the $\progFlatten(\pi_1, \pi_2)$ program emulates the execution of the program $\pi_1 \pll \pi_2$ as
 a sequential composition of the previous programs.
 Notice that there is no occurrence in $\progFlatten(\pi_1, \pi_2)$ of the parallel composition operator,
-except inside $\pi_1$ and $\pi_2$.
+except possibly inside $\pi_1$ and $\pi_2$.
 Lemma~\ref{lem:pllequivalence} below states that the emulation is faithful.
 We first need Lemma~\ref{lem:progClean},
-which can be seen as an adaptation of lemma~\ref{theo:irrelevantVariables} to $\progFlatten(P)$.
+which can be seen as an adaptation of Lemma~\ref{theo:irrelevantVariables} to $\progFlatten(P)$.
 
 \begin{lemma}\label{lem:progClean}
 For all models $\modl$ and $\modl'$, and all programs $\pi_1$ and $\pi_2$,
@@ -991,7 +1021,7 @@ It suffices to observe that all variables in $\propsetOf{\progFlatten(\pi_1, \pi
 (2) set to false and made unreadable by $\progmerge$.
 \end{proof}
 
-Now our main lemma.
+Here is our main lemma.
 
 \begin{lemma}\label{lem:pllequivalence}
 For all models $\modl$ and $\modl'$, and all programs $\pi_1$ and $\pi_2$,
@@ -1136,7 +1166,7 @@ $\progsplit( \propsetOf{\pi_1 \pll \pi_2} ) $ are fresh.
 %$$\ldia{ (\assgntopV{\atm_1} \ndet \assgnbotV{\atm_1}) ; \cdots ; (\assgntopV{\atm_n} \ndet \assgnbotV{\atm_n}) } \phi . $$
 %Observe that the order of the variables does not matter. 
 %
-One may also note that the length of the right hand side can be shortened by restricting 
+The length of the right hand side can be shortened by restricting 
 $\propsetOf{\pi_1 \pll \pi_2}$ to the propositional variables that are assigned by $\propsetOf{\pi_1 \pll \pi_2}$, i.e., 
 to elements $p \in \propset$ such that $\assgntopV p$ or $\assgnbotV p$ occurs in $\propsetOf{\pi_1 \pll \pi_2}$.
 
@@ -1290,9 +1320,9 @@ Its axiomatisation is made up of
 \item
 an axiomatisation of propositional logic;
 \item
-the equivalences of Sections \ref{sec:redax_pgmop}, 
+the equivalences of Sections~\ref{sec:redax_pgmop}, 
 \ref{sec:redax_atmpgm_bool}, 
-and \ref{sec:redax_atmpgm};
+and~\ref{sec:redax_atmpgm};
 %\item
 %the axiom about writability $\ldia{ \assgnbotV p } \top \leqv \writable p$, which abbreviates
 %$\ldia{ \assgntopV p } \top \leqv \ldia{ \assgnbotV p } \top $;
@@ -1322,7 +1352,7 @@ The axiomatisation of \DlpaPll is complete:
 if $\phi$ is \DlpaPll valid then it is provable in the axiomatics of \DlpaPll. 
 \end{theorem}
 \begin{proof}
-The reduction axioms of Sections \ref{sec:redax_pgmop}, \ref{sec:redax_atmpgm_bool}, and \ref{sec:redax_atmpgm} 
+The reduction axioms of Sections~\ref{sec:redax_pgmop},~\ref{sec:redax_atmpgm_bool}, and~\ref{sec:redax_atmpgm} 
 allow us to transform any formula into an equivalent boolean combination of 
 propositional variables and readability and writability statements. 
 (Their application requires the rule of replacement of equivalents, which is derivable 
@@ -1342,7 +1372,7 @@ there is a priori no connection between them nor with the propositional variable
 Based on the reduction of \DlpaPll formulas to boolean formulas 
 (and the transformation of $\readable p$ and $\writable{p}$ from abbreviations into propositional variables),
 we may check the satisfiability of \DlpaPll formulas by means of propositional logic SAT solvers. 
-This is however suboptimal because reduction may result in a formula that is super-exponentially longer than the original formula. 
+This is however suboptimal because the reduction may result in a formula that is super-exponentially longer than the original formula. 
 In the next section we explore another route.
 
 
@@ -1354,7 +1384,7 @@ We establish PSPACE complexity of \DlpaPll satisfiability and model checking by 
 Dynamic Logic of Propositional Assignments \Dlpa. 
 The language of the latter is the fragment of that of \DlpaPll:
 it has neither endogenous tests, nor readability and writability assignments, nor parallel composition. 
-So the language of \Dlpa is built by the following grammar: 
+Hence the language of \Dlpa is built by the following grammar: 
 \begin{align*}
 \phi & ::= p \mid \top \mid \lnot \phi \mid (\phi \lor \phi) \mid \ldia \pi \phi
 \\
@@ -1374,7 +1404,7 @@ The interpretation of \Dlpa formulas and programs therefore only requires a valu
 Our translation from \DlpaPll to \Dlpa eliminates endogenous tests and parallel composition. 
 This is done in a way that is similar to their reduction axioms of Table~\ref{fig:redax_pgmops}.
 It moreover transforms readability and writability statements into special propositional variables $\readable p$ and $\writable p$, similar to the reduction axioms of Table~\ref{fig:redax_assignments}.
-%into propositional logic formulas in Section \ref{sec:axiomatisation}. 
+%into propositional logic formulas in Section~\ref{sec:axiomatisation}. 
 
 To make this formal, let the set of \emph{atomic formulas} be
 $$ \atmset = \propset \cup \{ \writable{p} \suchthat p \in \propset \} \cup \{ \readable p \suchthat p \in \propset \} . $$
@@ -1386,7 +1416,7 @@ $\readOf P = \{ \readable p \suchthat p \in P \}$
 is the associated set of read-variables and 
 $\writeOf P = \{ \writable{p} \suchthat p \in P \}$ 
 is the associated set of write-variables. 
-So $\atmset = \propset \cup \readOf \propset \cup \writeOf \propset$. 
+Hence $\atmset = \propset \cup \readOf \propset \cup \writeOf \propset$. 
 %
 As before, the set of propositional variables occurring in a formula $\phi$ is noted $\propsetOf \phi $ and 
 the set of those occurring in a program $\pi$ is noted $\propsetOf \pi $. %similarly for $\atmset(\phi)$ and $\atmset(\pi) 
@@ -1406,7 +1436,10 @@ $\assgnbot{ \writable{p}}$.
 Moreover, we have to `spell out' that 
 $\assgnbot{ \writable p }$ has side effect $\assgnbot{ \readable p }$ and that  
 $\assgntop{ \readable p }$ has side effect $\assgntop{ \writable p }$. 
-So the programs and formulas of Table~\ref{fig:useful_programs} become the following \Dlpa programs and formulas:
+Hence the programs and formulas of Table~\ref{fig:useful_programs} become the following \Dlpa programs and formulas:
+\ah{
+a mettre dans une table? 
+}
 \begin{align*}
 \progsplit(P) =&\ \seqseq{p \in P} \Big( 
 \Big(
@@ -1511,7 +1544,7 @@ and   $\valuset'^+ = \valuset' \cup \readOf{\readset'} \cup \writeOf{\writeset'}
 \end{lemma}
 \begin{proof}[sketch]
 The proof is by simultaneous induction on the size of $\pi$ or $\phi$.
-The cases for endogenous tests and parallel compositions are similar to the ones in the proof of Theorem~\ref{theo:axiomatisationsound}.
+The cases for endogenous test and parallel composition are similar to those in the proof of Theorem~\ref{theo:axiomatisationsound}.
 The other cases are straightforward.
 \end{proof}
 
@@ -1537,30 +1570,55 @@ $\left[\seqseq{p \in \propsetOf \phi} \Big(
 \readable{p} \testpdl \ndet \big( \lnot \readable{p} \testpdl ; (\assgntopV{p} \ndet \assgnbotV{p}) \big) 
 \Big)\right] \phi \testpdl $ is linear in the size of $\phi$.
 All other translation expressions are clearly linear too.
-Hence, by applying $t$ from the root of the syntax tree to its leaves, $t(\phi)$ can be computed in time polynomial in the size of $\phi$.
+Hence applying $t$ from the root of the syntax tree to its leaves, $t(\phi)$ can be computed in time polynomial in the size of $\phi$.
 \end{proof}
 
 \begin{theorem}
 \DlpaPll model and satisfiability checking are both PSPACE complete.
 \end{theorem}
 \begin{proof}
-Since any \Dlpa formula is a \DlpaPll formula, and \Dlpa model and satisfiability checking has been proved in~\cite{BalbianiHST14} to be PSPACE complete,
+Since any \Dlpa formula is a \DlpaPll formula, and \Dlpa model and satisfiability checking has been proved to be PSPACE complete in~\cite{BalbianiHST14},
 \DlpaPll model and satisfiability checking are PSPACE hard.
 By Lemmas~\ref{lem:dlpatradcorrect} and~\ref{lem:polynomial}, \DlpaPll model and satisfiability checking are also in PSPACE.
 \end{proof}
 
 %----------------------------------------------------------%
-\section{Conclusion}\label{sec:conclusion}
+\section{Discussion and Conclusion}\label{sec:conclusion}
 %----------------------------------------------------------%
 
+\ah{
+para modifie et etendu
+}
 We have added to Dynamic Logic of Propositional Assignments \Dlpa
 a parallel composition operator in the spirit of separation logics. 
-To that end we have augmented \Dlpa valuations by readability and writability information. 
+Our semantics augments \Dlpa valuations by readability and writability information. 
+We have provided an axiomatisation in terms of a complete set of reduction axioms. 
+Our reduction to \Dlpa ensures decidability. 
+We have also proved PSPACE complexity via a polynomial translation to \Dlpa. 
+
 We have adopted a stricter stance on race conditions than in the approach of \cite{HerzigEtal-Ijcai19} 
-where e.g.\ the program $\assgntop p \pll \assgntop p$ is executable.
-We have provided a complete axiomatisation in terms of reduction axioms, 
-ensuring at the same time decidability. 
-We have also proved PSPACE complexity via a translation to \Dlpa. 
+where e.g.\ the program $\assgntop p \pll \assgntop p$ is executable. 
+Let us briefly compare these two semantics. 
+In our case, $\pi_1 \pll \pi_2$ is executable if and only if any interleaving of the components of $\pi_1$ and $\pi_2$ is executable, and any of these interleavings leads to the same outcome. 
+This is not guaranteed in the approach of \cite{HerzigEtal-Ijcai19}, which is motivated by parallel planning. 
+There, it is generally considered that two actions that are executed in parallel should not interfere \cite{DBLP:journals/ai/BlumF97}:
+they should not have conflicting effects and there should be no cross-interaction, where the second condition means that the effect of one action should not destroy the precondition of the other, and vice versa. 
+For example, in a world of blocks the actions 
+\begin{align*}
+\mathsf{liftLeft}(b) &= \mathsf{OnTable}(b) ? ; \assgnbot{ \mathsf{OnTable}(b) } ; \assgntop{ \mathsf{HoldsLeft}(b) }  ,
+\\
+\mathsf{liftRight}(b) &= \mathsf{OnTable}(b) ? ; \assgnbot{ \mathsf{OnTable}(b) }  ; \assgntop{ \mathsf{HoldsRight}(b) } 
+\end{align*}
+of lifting block $b$ with the left robot arm and with the right robot arm have cross-interaction because 
+one of the effects of $\mathsf{liftLeft}(b)$ is $\lnot \mathsf{OnTable}(b)$, which destroys the precondition $ \mathsf{OnTable}(b)$ of $\mathsf{liftLeft}(b)$. 
+In other words, $\mathsf{liftLeft}(b)$ and $\mathsf{liftRight}(b) $ cannot be interleaved. 
+%, and can therefore not be executed in parallel.  
+The more liberal semantics of \cite{HerzigEtal-Ijcai19} makes that interleavability of parallel actions in a parallel plan has to be ensured `by hand' when expressing parallel plans in the logic, namely by means of explicit tests.
+This is not necessary in our semantics where absence cross interaction between actions that are performed in parallel is `built-in'. 
+Indeed, the program
+$\ldia{ \mathsf{liftLeft}(b) \pll \mathsf{liftRight}(b) } \top $ 
+is unsatisfiable in our semantics: each subprogram requires writability of $\mathsf{OnTable}(b)$ to be executable. 
+Our logic \DlpaPll can therefore be expected to provide a more appropriate base for parallel planning. 
 
 The mathematical properties of \DlpaPll compare favourably with 
 the high complexity or even undecidability of the 
@@ -1571,6 +1629,12 @@ other extensions of dynamic logic by a separating parallel composition operator 
 Just as ours, the latter line of work is in the spirit of separation logic, having splitting and merging operations that are defined on system states. 
 The axiomatisation that was introduced and studied in \cite{DBLP:journals/logcom/BalbianiB18} is restricted to the star-free fragment and the authors had to add propositional quantifiers in order to make parallel composition definable. 
 This contrasts with the simplicity of our axiomatisation of \DlpaPll that we obtained by adding reduction axioms to the axiomatisation of \Dlpa. 
+\ah{
+phrase qui suit ajoutee
+}
+This may be related to the fact that propositional quantifiers can be expressed in \Dlpa: 
+$\exists p \phi$ is equivalent to $\ldia{ \assgntopV p \ndet \assgnbotV p } \phi$ and 
+$\forall p \phi$ is equivalent to $\lbox{ \assgntopV p \ndet \assgnbotV p } \phi$.
 Just as \Dlpa can be viewed as an instance of PDL%
 ---the interpretation of atomic programs moves from PDL's abstract relation between states to concrete updates of valuations\mbox{---,}
 \DlpaPll can be viewed as an instance of the logic of \cite{DBLP:journals/entcs/BenevidesFV11}
@@ -1578,16 +1642,22 @@ where the interpretation of parallel composition no longer resorts to
 an abstract relation $\star$ associating three states, 
 but instead has concrete functions that split and merge valuations and that are constrained by readability and writability information. 
 
+
+
 %----------------------------------------------------------%
 \section{Acknowledgements}
 %----------------------------------------------------------%
 The paper benefited from comments and remarks from the reviewers as well as from the attendees of DaL\'i 2019, 
-in particular Alexandru Baltag, Raul Fervari, Rainer H\"ahnle and Dexter Kozen. 
+in particular Alexandru Baltag, Raul Fervari, Rainer H\"ahnle and Dexter Kozen, as well as 
+to the reviewers of the first version submitted to the JLAMP.
+\ah{
+ajoute
+}
 We did our best take their comments into account. 
 
 
 \appendix
-\section{Associativity}
+\section{Appendix: Associativity of Parallel Composition}
 \input{associativity.tex}
 
 %\bibliographystyle{plainurl}
