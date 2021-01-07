@@ -250,18 +250,21 @@ is inexecutable because there is a conflict:
 the two possible interleavings 
 $\assgntopV p ; \assgnbotV p $ and $\assgnbotV p  ; \assgntopV p $ are not equivalent. 
 %Similarly, $( (p \testendo ; \assgntopV q) \ndet \top \testendo ) \pll \assgntopV p$ is inexecutable. 
-We even consider that $ \assgntopV p \pll \assgntopV p$ and $ p \testendo \pll \assgntopV p$ are inexecutable, 
+We even consider that $ \assgntopV p \pll \assgntopV p$ %and $ p \testendo \pll \assgntopV p$ are inexecutable, 
+is inexecutable,
 which some may consider a bit over-constrained. 
+\jb{Following paragraph removed.}
 \end{enumerate}
-Together, the above two principles entail that the dynamic logic formula
-$$ \lbox{ (\pi_1 ; \phi_1 \testendo ) \pll (\pi_2 ; \phi_2 \testendo ) } (\phi_1 \land \phi_2) $$
-should be valid. 
-If we replace $\phi_1$ by $p$ and $\phi_2$ by $\lnot p$ then the above tells us that 
-$(\pi_1 ; p \testendo ) \pll (\pi_2 ; \lnot p \testendo )$ is inexecutable. 
-Hence the program
-$\pi_1 ; (p \testendo \pll \pi_2) ; \lnot p \testendo $ 
-%$(\pi_1 ; p \testendo ) \pll (\pi_2 ; \lnot p \testendo )$ 
-that is obtained from it by interleaving should be inexecutable, too. 
+%Together, the above two principles entail that the dynamic logic formula
+%$$ \lbox{ (\pi_1 ; \phi_1 \testendo ) \pll (\pi_2 ; \phi_2 \testendo ) } (\phi_1 \land \phi_2) $$
+%should be valid. 
+%If we replace $\phi_1$ by $p$ and $\phi_2$ by $\lnot p$ then the above tells us that 
+%$(\pi_1 ; p \testendo ) \pll (\pi_2 ; \lnot p \testendo )$ is inexecutable. 
+%Hence the program
+%$\pi_1 ; (p \testendo \pll \pi_2) ; \lnot p \testendo $ 
+%%$(\pi_1 ; p \testendo ) \pll (\pi_2 ; \lnot p \testendo )$ 
+%that is obtained from it by interleaving should be inexecutable, too. 
+
 %\ah{
 %%chez Joseph: 
 %%``En combinant les deux, on a que les formules
@@ -305,7 +308,7 @@ This however did not allow one to define an adjoint implication as usually done 
 Another paper where one of us is involved has richer models where valuations are supplemented by information about writability of variables, supposing that a variable can only be assigned by a program when it is writable \cite{HerzigEtal-Ijcai19}. 
 Splitting and merging of such models can be defined in a natural way, thus providing a meaningful interpretation of parallel composition. 
 When the parallel composition is based on separation, writability of variables permits to resolve merge conflicts.
-Consider for instance the execution of the programs $\top \testendo \pll \assgntopV p$ and $\assgnbotV p \pll \assgntopV p$ from a state in which $p$ is false.
+Consider for instance the execution of the programs $\top \testpdl \pll \assgntopV p$ and $\assgnbotV p \pll \assgntopV p$ from a state in which $p$ is false.
 We argue that intuitively, the former program should lead to a state in which $p$ is true
 whereas the latter program should either not be executable or lead to a state where $p$ is undeterministically true or false.
 \ah{
