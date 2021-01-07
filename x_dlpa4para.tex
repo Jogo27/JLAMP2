@@ -566,41 +566,37 @@ $\modl \models \phi \lor \psi$ & iff & $\modl \models \phi $ or $\modl \models \
 $\modl \models \ldia \pi \phi $ & iff & there is a model $\modl'$ such that $\modl \intPgm{ \pi } \modl' $ and $\modl' \models \phi$.
 \end{tabular}\end{center}
 Programs are interpreted as relations on the set of models: 
-\begin{center}\begin{tabular}{lll}
-$\modl \intPgm{ \assgntopV{p} } \modl'$ & iff & $\readset' = \readset$, $\writeset' = \writeset $, $\valuset' = \valuset \cup \{p\} $, and $p \in \writeset$;
+\begin{align*}
+&\modl \intPgm{ \assgntopV{p} } \modl'&\text{ iff }&\readset' = \readset\text{, }\writeset' = \writeset \text{, }\valuset' = \valuset \cup \{p\} \text{, and }p \in \writeset
 \\
-$\modl \intPgm{ \assgnbotV{p} } \modl'$ & iff & $\readset' = \readset$, $\writeset' = \writeset $, $\valuset' = \valuset \setminus \{p\} $, and $p \in \writeset$;
+&\modl \intPgm{ \assgnbotV{p} } \modl'&\text{ iff }&\readset' = \readset\text{, }\writeset' = \writeset \text{, }\valuset' = \valuset \setminus \{p\} \text{, and }p \in \writeset
+\displaybreak[0]\\
+&\modl \intPgm{ \assgntopR{p} } \modl'&\text{ iff }&\readset' = \readset \cup \{p\} \text{, }\writeset' = \writeset \text{, and }\valuset'= \valuset
 \\
-$\modl \intPgm{ \assgntopR{p} } \modl'$ & iff & $\readset' = \readset \cup \{p\} $, $\writeset' = \writeset $, and $\valuset'= \valuset$;
+&\modl \intPgm{ \assgnbotR{p} } \modl'&\text{ iff }&\readset' = \readset \setminus \{p\} \text{, }\writeset' = \writeset \setminus \{p\}\text{, and }\valuset'= \valuset
 \\
-$\modl \intPgm{ \assgnbotR{p} } \modl'$ & iff & $\readset' = \readset \setminus \{p\} $, $\writeset' = \writeset \setminus \{p\}$, and $\valuset'= \valuset$;
+&\modl \intPgm{ \assgntopW{p} } \modl'&\text{ iff }&\readset' = \readset \cup \{p\} \text{, }\writeset' = \writeset \cup \{p\} \text{, and }\valuset' = \valuset
 \\
-$\modl \intPgm{ \assgntopW{p} } \modl'$ & iff & $\readset' = \readset \cup \{p\} $, $\writeset' = \writeset \cup \{p\} $, and $\valuset' = \valuset$;
+&\modl \intPgm{ \assgnbotW{p} } \modl'&\text{ iff }&\readset' = \readset\text{, }\writeset' = \writeset  \setminus \{p\} \text{, and }\valuset' = \valuset
+\displaybreak[0]\\
+&\modl \intPgm{ \phi \testpdl }\modl'&\text{ iff }&\modl = \modl'\text{ and }\modl \models \phi
 \\
-$\modl \intPgm{ \assgnbotW{p} } \modl'$ & iff & $\readset' = \readset$, $\writeset' = \writeset  \setminus \{p\} $, and $\valuset' = \valuset$;
+&\modl \intPgm{ \phi \testendo }\modl'&\text{ iff }&\modl = \modl'\text{ and }\modl'' \models \phi\text{ for every }\modl''\text{ such that }\modl'' \sim \modl
+\displaybreak[0]\\
+&\modl \intPgm{ \pi_1 ; \pi_2 } \modl'&\text{ iff }&\text{there is an }\modl''\text{ such that }\modl \intPgm{ \pi_1 } \modl'' \text{ and }
+												\modl'' \intPgm{ \pi_2 } \modl'
 \\
-$\modl \intPgm{ \phi \testpdl }\modl'$ & iff & $\modl = \modl'$ and $\modl \models \phi$;
+&\modl \intPgm{ \pi_1 \ndet \pi_2 } \modl'&\text{ iff }&\modl \intPgm{ \pi_1 } \modl'\text{ or }\modl \intPgm{ \pi_2 } \modl'
 \\
-$\modl \intPgm{ \phi \testendo }\modl'$ & iff & $\modl = \modl'$ and $\modl'' \models \phi$ for every $\modl''$ such that $\modl'' \sim \modl$;
-%``$\modl \intPgm{ \phi \testpdl } \modl'$ iff $\modl \sim \modl'$ and $\modl' \models \phi$''
-%serait plus jolie, avec l'axiome de reduction
-%$\ldia{\phi \testpdl } \psi \leqv \ \ldia{ \mathit{varyIfNotreadable}(\propsetOf \psi ) } (\phi \land \psi )$. 
-%Mais plus difficile a justifer. 
+&\modl \intPgm{ \pi^\ast } \modl'&\text{ iff }&\text{there is an }n \geq 0 \text{ such that }\modl \intPgm{ \pi } ^n \modl'
 \\
-$\modl \intPgm{ \pi_1 ; \pi_2 } \modl'$ & iff & there is an $\modl''$ such that $\modl \intPgm{ \pi_1 } \modl''$ and 
-												$\modl'' \intPgm{ \pi_2 } \modl'$;
-\\
-$\modl \intPgm{ \pi_1 \ndet \pi_2 } \modl'$ & iff & $\modl \intPgm{ \pi_1 } \modl'$ or $\modl \intPgm{ \pi_2 } \modl'$;
-\\
-$\modl \intPgm{ \pi^\ast } \modl'$ & iff & there is an $n \geq 0 $ such that $\modl \intPgm{ \pi } ^n \modl'$;
-\\
-$\modl \intPgm{ \pi_1 \pll \pi_2 } \modl'$ & iff & there are $\modl_1, \modl_2, \modl'_1, \modl'_2$ such that %\\&&
-$\splt{\modl}{\modl_1} {\modl_2} $, $\mrg{\modl'}{\modl'_1} {\modl'_2} $, \\&&
-$\modl_1 \intPgm{ \pi_1 } \modl'_1$, 
-$\readset_1 = \readset'_1 $, $\writeset_1 = \writeset'_1 $, $\valuset_1 \setminus \writeset_1 = \valuset'_1 \setminus \writeset'_1 , $ \\&&
-$\modl_2 \intPgm{ \pi_2 } \modl'_2$, 
-$\readset_2 = \readset'_2 $, $\writeset_2 = \writeset'_2 $, $\valuset_2 \setminus \writeset_2 = \valuset'_2 \setminus \writeset'_2 $. 
-\end{tabular}\end{center}
+&\modl \intPgm{ \pi_1 \pll \pi_2 } \modl'&\text{ iff }&\text{there are }\modl_1, \modl_2, \modl'_1, \modl'_2 \text{ such that }
+\splt{\modl}{\modl_1} {\modl_2} \text{, }\mrg{\modl'}{\modl'_1} {\modl'_2} \text{,} \\
+&&&\modl_1 \intPgm{ \pi_1 } \modl'_1 \text{, }
+\readset_1 = \readset'_1 \text{, }\writeset_1 = \writeset'_1 \text{, }\valuset_1 \setminus \writeset_1 = \valuset'_1 \setminus \writeset'_1 \text{, }\\
+&&&\modl_2 \intPgm{ \pi_2 } \modl'_2 \text{, }
+\readset_2 = \readset'_2 \text{, }\writeset_2 = \writeset'_2 \text{, }\valuset_2 \setminus \writeset_2 = \valuset'_2 \setminus \writeset'_2
+\end{align*}
 In the interpretation of assignments of atomic formulas we require 
 propositional variables to be modifiable, while 
 readability and writability can be modified unconditionally.
