@@ -1304,8 +1304,8 @@ When atomic programs face propositional variables or readability and writability
 then the modal operator can be eliminated (sometimes introducing a writability statement $\writable{p}$). 
 The reduction axioms doing that are in Table~\ref{fig:redax_assignments}.
 
-As announced, the exhaustive application of the above equivalences results in boolean combinations of 
-propositional variables and readability and writability statements. 
+As announced, the exhaustive application of the above axioms\jb{Replaced `equivalences' with `axioms' to fix overfull hbox.}
+results in boolean combinations of propositional variables and readability and writability statements. 
 
 %----------------------------------------------------------%
 \subsection{Soundness, Completeness, and Decidability} 
@@ -1592,8 +1592,8 @@ We have provided an axiomatisation in terms of a complete set of reduction axiom
 Our reduction to \Dlpa ensures decidability. 
 We have also proved PSPACE complexity via a polynomial translation to \Dlpa. 
 
-We have adopted a stricter stance on race conditions than in the approach of \cite{HerzigEtal-Ijcai19} 
-where e.g.\ the program $\assgntop p \pll \assgntop p$ is executable. 
+We have adopted a stricter stance on race conditions than in~\cite{HerzigEtal-Ijcai19}\jb{Removed `the approach of' to fix overfull hbox.}
+where e.g.~the program $\assgntop p \pll \assgntop p$ is executable. 
 Let us briefly compare these two semantics. 
 In our case, $\pi_1 \pll \pi_2$ is executable if and only if any interleaving of the components of $\pi_1$ and $\pi_2$ is executable, and any of these interleavings leads to the same outcome. 
 This is not guaranteed in the approach of \cite{HerzigEtal-Ijcai19}, which is motivated by parallel planning. 
