@@ -287,49 +287,11 @@ is not executable? It does not seem reasonable.
 }
 
 As we say in the introduction, this is a indeed very restrictive version of parallel composition. 
-It could however be relaxed easily in our framework by allowing both subprograms in $ (\assgntop p \pll \assgntop p) $ to modify the same variable, under the condition that they do so in the same way. 
+It could be relaxed easily in our framework by allowing both subprograms in $ (\assgntop p \pll \assgntop p) $ to modify the same variable, under the condition that they do so in the same way. 
 This choice was made in [HMV19]. %Herzig et al., IJCAI 2019]. 
-We have added the following paragraph discussing the differences in the ``Discussion and Conclusion'' section:
-
-%\begin{quote}
-The semantics of DL-PA$^\pll$ could be adapted to that $ (\assgntop p \pll \assgntop p) $ becomes executable. 
-both subprograms in to modify the same variable, under the condition that they do so in the same way. 
-This choice was made in [HMV19]. %Herzig et al., IJCAI 2019]. 
-It suffices to modify the definition of split and merge 
-\begin{center}\begin{tabular}{lll}
-$\splt{\modl}{\modl_1} {\modl_2} $ & iff & $\modl_1$ and $\modl_2$ are RW-disjoint, 
-$\readset = \readset_1 \cup \readset_2 $, $\writeset = \writeset_1 \cup \writeset_2$,  \\&&  and $\valuset = \valuset_1 = \valuset_2$;
-%\writeset_1 \cap \readset_2  = \writeset_2 \cap \readset_1  = \emptyset , \text{ and } $ \\&& $\valuset = \valuset_1 = \valuset_2$ 
-\\
-$\mrg{\modl}{\modl_1} {\modl_2} $ & iff  & $\modl_1$ and $\modl_2$ are RW-disjoint, 
-$\readset = \readset_1 \cup \readset_2$, $\writeset = \writeset_1 \cup \writeset_2$,  \\&&
-$\valuset_1 \setminus \writeset = \valuset_2 \setminus \writeset $, and 
-$\valuset = (\valuset_1 \cap \writeset_1) \cup (\valuset_2 \cap \writeset_2) \cup (\valuset_1 \cap \valuset_2) $. 
-\end{tabular}\end{center}
-by dropping the RW-disjointness condition and checking instead that the variables that are modified by both subprograms got assigned the same truth value:
-\begin{center}\begin{tabular}{lll}
-$\splt{\modl}{\modl_1} {\modl_2} $ & iff & 
-$\readset = \readset_1 \cup \readset_2 $, $\writeset = \writeset_1 \cup \writeset_2$, and $\valuset = \valuset_1 = \valuset_2$;
-%\writeset_1 \cap \readset_2  = \writeset_2 \cap \readset_1  = \emptyset , \text{ and } $ \\&& $\valuset = \valuset_1 = \valuset_2$ 
-\\
-$\mrg{\modl}{\modl_1} {\modl_2} $ & iff  & 
-$\readset = \readset_1 \cup \readset_2$, $\writeset = \writeset_1 \cup \writeset_2$, \\&&
-$\valuset_1 \cap \writeset_1 \cap \writeset_2  = \valuset_2 \cap \writeset_1 \cap \writeset_2 $, \\&&
-$\valuset_1 \setminus \writeset = \valuset_2 \setminus \writeset $, and 
-$\valuset = (\valuset_1 \cap \writeset_1) \cup (\valuset_2 \cap \writeset_2) \cup (\valuset_1 \cap \valuset_2) $. 
-\end{tabular}\end{center}
-
-It seems however a matter of debate whether this is the right semantics. 
-Consider the execution of the program $\mathtt{toggle}(p) \pll \mathtt{toggle}(p)$ at the empty valuation $\emptyset$, where $\mathtt{toggle}(p)$ abbreviates 
-$ (p ? ; \assgnbot p) \ndet (\lnot p ? ; \assgntop p)$. 
-If one considers that $ \assgntop p \pll \assgntop p$ should be executable then one should also accept that $\mathtt{toggle}(p) \pll \mathtt{toggle}(p)$ is so, too, and that the result is the valuation $\{p\}$. 
-This contrasts with the result of interleaving, which is the valuation $\emptyset$. 
-The result $\{p\}$ may be defendable if parallel composition associates separate `workspaces' to the two subprograms at the start of the execution. % then the result is the valuation $\{p\}$. 
-It is however problematic otherwise. 
-Our---as we say in the introduction---admittedly radical solution avoids any ambiguity here: 
-both subprograms assign $p$ and, according to our definition, cannot be merged for that reason. 
-The benefit of such a constrained semantics is a clear-cut semantics. 
-%\end{quote}
+However, this approach leads to allow some unwanted cross interactions between subprograms of parallel compositions.
+In contrast, the approach in the present paper provides a clear-cut semantics.
+We have added a paragraph comparing the two approches in the ``Discussion and Conclusion'' section.
 
 \REVIEWERCOMMENT{\noindent
 Page 2,3: some discussion should be provided about limit cases, for instance, when all variables are writable and readable.

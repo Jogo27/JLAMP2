@@ -252,7 +252,8 @@ $\assgntopV p ; \assgnbotV p $ and $\assgnbotV p  ; \assgntopV p $ are not equiv
 %Similarly, $( (p \testendo ; \assgntopV q) \ndet \top \testendo ) \pll \assgntopV p$ is inexecutable. 
 We even consider that $ \assgntopV p \pll \assgntopV p$ %and $ p \testendo \pll \assgntopV p$ are inexecutable, 
 is inexecutable,
-which some may consider a bit over-constrained. 
+which some may consider a bit over-constrained\footnote{This restriction can be related to the fact that
+the formula $e \mathrel\mapsto e' \mathbin\ast e \mathrel\mapsto e'$ is unsatisfiable in Separation Logic~\cite{Reynolds02}.}.
 \jb{Following paragraph removed.}
 \end{enumerate}
 %Together, the above two principles entail that the dynamic logic formula
@@ -310,12 +311,8 @@ Splitting and merging of such models can be defined in a natural way, thus provi
 When parallel composition is based on separation, writability information permits to resolve merge conflicts.
 Consider for instance the execution of the programs $\top \testpdl \pll \assgntopV p$ and $\assgnbotV p \pll \assgntopV p$ from a state in which $p$ is false.
 We argue that intuitively, the former program should lead to a state in which $p$ is true
-whereas the latter program should either not be executable or lead to a state where $p$ is undeterministically true or false.
-\ah{
-Je ne comprends pas le ``undeterministically'' : ca veut dire que ou bien c'est inexecutable, ou bien $p$ devient faux ? mais alors c'est la meme chose que rendre $p$ deterministiquement faux. 
-\textbf{JB} Est-ce mieux maintenant ?
-\textbf{AH:} Qu'est-ce qu'un ``state where $p$ is undeterministically true or false'' ? ce serait pas plutot : ``...or non-deterministically lead to two possible states, one where $p$ is true and one where $p$ is false.'' ?
-}
+whereas the latter program should either not be executable
+or non-deterministically lead to two possible states, one where $p$ is true and one where $p$ is false.
 However, without writability information, the states before the merge of each of these programs are the same:
 $p$ is false in the left branch but true in the right branch.
 Writability allows the merge to distinguish these two situations and to resolve the conflict in the former case.
@@ -1615,11 +1612,7 @@ Phrase suivante mo\-di\-fiée.}
 %In other words, $\mathsf{liftLeft}(b)$ and $\mathsf{liftRight}(b) $ cannot be interleaved. 
 %, and can therefore not be executed in parallel.  
 The more liberal semantics of \cite{HerzigEtal-Ijcai19} makes that it is not enough to describe the parallel execution of actions $\pi_1,\ldots,\pi_n$ as a step of a parallel plan by $\pi_1 \pll \ldots \pll \pi_n$. 
-Instead, the absence of cross-interactions has to be checked `by hand', namely by explicitly inserting a \Dlpa test after each $\pi_i$ that the preconditions of the other actions are not violated: a step of a parallel plan is described by the program
-\jb{
-Des tests dans le langage de la logique ou des tests hors de la logique ?
-\textbf{AH:} mieux ? 
-}.
+Instead, the absence of cross-interactions has to be checked `by hand', namely by explicitly inserting a \Dlpa test after each $\pi_i$ that the preconditions of the other actions are not violated: a step of a parallel plan is described by the program.
 $$ \big( \pi_1 ; \bigwedge_{i \neq 1} \mathsf{pre}(\pi_j) ? \big) \pll \ldots \pll 
    \big( \pi_n ; \bigwedge_{i \neq n} \mathsf{pre}(\pi_j) ? \big) . $$
 This is not necessary in our semantics where the absence of cross interaction between actions that are performed in parallel is `built-in'. 
