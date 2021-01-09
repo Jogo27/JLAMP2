@@ -210,7 +210,7 @@ a program operator of parallel composition $\pi_1 \pll \pi_2$ of two programs $\
 that is inspired by separation logic. 
 The latter was studied in the literature as an account of concurrency,
 among others by Brookes and by O'Hearn %(Concurrent Separation Logic, Brookes 2004 et O'Hearn 2004). 
-\cite{OHearn04,Brookes04,Brookes07,BrookesO16}.
+\cite{OHearn04,Brookes04,BrookesO16}.
 Their Concurrent Separation Logic is characterised by two main principles:
 \begin{enumerate}
 \item
@@ -224,18 +224,18 @@ the parallel execution of two programs that do nothing does not change the state
 The formula 
 $\phi \limp \lbox{ \top ? \pll \top ? } \phi$ 
 should therefore be valid, where ``$ \top ? $'' is the test that $\top$ is true (which always succeeds).
-\ah{
-avant (probablement parce qu'a l'epoque on n'avait pas `$?$') :
-``The formula 
-$\phi \limp \lbox{ \top \testendo \pll \top \testendo } \phi$ 
-%$\lbox{ \phi \testendo \pll \top \testendo } \phi$ 
-should therefore be valid, where ``$ \testendo $'' is the test operator.
-(The notation ``$ \testendo $'' signals a difference with the standard PDL test ``$ \testpdl $'' 
-that however does not matter here.
-%These tests $\phi \testendo$ differ from standard PDL tests;
-It will be explained in the end of the present section
-when we discuss what system states should look like.)''
-}
+%\ah{
+%avant (probablement parce qu'a l'epoque on n'avait pas `$?$') :
+%``The formula 
+%$\phi \limp \lbox{ \top \testendo \pll \top \testendo } \phi$ 
+%%$\lbox{ \phi \testendo \pll \top \testendo } \phi$ 
+%should therefore be valid, where ``$ \testendo $'' is the test operator.
+%(The notation ``$ \testendo $'' signals a difference with the standard PDL test ``$ \testpdl $'' 
+%that however does not matter here.
+%%These tests $\phi \testendo$ differ from standard PDL tests;
+%It will be explained in the end of the present section
+%when we discuss what system states should look like.)''
+%}
 \item
 The execution of a parallel program $\pi_1 \pll \pi_2$ should be insensitive to 
 the way the components of $\pi_1$ and $\pi_2$ are interleaved. 
@@ -254,7 +254,6 @@ We even consider that $ \assgntopV p \pll \assgntopV p$ %and $ p \testendo \pll 
 is inexecutable,
 which some may consider a bit over-constrained\footnote{This restriction can be related to the fact that
 the formula $e \mathrel\mapsto e' \mathbin\ast e \mathrel\mapsto e'$ is unsatisfiable in Separation Logic~\cite{Reynolds02}.}.
-\jb{Following paragraph removed.}
 \end{enumerate}
 %Together, the above two principles entail that the dynamic logic formula
 %$$ \lbox{ (\pi_1 ; \phi_1 \testendo ) \pll (\pi_2 ; \phi_2 \testendo ) } (\phi_1 \land \phi_2) $$
@@ -346,9 +345,6 @@ in Section~\ref{sec:interpretation} we give the interpretation of formulas and p
 In Section~\ref{sec:axiomatisation} we axiomatise the valid formulas by means of reduction axioms and
 in Section~\ref{sec:complexity} we establish that the satisfiability problem is PSPACE complete. 
 Section~\ref{sec:conclusion} sums up our contributions and discusses related work and the application to parallel planning. 
-\ah{
-reste ajoute
-}
 The annex contains a proof of associativity of parallel composition.\footnote{
 The present paper is a more elaborate version of %a paper that was presented at DaL\'i 2019
 \cite{DBLP:conf/tap/BoudouHT19}. 
@@ -520,7 +516,6 @@ $\pi^{\leq 0} = \top \testpdl $ and
 $\pi^{\leq n+1} = \top \testpdl \ndet (\pi ; \pi^{\leq n}) $. 
 %The program $\ifthen{\phi}{\pi}$ abbreviates $(\phi \testpdl ; \pi) \ndet \lnot \phi \testpdl $.
 %The program $\assgn \atm \phi$ abbreviates $(\phi \testpdl ; \assgntopV \atm) \ndet (\lnot \phi \testpdl ; \assgntopV \atm) $.
-%\ah{elimine }
 For a finite set of variables 
 $P = \{p_i\}_{1 \leq  i \leq n}$ 
 %$P = \{p_1,\ldots,p_n\}$ 
@@ -683,9 +678,6 @@ $\mrg
 { \tuple{\{p\},\{p\},\{p\}} }$.
 \end{example}
 
-\ah{
-paragraphe ajoute
-}
 It is clear that parallel composition satisfies commutativity. 
 It is less obvious that it is also associative. 
 The proof is somewhat involved and can be found in the annex. 
@@ -970,10 +962,6 @@ The additional hypotheses are guaranteed to hold by the interplay of programs $\
 and formula $\progOkChange(P)$.
 
 \begin{lemma}\label{lem:progmerge}
-%\ah{
-%Pourquoi $\valuset^\sharp $ est contraint deux fois ? (dans la 1ere et dans la derniere ligne)
-%En tout cas la phrase est tres longue, je propose de couper en deux, genre : ``Let .... Then ...''
-%}
 Let $\modl$, $\modl_1$ and $\modl_2$ be models, and $P$ a set of propositional variables
 such that $\modl \modinter P = \modl$,
         $\modl_1$ and $\modl_2$ are RW-disjoint,
@@ -1017,7 +1005,7 @@ It suffices to observe that all variables in $\propsetOf{\progFlatten(\pi_1, \pi
 (2) set to false and made unreadable by $\progmerge$.
 \end{proof}
 
-Here is our main lemma.
+We can now prove our main lemma.
 
 \begin{lemma}\label{lem:pllequivalence}
 For all models $\modl$ and $\modl'$, and all programs $\pi_1$ and $\pi_2$,
@@ -1304,7 +1292,7 @@ When atomic programs face propositional variables or readability and writability
 then the modal operator can be eliminated (sometimes introducing a writability statement $\writable{p}$). 
 The reduction axioms doing that are in Table~\ref{fig:redax_assignments}.
 
-As announced, the exhaustive application of the above axioms\jb{Replaced `equivalences' with `axioms' to fix overfull hbox.}
+As announced, the exhaustive application of the above axioms
 results in boolean combinations of propositional variables and readability and writability statements. 
 
 %----------------------------------------------------------%
@@ -1432,10 +1420,8 @@ $\assgnbot{ \writable{p}}$.
 Moreover, we have to `spell out' that 
 $\assgnbot{ \writable p }$ has side effect $\assgnbot{ \readable p }$ and that  
 $\assgntop{ \readable p }$ has side effect $\assgntop{ \writable p }$. 
-Hence the programs and formulas of Table~\ref{fig:useful_programs} become the following \Dlpa programs and formulas:
-\ah{
-a mettre dans une table? 
-}
+Hence the programs and formulas of Table~\ref{fig:useful_programs} become the \Dlpa programs and formulas listed in Table~\ref{fig:useful_dlpa}.
+\begin{table}[t]
 \begin{align*}
 \progsplit(P) =&\ \seqseq{p \in P} \Big( 
 \Big(
@@ -1496,6 +1482,10 @@ a mettre dans une table?
   \progOkChange\left(\propsetOf{\pi_1 \pll \pi_2}\right) \testpdl ;
   \progmerge\left(\propsetOf{\pi_1 \pll \pi_2}\right)
 \end{align*}
+\caption{Adaptation of the programs and formulas of Table~\ref{fig:useful_programs} to the translation into \Dlpa.
+\label{fig:useful_dlpa}
+}
+\end{table}
 Notice that
 readability and writability statements are no longer \DlpaPll abbreviations, but are now \Dlpa propositional variables. 
 
@@ -1582,9 +1572,6 @@ By Lemmas~\ref{lem:dlpatradcorrect} and~\ref{lem:polynomial}, \DlpaPll model and
 \section{Discussion and Conclusion}\label{sec:conclusion}
 %----------------------------------------------------------%
 
-\ah{
-para modifie et etendu
-}
 We have added to Dynamic Logic of Propositional Assignments \Dlpa
 a parallel composition operator in the spirit of separation logics. 
 Our semantics augments \Dlpa valuations by readability and writability information. 
@@ -1592,7 +1579,7 @@ We have provided an axiomatisation in terms of a complete set of reduction axiom
 Our reduction to \Dlpa ensures decidability. 
 We have also proved PSPACE complexity via a polynomial translation to \Dlpa. 
 
-We have adopted a stricter stance on race conditions than in~\cite{HerzigEtal-Ijcai19}\jb{Removed `the approach of' to fix overfull hbox.}
+We have adopted a stricter stance on race conditions than in~\cite{HerzigEtal-Ijcai19} %\jb{Removed `the approach of' to fix overfull hbox.}
 where e.g.~the program $\assgntop p \pll \assgntop p$ is executable. 
 Let us briefly compare these two semantics. 
 In our case, $\pi_1 \pll \pi_2$ is executable if and only if any interleaving of the components of $\pi_1$ and $\pi_2$ is executable, and any of these interleavings leads to the same outcome. 
@@ -1606,9 +1593,8 @@ For example, in a world of blocks the actions
 \mathsf{liftRight}(b) &= \mathsf{OnTable}(b) ? ; \assgnbot{ \mathsf{OnTable}(b) }  ; \assgntop{ \mathsf{HoldsRight}(b) } 
 \end{align*}
 of lifting block $b$ with the left robot arm and with the right robot arm have cross-interaction because 
-one of the effects of $\mathsf{liftLeft}(b)$ is $\lnot \mathsf{OnTable}(b)$, which makes the precondition $\mathsf{pre}(\mathsf{liftLeft}(b)) = \mathsf{OnTable}(b)$ of $\mathsf{liftLeft}(b)$ false. 
-\jb{Supp. de la phrase sur l'interleaving~: tout interleaving com\-men\-çant par les deux tests est exécutable.
-Phrase suivante mo\-di\-fiée.}
+one of the effects of $\mathsf{liftLeft}(b)$ is $\lnot \mathsf{OnTable}(b)$, which makes the precondition $\mathsf{pre}(\mathsf{liftLeft}(b)) = \mathsf{OnTable}(b)$ of $\mathsf{liftLeft}(b)$ false.
+%\jb{Supp. de la phrase sur l'interleaving~: tout interleaving com\-men\-çant par les deux tests est exécutable.}
 %In other words, $\mathsf{liftLeft}(b)$ and $\mathsf{liftRight}(b) $ cannot be interleaved. 
 %, and can therefore not be executed in parallel.  
 The more liberal semantics of \cite{HerzigEtal-Ijcai19} makes that it is not enough to describe the parallel execution of actions $\pi_1,\ldots,\pi_n$ as a step of a parallel plan by $\pi_1 \pll \ldots \pll \pi_n$. 
@@ -1630,9 +1616,6 @@ other extensions of dynamic logic by a separating parallel composition operator 
 Just as ours, the latter line of work is in the spirit of separation logic, having splitting and merging operations that are defined on system states. 
 The axiomatisation that was introduced and studied in \cite{DBLP:journals/logcom/BalbianiB18} is restricted to the star-free fragment and the authors had to add propositional quantifiers in order to make parallel composition definable. 
 This contrasts with the simplicity of our axiomatisation of \DlpaPll that we obtained by adding reduction axioms to the axiomatisation of \Dlpa. 
-\ah{
-phrase qui suit ajoutee
-}
 This may be related to the fact that propositional quantifiers can be expressed in \Dlpa: 
 $\exists p \phi$ is equivalent to $\ldia{ \assgntopV p \ndet \assgnbotV p } \phi$ and 
 $\forall p \phi$ is equivalent to $\lbox{ \assgntopV p \ndet \assgnbotV p } \phi$.
@@ -1651,9 +1634,6 @@ but instead has concrete functions that split and merge valuations and that are 
 The paper benefited from comments and remarks from the reviewers as well as from the attendees of DaL\'i 2019, 
 in particular Alexandru Baltag, Raul Fervari, Rainer H\"ahnle and Dexter Kozen, as well as 
 to the reviewers of the first version submitted to the JLAMP.
-\ah{
-ajoute
-}
 We did our best take their comments into account. 
 
 
