@@ -1060,7 +1060,7 @@ The following statements can be proved:
   \item\label{pllequivalence:ltr:merge}
         $\modl^+_4 \intPgm{\progmerge(P)} \modl'$.
         The proof relies on Lemma~\ref{lem:progmerge}.
-  \item $\modl \intPgm{\progFlatten(\pi_1, \pi2)} \modl'$.
+  \item $\modl \intPgm{\progFlatten(\pi_1, \pi_2)} \modl'$.
 \end{enumerate}
 
 For the right-to-left direction, let us suppose that there are
@@ -1101,7 +1101,7 @@ The following statements can be proved:
   \item\label{pllequivalence:rtl:merge}
         $\mrg{\modl'}{\modl'_1}{\modl'_2}$.
         The proof relies on Lemma~\ref{lem:progmerge}.
-  \item $\modl \intPgm{\pi_1 \pll \pi2} \modl'$.
+  \item $\modl \intPgm{\pi_1 \pll \pi_2} \modl'$.
 \end{enumerate}
 \end{proof}
 
@@ -1593,7 +1593,7 @@ For example, in a world of blocks the actions
 \mathsf{liftRight}(b) &= \mathsf{OnTable}(b) ? ; \assgnbot{ \mathsf{OnTable}(b) }  ; \assgntop{ \mathsf{HoldsRight}(b) } 
 \end{align*}
 of lifting block $b$ with the left robot arm and with the right robot arm have cross-interaction because 
-one of the effects of $\mathsf{liftLeft}(b)$ is $\lnot \mathsf{OnTable}(b)$, which makes the precondition $\mathsf{pre}(\mathsf{liftLeft}(b)) = \mathsf{OnTable}(b)$ of $\mathsf{liftLeft}(b)$ false.
+one of the effects of $\mathsf{liftLeft}(b)$ is $\lnot \mathsf{OnTable}(b)$, which makes the precondition $\mathsf{pre}(\mathsf{liftRight}(b)) = \mathsf{OnTable}(b)$ of $\mathsf{lifRight}(b)$ false.
 %\jb{Supp. de la phrase sur l'interleaving~: tout interleaving com\-men\-çant par les deux tests est exécutable.}
 %In other words, $\mathsf{liftLeft}(b)$ and $\mathsf{liftRight}(b) $ cannot be interleaved. 
 %, and can therefore not be executed in parallel.  
