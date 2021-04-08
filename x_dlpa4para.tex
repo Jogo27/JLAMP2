@@ -6,6 +6,7 @@
 \usepackage{txfonts} % for \mathbb; cf. command `assign'
 \usepackage{xspace}
 \usepackage[all]{xypic} 
+%\usepackage{pdfpages} POUR : %\includepdf[page={1,2,3,4,5,6}]{reviews123withresponse.pdf}
 
 \usepackage{enumitem}
 \usepackage{tikz}
@@ -188,7 +189,7 @@ the intersection of the accessibility relations interpreting $\pi_1$ and $\pi_2$
 However, it seems fair to say that there is still no consensus which of these extensions is the `right' one. 
 
 Dynamic Logic of Propositional Assignments \Dlpa \cite{BalbianiHerzigTroquard-Lics13,BalbianiHST14} 
-is a version of Propositional Dynamic Logic PDL whose atomic programs are 
+is a version of Propositional Dynamic Logic (PDL) whose atomic programs are 
 assignments of propositional variables $p$ to true or false, respectively written $\assgntop p$ and $\assgnbot p$. 
 We and coauthors have shown that many knowledge representation concepts and formalisms can be captured in \Dlpa, such as 
 update and revision operations \cite{Herzig-Kr14}, 
@@ -367,7 +368,7 @@ The constraint that $\writeset \subseteq \readset$ means that writability implie
 
 The special case when $\writeset = \propset$ is typical when checking the validity or the satisfiability of a formula $\phi$.
 Lemma~\ref{theo:irrelevantVariables} in Section~\ref{sec:interpretation} will prove that,
-as expected, this case is equivalent to the case where $\writeset$ and $\readset$ are the set of propositional variables occuring in $\phi$.
+as expected, this case is equivalent to the case where $\writeset$ and $\readset$ are the set of propositional variables occurring in $\phi$.
 In fact, the writability and readability sets are mostly useful for checking properties of subprograms of parallel compositions.
 On the other end of the spectrum, the case $\writeset = \emptyset$ is of little interest since the only executable programs will be those without assignments.
 
@@ -425,7 +426,30 @@ We are grateful to Rainer H\"ahnle for pointing this out to us.
 %\usepackage[all]{xypic} 
 \begin{figure}[t]
   \centering
-  \input{figure-split-merge.tex}
+  %\input{figure-split-merge.tex}
+  \begin{tikzpicture}[>=latex', join=bevel, initial text = , every node/.style=, scale=0.9]
+  % States
+  \node (tosplit) at (0bp, 0bp) [draw] {$\tuple{ \set{p,q,r} , \set{p,q} , \set{p,q,r} } $};
+
+  \node (split1) at (80bp, 30bp) [draw] {$\tuple{ \set{p,r} , \set{p} , \set{p,q,r} } $};
+  \node (split2) at (80bp, -30bp) [draw] {$\tuple{ \set{q,r} , \set{q} , \set{p,q,r} } $};
+
+
+  \node (tomerge1) at (200bp, 30bp) [draw] {$\tuple{ \set{p,r} , \set{p} , \set{q,r} } $};
+  \node (tomerge2) at (200bp, -30bp) [draw] {$\tuple{ \set{q,r} , \set{q} , \set{p,r} } $};
+  \node (merged) at (280bp, 0bp) [draw] {$\tuple{ \set{p,q,r} , \set{p,q} , \set{r} } $};
+  
+  % Edges
+  % \draw[->] (0) to node [above] {$-1$} (1);
+  \draw[thick, dashed, ->] (tosplit) to node [] {} (split1.west);
+  \draw[thick, dashed, ->] (tosplit) to node [] {} (split2.west);
+
+  \draw[thick, dotted, ->] (tomerge1.east) to node [] {} (merged);
+  \draw[thick, dotted, ->] (tomerge2.east) to node [] {} (merged);  
+  
+  % Selfloops
+  % \draw (0) edge [loop above] node [above] {$+1$} (0);
+\end{tikzpicture}
 %% \begin{center} \fbox{ \xymatrix @C=1em { 
 %% &*+<1pc>!<.5pc,-.5pc>[F]{\txt{ $\tuple{ \set{p,q,r} , \set{p,q} , \set{p,q,r} } $ }}
 %% \ar[dl]{->}
@@ -612,7 +636,35 @@ Some more examples follow.
 
 \begin{figure}[t]
   \centering
-  \input{figure-example.tex}
+  %\input{figure-example.tex}
+  \begin{tikzpicture}[>=latex', join=bevel, initial text = , every node/.style=, scale=0.9]
+  % States
+  \node (tosplit) at (0bp, 0bp) [draw] {$\tuple{ \set{p,q,r} , \set{p,q} , \set{p,q,r} } $};
+
+  \node (split1) at (80bp, 30bp) [draw] {$\tuple{ \set{p,r} , \set{p} , \set{p,q,r} } $};
+  \node (split2) at (80bp, -30bp) [draw] {$\tuple{ \set{q,r} , \set{q} , \set{p,q,r} } $};
+
+
+  \node (tomerge1) at (200bp, 30bp) [draw] {$\tuple{ \set{p,r} , \set{p} , \set{q,r} } $};
+  \node (tomerge2) at (200bp, -30bp) [draw] {$\tuple{ \set{q,r} , \set{q} , \set{p,r} } $};
+  \node (merged) at (280bp, 0bp) [draw] {$\tuple{ \set{p,q,r} , \set{p,q} , \set{r} } $};
+  
+  % Edges
+  % \draw[->] (0) to node [above] {$-1$} (1);
+  \draw[thick, dashed, ->] (tosplit) to node [] {} (split1.west);
+  \draw[thick, dashed, ->] (tosplit) to node [] {} (split2.west);
+
+  \draw[thick, ->] (split1) to node [above] {$\assgnbotV p$} (tomerge1);
+  \draw[thick, ->] (split2) to node [above] {$\assgnbotV q$} (tomerge2);
+  
+  \draw[thick, dotted, ->] (tomerge1.east) to node [] {} (merged);
+  \draw[thick, dotted, ->] (tomerge2.east) to node [] {} (merged);  
+ 
+  
+  % Selfloops
+  % \draw (0) edge [loop above] node [above] {$+1$} (0);
+\end{tikzpicture}
+
 %% \begin{center} \fbox{ \xymatrix @C=1em { 
 %% &*+<1pc>!<.5pc,-.5pc>[F]{\txt{ $\tuple{ \set{p,q,r} , \set{p,q} , \set{p,q,r} } $ }} 
 %% \ar[dl]{->}
@@ -920,14 +972,14 @@ Observe also that the only endogenous tests on the right hand side occur in read
   \progOkChange\left(\propsetOf{\pi_1 \pll \pi_2}\right) \testpdl ;
   \progmerge\left(\propsetOf{\pi_1 \pll \pi_2}\right)
 \end{align*}
-\caption{Useful programs, for all finite $P \subseteq \propset$ and all programs $\pi_1$ and $\pi_2$.
+\caption{Useful programs and formulas, for all finite $P \subseteq \propset$ and all programs $\pi_1$ and $\pi_2$.
 \label{fig:useful_programs}
 }
 \end{table}
 
 The $\progsplit(P)$ program simulates the split operation by 
 (1) assigning the truth value of every $p \in P$ to its copies $\cp 1 p$ and $\cp 2 p$ and
-(2) nondeterministically assigning
+(2) non-deterministically assigning
 two copies of each read and write variable in a way such that a counterpart of the RW-disjointness condition
 $\writeset_1 \cap \readset_2 = \writeset_2 \cap \readset_1 = \emptyset$ is guaranteed.  
 Note that the assignments $\assgntopW{ \cp{k}{p} }$ also make $\cp{k}{p} $ readable.
@@ -1109,7 +1161,7 @@ The following statements can be proved:
 \subsection{Reduction Axioms for Program Operators}\label{sec:redax_pgmop} 
 
 The reduction axioms for program operators are in Table~\ref{fig:redax_pgmops}.
-Those for sequential and nondeterministic composition and for exogenous tests (PDL tests) are as in PDL. 
+Those for sequential and non-deterministic composition and for exogenous tests (PDL tests) are as in PDL. 
 The one for endogenous tests $ \phi \testendo$ 
 checks whether $\phi$ remains true for any possible value of the non-readable variables of $\phi$. 
 That for the Kleene star is familiar from \Dlpa. 
@@ -1599,13 +1651,22 @@ one of the effects of $\mathsf{liftLeft}(b)$ is $\lnot \mathsf{OnTable}(b)$, whi
 %, and can therefore not be executed in parallel.  
 The more liberal semantics of \cite{HerzigEtal-Ijcai19} makes that it is not enough to describe the parallel execution of actions $\pi_1,\ldots,\pi_n$ as a step of a parallel plan by $\pi_1 \pll \ldots \pll \pi_n$. 
 Instead, the absence of cross-interactions has to be checked `by hand', namely by explicitly inserting a \Dlpa test after each $\pi_i$ that the preconditions of the other actions are not violated: a step of a parallel plan is described by the program.
-$$ \big( \pi_1 ; \bigwedge_{i \neq 1} \mathsf{pre}(\pi_j) ? \big) \pll \ldots \pll 
-   \big( \pi_n ; \bigwedge_{i \neq n} \mathsf{pre}(\pi_j) ? \big) . $$
+$$ \big( \pi_1 ; \bigwedge_{j \neq 1} \mathsf{pre}(\pi_j) ? \big) \pll \ldots \pll 
+   \big( \pi_n ; \bigwedge_{j \neq n} \mathsf{pre}(\pi_j) ? \big) . $$
 This is not necessary in our semantics where the absence of cross interaction between actions that are performed in parallel is `built-in'. 
 Indeed, the parallel composition 
 $\mathsf{liftLeft}(b) \pll \mathsf{liftRight}(b)$ 
-is not executable in our semantics: each subprogram requires writability of $\mathsf{OnTable}(b)$ to be executable. 
+is not executable in \DlpaPll: each subprogram requires writability of $\mathsf{OnTable}(b)$ to be executable. 
 Our logic \DlpaPll can therefore be expected to provide a more appropriate base for parallel planning. 
+
+The language of the extension of \Dlpa of \cite{HerzigEtal-Ijcai19} also contains an operator of inclusive nondeterministic composition, noted $\sqcup$. 
+While the standard inclusive nondeterministic composition $\pi_1 \ndet \pi_2$ of \Pdl and\DlpaPll is read 
+``do either $\pi_1$ or $\pi_2$'', the program $\pi_1 \sqcup \pi_2$ is read 
+``do $\pi_1$ or $\pi_2$ \emph{or both}''. 
+It has the same semantics as $\pi_1 \ndet \pi_2 \ndet (\pi_1 \pll \pi_2)$ and hence does not add expressivity. 
+It is shown in \cite{HerzigEtal-Ijcai19} that it does not increase succinctness either.
+This is proved by a polynomial reduction that uses the same `flattening' programs as the reduction of parallel composition. 
+These programs are similar to our programs in Table~\ref{fig:useful_dlpa}, we therefore expect that inclusive nondeterministic composition does not increase the succinctness of the language of \DlpaPll either. 
 
 The mathematical properties of \DlpaPll compare favourably with 
 the high complexity or even undecidability of the 
@@ -1616,7 +1677,7 @@ other extensions of dynamic logic by a separating parallel composition operator 
 Just as ours, the latter line of work is in the spirit of separation logic, having splitting and merging operations that are defined on system states. 
 The axiomatisation that was introduced and studied in \cite{DBLP:journals/logcom/BalbianiB18} is restricted to the star-free fragment and the authors had to add propositional quantifiers in order to make parallel composition definable. 
 This contrasts with the simplicity of our axiomatisation of \DlpaPll that we obtained by adding reduction axioms to the axiomatisation of \Dlpa. 
-This may be related to the fact that propositional quantifiers can be expressed in \Dlpa: 
+This can be related to the fact that propositional quantifiers can be expressed in \Dlpa: 
 $\exists p \phi$ is equivalent to $\ldia{ \assgntopV p \ndet \assgnbotV p } \phi$ and 
 $\forall p \phi$ is equivalent to $\lbox{ \assgntopV p \ndet \assgnbotV p } \phi$.
 Just as \Dlpa can be viewed as an instance of PDL%
@@ -1632,14 +1693,421 @@ but instead has concrete functions that split and merge valuations and that are 
 \section{Acknowledgements}
 %----------------------------------------------------------%
 The paper benefited from comments and remarks from the reviewers as well as from the attendees of DaL\'i 2019, 
-in particular Alexandru Baltag, Raul Fervari, Rainer H\"ahnle and Dexter Kozen, as well as 
-to the reviewers of the first version submitted to the JLAMP.
+in particular Alexandru Baltag, Raul Fervari, Rainer H\"ahnle and Dexter Kozen.
 We did our best take their comments into account. 
 
+Nicolas Troquard was supported by 
+UNIBZ CRC 2019 project IN2092, Computations in Resource Aware Systems (CompRAS).
 
 \appendix
 \section{Appendix: Associativity of Parallel Composition}
-\input{associativity.tex}
+%\input{associativity.tex}
+
+\newcommand{\modla}{\mathsf a}
+\newcommand{\readseta}{\mathsf {Rda}}
+\newcommand{\writeseta}{\mathsf {Wra}}
+\newcommand{\valuseta}{\mathsf {Va}}
+
+Alongside commutativity, associativity is a desirable property of a parallel composition operator. While the operator defined in Section~\ref{sec:interpretation} is clearly commutative, whether it is associative does not strike the eye. In fact, a detailed proof of it is rather cumbersome. We present it here.
+
+\begin{proposition}\label{prop:associativity}
+$\modl \intPgm{ \pi_1 \pll (\pi_2 \pll \pi_3) } \modl'$ iff $\modl \intPgm{ (\pi_1 \pll \pi_2) \pll \pi_3 } \modl'$.
+\end{proposition}
+\begin{proof}
+
+
+  \begin{figure}%[h]
+    \centering
+    \begin{tabular}{lcl}
+      $\exists \modl_1, \modl_*, \modl_2, \modl_3, \modl'_1, \modl'_2, \modl'_3, \modl'_*$': &  ~~~~~\emph{iff}~~~~~&    $\exists \modla_\#, \modla_3, \modla_1, \modla_2, \modla_1', \modla_2', \modla_\#', \modla_3'$:\\
+      %\input{figure-associativity1.tex} AAAAAAAAAAAAAAAAAAAAAAA
+      \begin{tikzpicture}[>=latex', join=bevel, initial text = , every node/.style=, scale=1.2]
+  % States
+  \node (m) at (0bp, 0bp) {$\modl$};
+
+  \node (m1) at (10bp, 30bp) {$\modl_1$};
+  \node (mast) at (10bp, -30bp) {$\modl_*$};
+
+  \node (m1prime) at (100bp, 30bp) {$\modl'_1$};
+  \node (m2) at (20bp, -5bp) {$\modl_2$};  
+  \node (m3) at (20bp, -55bp) {$\modl_3$};  
+
+  \node (mastprime) at (100bp, -30bp) {$\modl'_*$};
+  \node (m2prime) at (90bp, -5bp) {$\modl'_2$};  
+  \node (m3prime) at (90bp, -55bp) {$\modl'_3$};  
+
+  \node (mprime) at (110bp, 0bp) {$\modl'$};
+  % Edges
+  % \draw[->] (0) to node [above] {$-1$} (1);
+  \draw[thick, dashed, ->] (m) to node [] {} (m1);
+  \draw[thick, dashed, ->] (m) to node [] {} (mast);
+
+  \draw[thick, dashed, ->] (mast) to node [] {} (m2);
+  \draw[thick, dashed, ->] (mast) to node [] {} (m3);
+
+  \draw[thick, ->] (m1) to node [below] {$\pi_1$} (m1prime);  
+  \draw[thick, ->] (m2) to node [below] {$\pi_2$} (m2prime);  
+  \draw[thick, ->] (m3) to node [above] {$\pi_3$} (m3prime);  
+
+  \draw[thick, dotted,->] (m2prime) to node [] {} (mastprime);
+  \draw[thick, dotted,->] (m3prime) to node [] {} (mastprime);
+
+  \draw[thick, dotted, ->] (m1prime) to node [] {} (mprime);  
+  \draw[thick, dotted,->] (mastprime) to node [] {} (mprime);  
+  
+  % Selfloops
+  % \draw (0) edge [loop above] node [above] {$+1$} (0);
+\end{tikzpicture}
+      & ~ &
+      %\input{figure-associativity2.tex} AAAAAAAAAAAAAAAAAAAAAAA
+\begin{tikzpicture}[>=latex', join=bevel, initial text = , every node/.style=, scale=1.2]
+  % States
+  \node (m) at (0bp, 0bp) {$\modl$};
+
+  \node (a3) at (10bp, -30bp) {$\modla_3$};
+  \node (msharp) at (10bp, 30bp) {$\modla_\#$};
+
+  \node (a3prime) at (100bp, -30bp) {$\modla'_3$};
+  \node (a2) at (20bp, 5bp) {$\modla_2$};  
+  \node (a1) at (20bp, 55bp) {$\modla_1$};  
+
+  \node (msharpprime) at (100bp, 30bp) {$\modla'_\#$};
+  \node (a2prime) at (90bp, 5bp) {$\modla'_2$};  
+  \node (a1prime) at (90bp, 55bp) {$\modla'_1$};  
+
+  \node (mprime) at (110bp, 0bp) {$\modl'$};
+  % Edges
+  % \draw[->] (0) to node [above] {$-1$} (1);
+  \draw[thick, dashed, ->] (m) to node [] {} (a3);
+  \draw[thick, dashed, ->] (m) to node [] {} (msharp);
+
+  \draw[thick, dashed, ->] (msharp) to node [] {} (a2);
+  \draw[thick, dashed, ->] (msharp) to node [] {} (a1);
+
+  \draw[thick, ->] (a3) to node [above] {$\pi_3$} (a3prime);  
+  \draw[thick, ->] (a2) to node [above] {$\pi_2$} (a2prime);  
+  \draw[thick, ->] (a1) to node [below] {$\pi_1$} (a1prime);  
+
+  \draw[thick, dotted, ->] (a2prime) to node [] {} (msharpprime);
+  \draw[thick, dotted, ->] (a1prime) to node [] {} (msharpprime);
+
+  \draw[thick, dotted, ->] (a3prime) to node [] {} (mprime);  
+  \draw[thick, dotted, ->] (msharpprime) to node [] {} (mprime);  
+  
+  % Selfloops
+  % \draw (0) edge [loop above] node [above] {$+1$} (0);
+\end{tikzpicture}
+    \end{tabular}
+    \caption{\label{fig:illustration-associativity} Illustration of associativity. Visual aid for the proof of Proposition~\ref{prop:associativity}.}
+  \end{figure}
+  
+%% \begin{figure}[h]
+%% \begin{verbatim}
+%%     exist m1, m*, m2, m3, m'1, m'2, m'3, m'*:
+
+%%        m1-----------pi1-----------m'1
+%%       /                             \
+%%    m /                               \ m'
+%%      \                               /
+%%       \     m2-----pi2-----m'2      /
+%%        \   /                  \    /
+%%         m*/                    \m'*
+%%           \                    /
+%%            \                  /
+%%             m3-----pi3-----m'3
+
+
+%%     iff exist a#, a3, a1, a2, a'1, a'2, a'#, a'3:
+
+%%             a1-----pi1-----a'1
+%%            /                  \
+%%         a#/                    \a'#
+%%        /  \                    /  \
+%%       /    \                  /    \
+%%    m /      a2-----pi2-----a'2      \ m'
+%%      \                              /
+%%       \                            /
+%%        a3-----------pi3-----------a'3
+
+%% \end{verbatim}
+%% \caption{\label{fig:illustration-associativity-ascii} Illustration of associativity. Visual aid for the proof of Proposition~\ref{prop:associativity}.}
+%% \end{figure}
+
+Figure~\ref{fig:illustration-associativity} illustrates precisely what we are going to show.
+  %
+Suppose $\modl = \tuple{\readset, \writeset, \valuset}$ and $\modl' = \tuple{\readset', \writeset', \valuset'}$.
+
+
+
+
+\paragraph{Left-hand side.} $\modl \intPgm{ \pi_1 \pll (\pi_2 \pll \pi_3) } \modl'$.
+
+There are $\modl_1, \modl_*, \modl'_1, \modl'_*$ such that (with, $\modl_1 = \tuple{\readset_1, \writeset_1, \valuset_1}$, $\modl'_1 = \tuple{\readset'_1, \writeset'_1, \valuset'_1}$, $\modl_* = \tuple{\readset_*, \writeset_*, \valuset_*}$, $\modl'_* = \tuple{\readset'_*, \writeset'_*, \valuset'_*}$):
+\begin{enumerate}
+\item\label{i:split-merge1}\label{i:lhsfirst} $\splt{\modl}{\modl_1} {\modl_*}$
+  and $\mrg{\modl'}{\modl'_1} {\modl'_*}$ 
+\item $\modl_1 \intPgm{ \pi_1 } \modl'_1$
+\item $\readset_1 = \readset'_1$
+  and $\writeset_1 = \writeset'_1$
+  and $\valuset_1 \setminus \writeset_1 = \valuset'_1 \setminus \writeset'_1$
+\item\label{i:pi2pi3} $\modl_* \intPgm{ \pi_2 \pll \pi_3 } \modl'_*$ 
+\item $\readset_* = \readset'_*$
+  and $\writeset_* = \writeset'_*$ 
+  and $\valuset_* \setminus \writeset_* = \valuset'_* \setminus \writeset'_*$
+\end{enumerate}
+Item~\ref{i:pi2pi3} is equivalent to: there are $\modl_2, \modl_3, \modl'_2, \modl'_3$ such that  (with $\modl_2 = \tuple{\readset_2, \writeset_2, \valuset_2}$, $\modl'_2 = \tuple{\readset'_2, \writeset'_2, \valuset'_2}$, $\modl_3 = \tuple{\readset_3, \writeset_3, \valuset_3}$, $\modl'_3 = \tuple{\readset'_3, \writeset'_3, \valuset'_3}$):
+\begin{enumerate}[resume]
+\item\label{i:split-merge2} $\splt{\modl_*}{\modl_2} {\modl_3} $ and $\mrg{\modl_*'}{\modl'_2} {\modl'_3} $,
+\item $\modl_2 \intPgm{ \pi_2 } \modl'_2$, 
+\item $\readset_2 = \readset'_2 $ and $\writeset_2 = \writeset'_2 $ and $\valuset_2 \setminus \writeset_2 = \valuset'_2 \setminus \writeset'_2$,
+\item $\modl_3 \intPgm{ \pi_3 } \modl'_3$, 
+\item $\readset_3 = \readset'_3 $ and $\writeset_3 = \writeset'_3 $ and $\valuset_3 \setminus \writeset_3 = \valuset'_3 \setminus \writeset'_3$.
+\end{enumerate}
+Item~\ref{i:split-merge1} is $\splt{\modl}{\modl_1} {\modl_*} $ and $\mrg{\modl'}{\modl'_1} {\modl'_*} $ iff:
+\begin{enumerate}[resume]
+\item
+  %%%% split
+  $\writeset_1 \cap \readset_* = \writeset_* \cap \readset_1 = \emptyset$ ($\modl_1$ and $\modl_*$ are RW-compatible),
+  \item 
+    $\readset = \readset_1 \cup \readset_* $, and $\writeset = \writeset_1 \cup \writeset_*$, and $\valuset = \valuset_1 = \valuset_*$,
+
+    %%%% merge
+    
+    \item $\writeset'_1 \cap \readset'_* = \writeset'_* \cap \readset'_1 = \emptyset$ ($\modl'_1$ and $\modl'_*$ are RW-compatible),
+    \item $\readset' = \readset'_1 \cup \readset'_*$, $\writeset' = \writeset'_1 \cup \writeset'_*$, and $\valuset'_1 \setminus \writeset' = \valuset'_* \setminus \writeset'$, and $\valuset' = (\valuset'_1 \cap \writeset'_1) \cup (\valuset'_* \cap \writeset'_*) \cup (\valuset'_1 \cap \valuset'_*) $. 
+\end{enumerate}
+Item~\ref{i:split-merge2} is $\splt{\modl}{\modl_2} {\modl_3} $ and $\mrg{\modl'}{\modl'_2} {\modl'_3} $ iff:
+\begin{enumerate}[resume]
+\item
+  %%%% split
+  $\writeset_2 \cap \readset_3 = \writeset_3 \cap \readset_2 = \emptyset$ ($\modl_2$ and $\modl_3$ are RW-compatible),
+  \item 
+    $\readset_* = \readset_2 \cup \readset_3 $, and $\writeset_* = \writeset_2 \cup \writeset_3$, and $\valuset_* = \valuset_2 = \valuset_3$,
+
+    %%%% merge
+    
+    \item $\writeset'_2 \cap \readset'_3 = \writeset'_3 \cap \readset'_2 = \emptyset$ ($\modl'_2$ and $\modl'_3$ are RW-compatible),
+    \item\label{i:lhslast} $\readset_*' = \readset'_2 \cup \readset'_3$, $\writeset_*' = \writeset'_2 \cup \writeset'_3$, and $\valuset'_2 \setminus \writeset_*' = \valuset'_3 \setminus \writeset_*'$, and $\valuset_*' = (\valuset'_2 \cap \writeset'_2) \cup (\valuset'_3 \cap \writeset'_3) \cup (\valuset'_2 \cap \valuset'_3) $. 
+\end{enumerate}
+
+
+\paragraph{Right-hand side.} $\modl \intPgm{ (\pi_1 \pll \pi_2) \pll \pi_3 } \modl'$.
+
+There are %$\modla_\#, \modla_3, \modla_\#', \modla_3'$ such that
+$\modla_\# = \tuple{\readseta_\#, \writeseta_\#, \valuseta_\#}$, $\modla'_\# = \tuple{\readseta'_\#, \writeseta'_\#, \valuseta'_\#}$, $\modla_3 = \tuple{\readseta_3, \writeseta_3, \valuseta_3}$ and $\modla'_3 = \tuple{\readseta'_3, \writeseta'_3, \valuseta'_3}$
+such that:
+\begin{enumerate}[resume]
+\item\label{i:split-merge3}\label{i:rhsfirst} $\splt{\modl}{\modla_\#} {\modla_3}$
+  and $\mrg{\modl'}{\modla'_\#} {\modla'_3}$, 
+\item\label{i:pi1pi2} $\modla_\# \intPgm{ \pi_1 \pll \pi_2} \modla'_\#$,
+\item $\readseta_\# = \readseta'_\#$
+  and $\writeseta_\# = \writeseta'_\#$
+  and $\valuseta_\# \setminus \writeseta_\# = \valuseta'_\# \setminus \writeseta'_\#$,
+\item $\modla_3 \intPgm{ \pi_3 } \modla'_3$, 
+\item $\readseta_3 = \readseta'_3$
+  and $\writeseta_3 = \writeseta'_3$ 
+  and $\valuseta_3 \setminus \writeseta_3 = \valuseta'_3 \setminus \writeseta'_3$.
+\end{enumerate}
+Item~\ref{i:pi1pi2} is equivalent to:
+there are $\modla_1, \modla_2, \modla'_1, \modla'_2$ such that 
+(with, $\modla_1 = \tuple{\readseta_1, \writeseta_1, \valuseta_1}$, $\modla'_1 = \tuple{\readseta'_1, \writeseta'_1, \valuseta'_1}$, $\modla_2 = \tuple{\readseta_2, \writeseta_2, \valuseta_2}$, $\modla'_2 = \tuple{\readseta'_2, \writeseta'_2, \valuseta'_2}$):
+\begin{enumerate}[resume]
+\item\label{i:split-merge4} $\splt{\modla_\#}{\modla_1} {\modla_2}$
+  and $\mrg{\modla'_\#}{\modla'_1} {\modla'_2}$, 
+\item $\modla_1 \intPgm{ \pi_1} \modla'_1$,
+\item $\readseta_1 = \readseta'_1$,
+  and $\writeseta_1 = \writeseta'_1$
+  and $\valuseta_1 \setminus \writeseta_1 = \valuseta'_1 \setminus \writeseta'_1$,
+\item $\modla_2 \intPgm{ \pi_2 } \modla'_2$, 
+\item $\readseta_2 = \readseta'_2$
+  and $\writeseta_2 = \writeseta'_2$ 
+  and $\valuseta_2 \setminus \writeseta_2 = \valuseta'_2 \setminus \writeseta'_2$.
+\end{enumerate}
+Item~\ref{i:split-merge3} is $\splt{\modl}{\modla_\#} {\modla_3}$ and $\mrg{\modl'}{\modla'_\#} {\modla'_3}$ iff:
+\begin{enumerate}[resume]
+\item
+  %%%% split
+  $\writeseta_\# \cap \readseta_3 = \writeseta_3 \cap \readseta_\# = \emptyset$ ($\modla_\#$ and $\modla_3$ are RW-compatible),
+  \item 
+    $\readset = \readseta_\# \cup \readseta_3 $, and $\writeset = \writeseta_\# \cup \writeseta_3$, and $\valuset = \valuseta_\# = \valuseta_3$,
+
+    %%%% merge
+    
+    \item $\writeseta'_\# \cap \readseta'_3 = \writeseta'_3 \cap \readseta'_\# = \emptyset$ ($\modla'_\#$ and $\modla'_3$ are RW-compatible),
+    \item $\readset' = \readseta'_\# \cup \readseta'_3$, $\writeset' = \writeseta'_\# \cup \writeseta'_3$, and $\valuseta'_\# \setminus \writeset' = \valuseta'_3 \setminus \writeset'$, and $\valuset' = (\valuseta'_\# \cap \writeseta'_\#) \cup (\valuseta'_3 \cap \writeseta'_3) \cup (\valuseta'_\# \cap \valuseta'_3) $. 
+\end{enumerate}
+Item~\ref{i:split-merge4} is $\splt{\modla_\#}{\modla_1} {\modla_2}$ and $\mrg{\modla'_\#}{\modla'_1} {\modla'_2}$ iff:
+\begin{enumerate}[resume]
+\item
+  %%%% split
+  $\writeseta_1 \cap \readseta_2 = \writeseta_2 \cap \readseta_1 = \emptyset$ ($\modla_1$ and $\modla_2$ are RW-compatible),
+  \item 
+    $\readseta_\# = \readseta_1 \cup \readseta_2 $, and $\writeseta_\# = \writeseta_1 \cup \writeseta_2$, and $\valuseta_\# = \valuseta_1 = \valuseta_2$,
+
+    %%%% merge
+    
+    \item $\writeseta'_1 \cap \readseta'_2 = \writeseta'_2 \cap \readseta'_1 = \emptyset$ ($\modla'_1$ and $\modla'_2$ are RW-compatible),
+    \item\label{i:rhslast} $\readseta_\#' = \readseta'_1 \cup \readseta'_2$, $\writeseta_\#' = \writeseta'_1 \cup \writeseta'_2$, and $\valuseta'_1 \setminus \writeseta_\#' = \valuseta'_2 \setminus \writeseta_\#'$, and $\valuseta_\#' = (\valuseta'_1 \cap \writeseta'_1) \cup (\valuseta'_2 \cap \writeseta'_2) \cup (\valuseta'_1 \cap \valuseta'_2) $. 
+\end{enumerate}
+
+
+\paragraph{Left to right.}
+
+Suppose lhs. We define:
+\begin{itemize} 
+\item $\modla_\# = \tuple{\readseta_\#, \writeseta_\#, \valuseta_\#} = \tuple{\readset_1 \cup \readset_2, \writeset_1 \cup \writeset_2, \valuset}$,
+\item $\modla_1 = \tuple{\readseta_1, \writeseta_1, \valuseta_1} = \modl_1 = \tuple{\readset_1, \writeset_1, \valuset}$,
+\item $\modla_2 = \tuple{\readseta_2, \writeseta_2, \valuseta_2} = \modl_2 = \tuple{\readset_2, \writeset_2, \valuset}$,
+\item $\modla_3 = \tuple{\readseta_3, \writeseta_3, \valuseta_3} = \modl_3 = \tuple{\readset_3, \writeset_3, \valuset}$,
+\item $\modla'_\# = \tuple{\readseta'_\#, \writeseta'_\#, \valuseta'_\#} = \tuple{\readset'_1 \cup \readset'_2, \writeset'_1 \cup \writeset'_2, (\valuset'_1 \cap \writeset_1) \cup (\valuset'_2 \cap \writeset_2) \cup (\valuset'_1 \cap \valuset'_2)}$,
+\item $\modla'_1 = \tuple{\readseta'_1, \writeseta'_1, \valuseta'_1) = \modl'_1 = (\readset'_1, \writeset'_1, \valuset'_1}$,
+\item $\modla'_2 = \tuple{\readseta'_2, \writeseta'_2, \valuseta'_2} = \modl'_2 = \tuple{\readset'_2, \writeset'_2, \valuset'_2}$,
+\item $\modla'_3 = \tuple{\readseta'_3, \writeseta'_3, \valuseta'_3} = \modl'_3 = \tuple{\readset'_3, \writeset'_3, \valuset'_3}$. 
+\end{itemize}
+
+We must show that these models satisfy all the properties from~\ref{i:rhsfirst} through~\ref{i:rhslast}.
+\begin{itemize}
+\item[19] if and only if
+  \begin{itemize}
+  \item[29]  $\writeseta_\# \cap \readseta_3 = \emptyset$,
+    $\writeseta_3 \cap \readseta_\# = \emptyset$. It holds because:
+    \begin{itemize}
+    \item $\writeseta_\# \cap \readseta_3 = (\writeset_1 \cup \writeset_2) \cap \readset_3 = (\writeset_1 \cap \readset_3) \cup (\writeset_2 \cap \readset_3)$.
+      By 15, we have $\writeset_2 \cap \readset_3 = \emptyset$.
+      By 16, we have $\readset_3 \subseteq \readset_*$.
+      By 11, we have $\writeset_1 \cap \readset_* = \emptyset$. So, $\writeset_1 \cap \readset_3 = \emptyset$.
+    \item $\writeseta_3 \cap \readseta_\# = \writeset_3 \cap (\readset_1 \cup \readset_2) = (\writeset_3 \cap \readset_1) \cup (\writeset_3 \cap \readset_2)$.
+      By 15, we have $\writeset_3 \cap \readset_2 = \emptyset$.
+      By 11, we have $\writeset_* \cap \readset_1 = \emptyset$.
+      By 16, we have $\writeset_3 \subseteq \writeset_*$.
+      So, $\writeset_3 \cap \readset_1 = \emptyset$.
+    \end{itemize}
+  
+  \item[30]
+    %$\readset = \readseta_\# \cup \readseta_3$?
+$\readseta_\# \cup \readseta_3 = (\readset_1 \cup \readset_2) \cup \readset_3 = \readset_1 \cup \readset_* = \readset$ (definition and 16 and 12).
+    % $\writeset = \writeseta_\# \cup \writeseta_3$?
+    $\writeseta_\# \cup \writeseta_3 = (\writeset_1 \cup \writeset_2) \cup \writeset_3 = \writeset_1 \cup \writeset_* = \writeset$ (definition and 16 and 12).
+    % $\valuset = \valuseta_\# = \valuseta_3$?
+    $\valuset = \valuseta_\# = \valuseta_3$ (definition).
+    
+  \item[31] $\writeseta'_\# \cap \readseta'_3 = \writeseta'_3 \cap \readseta'_\# = \emptyset$. It holds because:
+    \begin{itemize}
+    \item $\writeseta'_\# \cap \readseta'_3 = (\writeset'_1 \cup \writeset'_2) \cap \readset'_3$ by definition. It is equal to $(\writeset_1 \cap \readset_3) \cup (\writeset_2 \cap \readset_3)$, by 3, 8, 10. We have $\writeset_1 \cap \readset_* = \emptyset$ (11), and $\readset_3 \subseteq \readset_*$ (16). So $\writeset_1 \cap \readset_3 = \emptyset$.
+      We have $\writeset_2 \cap \readset_3 = \emptyset$ (15).
+    \item $\writeseta'_3 \cap \readseta'_\# = \writeseta'_3 \cap (\readset'_1 \cup \readset'_2)$ by definition. It is equal to $(\writeseta_3 \cap \readset_1) \cup (\writeseta_3 \cap \readset_2)$, by 10, 3, 8. We have $\writeset_3 \subseteq \writeset_*$ (16) and $\writeset_* \cap \readset_1 = \emptyset$ (11).
+      So $\writeseta_3 \cap \readset_1 = \emptyset$.
+      We have $\writeseta_3 \cap \readset_2 = \emptyset$ (15).
+    \end{itemize}
+
+  \item[32]
+    \begin{itemize}
+    \item Instrumental claims:
+      \begin{itemize}
+  \item(claim~1) $\writeset'_* = \writeset_*$, by 16, 7, 9 and 18.
+  \item(claim~2) $\writeset = \writeset'$, by 12, 3, claim~1, 14.
+  \item(claim~3) $\writeset_1 \subseteq \writeset'$, by claim~2, and 12.
+  \item(claim~4.1) $\writeset_2 \subseteq \writeset'$, by claim~2, 16, and 12.
+  \item(claim~4.2) $\writeset_3 \subseteq \writeset'$, by claim~2, 16, and 12.    
+  \item(claim~5) $\valuset'_1 \setminus \writeset' = \valuset_1 \setminus \writeset'$, by 3, 12, and claim~2.
+  \item(claim~6) $\valuset'_2 \setminus \writeset' = \valuset_2 \setminus \writeset'$, by 8, 16, and 12.
+  \item(claim~7) $\valuset'_3 \setminus \writeset' = \valuset_3 \setminus \writeset'$, by 10, 16, and 12.
+  \item(claim~8) $\writeset_1 \cap \writeset_2 = \emptyset$, by 11, 12, the `write-set included in read-set' model constraint, and 16.
+      \end{itemize}
+    \item $\readset' = \readseta'_\# \cup \readseta'_3$ and $\writeset' = \writeseta'_\# \cup \writeseta'_3$ hold by definition, 16 and 12. 
+
+    \item $\valuseta'_\# \setminus \writeset' = \valuseta'_3 \setminus \writeset'$ holds because:
+      \begin{itemize}
+        \item $\valuseta'_\# \setminus \writeset' = (\valuset_1' \cup \valuset_2') \setminus \writeset'$ by definitions, claim~3, and claim~4.1. By claim~5 and claim~6, it is equal to $(\valuset_1 \cup \valuset_2) \setminus \writeset'$, which by 12 and 16 is $\valuset \setminus \writeset'$.
+          %
+          \item
+      Moreover, $\valuseta'_3 \setminus \writeset' = \valuset'_3 \setminus \writeset'$ by definition. It is equal to $\valuset_3 \setminus \writeset'$ by claim~7, and to $\valuset \setminus \writeset'$ by 12 and 16.
+      \end{itemize}
+    \item $\valuset' = (\valuseta'_\# \cap \writeseta'_\#) \cup (\valuseta'_3 \cap \writeseta'_3) \cup (\valuseta'_\# \cap \valuseta'_3)$  holds because:
+      \begin{itemize}
+      \item $\valuseta'_\# \cap \writeseta'_\# = ((\valuset'_1 \cap \writeset'_1) \cup (\valuset'_2 \cap \writeset'_2) \cup (\valuset'_1 \cap \valuset'_2)) \cap (\writeset'_1 \cup \writeset'_2)$ by definition, 3, and 8. We get $(\valuset'_1 \cap \writeset'_1 \cap \writeset'_1) \cup (\valuset'_1 \cap \writeset'_1 \cap \writeset'_2) \cup (\valuset'_2 \cap \writeset'_2 \cap \writeset'_1) \cup (\valuset'_2 \cap \writeset'_2 \cap \writeset'_2) \cup (\valuset'_1 \cap \valuset'_2 \cap \writeset'_1) \cup (\valuset'_1 \cap \valuset'_2 \cap \writeset'_2)$. With elementary set theory simplifications and claim~8, we obtain $(\valuset'_1 \cap \writeset'_1) \cup (\valuset'_2 \cap \writeset'_2)$.
+\item $\valuseta'_3 \cap \writeseta'_3 = \valuset'_3 \cap \writeset'_3$.
+\item $\valuseta'_\# \cap \valuseta'_3 ((\valuset'_1 \cap \writeset'_1) \cup (\valuset'_2 \cap \writeset'_2) \cup (\valuset'_1 \cap \valuset'_2)) \cap \valuset'_3$ by definition, 3, and 8. We get $(\valuset'_1 \cap \writeset'_1 \cap \valuset'_3) \cup (\valuset'_2 \cap \writeset'_2 \cap \valuset'_3) \cup (\valuset'_1 \cap \valuset'_2 \cap \valuset'_3)$.
+\item The rhs quantity $(\valuseta'_\# \cap \writeseta'_\#) \cup (\valuseta'_3 \cap \writeseta'_3) \cup (\valuseta'_\# \cap \valuseta'_3)$ is then equal to
+  $(\valuset'_1 \cap \writeset'_1) \cup (\valuset'_2 \cap \writeset'_2) \cup
+  (\valuset'_3 \cap \writeset'_3) \cup (\valuset'_1 \cap \valuset'_2 \cap \valuset'_3)$.
+\item Moreover, by 14, we have $\valuset' = (\valuset'_1 \cap \writeset'_1) \cup (\valuset'_* \cap \writeset'_*) \cup (\valuset'_1 \cap \valuset'_*)$.
+\item By 18, $\valuset'_* = (\valuset'_2 \cap \writeset'_2) \cup (\valuset'_3 \cap \writeset'_3) \cup (\valuset'_1 \cap \valuset'_2)$.
+\item By claim~1, $\writeset'_* = \writeset_*$, which by 16 is $\writeset_2 \cup \writeset_3$ which by 8 and 10 is $\writeset'_2 \cup \writeset'_3$. So $\writeset'_2 \subseteq \writeset'_*$ and $\writeset'_3 \subseteq \writeset'_*$.
+\item So $(\valuset'_* \cap \writeset'_*) = (\valuset'_2 \cap \writeset'_2) \cup (\valuset'_3 \cap \writeset'_3) \cup (\valuset'_1 \cap \valuset'_2 \cap \writeset'_*)$, with $\valuset'_1 \cap \valuset'_2 \cap \writeset'_* = \valuset'_1 \cap \valuset'_2 \cap (\writeset'_2 \cup \writeset'_3)$ by 18, which is $(\valuset'_2 \cap \valuset'_3 \cap \writeset'_2) \cup (\valuset'_2 \cap \valuset'_3 \cap \writeset'_3)$. So $(\valuset'_* \cap \writeset'_*) = (\valuset'_2 \cap \writeset'_2) \cup (\valuset'_3 \cap \writeset'_3)$.
+\item Also $(\valuset'_1 \cap \valuset'_*) = (\valuset'_1 \cap \valuset'_2 \cap \writeset'_2) \cup (\valuset'_1 \cap \valuset'_3 \cap \writeset'_3) \cup (\valuset'_1 \cap \valuset'_2 \cap \valuset'_3)$, with the first two disjuncts included in $\valuset'_* \cap \writeset'_*$.
+\item The lhs quantity $V'$ is then equal to $(\valuset'_1 \cap \writeset'_1) \cup (\valuset'_2 \cap \writeset'_2) \cup
+  (\valuset'_3 \cap \writeset'_3) \cup (\valuset'_1 \cap \valuset'_2 \cap \valuset'_3)$.
+      \end{itemize}
+    \end{itemize}
+
+  \end{itemize}
+
+
+\item[20] if and only if
+
+  \begin{itemize}
+  \item[24] if and only if
+  \begin{itemize}
+  \item[33] $\writeseta_1 \cap \readseta_2 = \emptyset$,
+    $\writeseta_2 \cap \readseta_1 = \emptyset$. It holds, because:
+    \begin{itemize}
+
+    \item $\writeseta_1 \cap \readseta_2 = \writeset_1 \cap \readset_2$ by definition.
+    From 16, $\readset_2 \subseteq \readset_*$. From 11, $\writeset_1 \cap \readset_* = \emptyset$. So $\writeset_1 \cap \readset_2 = \emptyset$.
+
+    \item $\writeseta_2 \cap \readseta_1 = \writeset_2 \cap \readset_1$ by definition.
+    From 16, $\writeset_2 \subseteq \writeset_*$. From 11, $\writeset_* \cap \readset_1 = \emptyset$. So $\writeset_2 \cap \readset_1 = \emptyset$.
+    \end{itemize}
+  \item[34] By definition.
+  \item[35] By definition, 33, 3, and 8.
+  \item[36] $\readseta_\#' = \readseta'_1 \cup \readseta'_2$, $\writeseta_\#' = \writeseta'_1 \cup \writeseta'_2$, and $\valuseta_\#' = (\valuseta'_1 \cap \writeseta'_1) \cup (\valuseta'_2 \cap \writeseta'_2) \cup (\valuseta'_1 \cap \valuseta'_2)$ by definition.
+%
+    Also, $\valuseta'_1 \setminus \writeseta_\#' = \valuseta'_2 \setminus \writeseta_\#'$ holds because:
+    \begin{itemize}
+    \item $\valuseta'_1 \setminus \writeseta_\#' = \valuset'_1 \setminus (\writeset'_1 \cup \writeset'_2)$, which by 3 and 8 is equal to $\valuset_1 \setminus (\writeset_1 \cup \writeset_2)$, which by 12 is equal to $\valuset \setminus (\writeset_1 \cup \writeset_2)$.
+      \item Similarly, $\valuseta'_2 \setminus \writeseta_\#'$ is equal to $\valuset \setminus (\writeset_1 \cup \writeset_2)$ by 8, 3, 16 and 12.
+    \end{itemize}
+  \end{itemize}
+\item[25] By definition, and 2.
+\item[26] By definition, 3, and 12.
+\item[27] By definition, and 7.
+\item[28] By definition, 8, 16, and 12.
+  \end{itemize}
+\item[21] $\readseta_\# = \readseta'_\#$
+  and $\writeseta_\# = \writeseta'_\#$ hold by definition, 3, and 8.
+  Also by definition, 3, and 8, $\valuseta_\# \setminus \writeseta_\# = \valuseta'_\# \setminus \writeseta'_\#$ is equivalent to $\valuset \setminus (\writeset_1 \cup \writeset_2) = ((\valuset'_1 \cap \writeset'_1) \cup (\valuset'_2 \cap \writeset'_2) \cup (\valuset'_1 \cap \valuset'_2)) \setminus (\writeset_1 \cup \writeset_2)$. The right-hand-side simplifies into $(\valuset'_1 \cap \valuset'_2) \setminus (\writeset_1 \cup \writeset_2)$. Moreover, we have $\valuset'_1 \setminus \writeset'_1 = \valuset \setminus \writeset'_1$ (by 3 and 12) and $\valuset'_2 \setminus \writeset'_2 = \valuset \setminus \writeset'_2$ (by 8, 16, and 12). So we have $\valuset'_1 \setminus (\writeset'_1 \cup \writeset'_2) = \valuset \setminus (\writeset'_1 \cup \writeset'_2)$ and $\valuset'_2 \setminus (\writeset'_1 \cup \writeset'_2) = \valuset \setminus (\writeset'_1 \cup \writeset'_2)$. Hence, $(\valuset'_1 \cap \valuset'_2) \setminus (\writeset_1 \cup \writeset_2)$ simplifies into the left-hand-side $\valuset \setminus (\writeset_1 \cup \writeset_2)$.
+\item[22] By definition, and 9.
+\item[23] By definition, 10, 16, and 12.
+\end{itemize}
+
+
+\paragraph{Right to left.}
+
+Suppose rhs. We define:
+\begin{itemize}
+\item $\modl_* = \tuple{\readset_*, \writeset_*, \valuset_*} = \tuple{\readseta_2 \cup \readseta_3, \writeseta_2 \cup \writeseta_3, \valuset}$,
+
+\item $\modl_1 = \tuple{\readset_1, \writeset_1, \valuset_1} = \modla_1 = \tuple{\readseta_1, \writeseta_1, \valuseta}$,
+\item $\modl_2 = \tuple{\readset_2, \writeset_2, \valuset_2} = \modla_2 = \tuple{\readseta_2, \writeseta_2, \valuseta}$,
+\item $\modl_3 = \tuple{\readset_3, \writeset_3, \valuset_3} = \modla_3 = \tuple{\readseta_3, \writeseta_3, \valuseta}$,  
+
+\item $\modl'_* = \tuple{\readset'_*, \writeset'_*, \valuset'_*} = \tuple{\readseta'_2 \cup \readseta'_3, \writeseta'_2 \cup \writeseta'_3, (\valuseta'_2 \cap \writeseta_2) \cup (\valuseta'_3 \cap \writeseta_3) \cup (\valuseta'_2 \cap \valuseta'_3)}$,
+  
+\item $\modl'_1 = \tuple{\readset'_1, \writeset'_1, \valuset'_1} = \modla'_1 = \tuple{\readseta'_1, \writeseta'_1, \valuseta'_1}$,
+\item $\modl'_2 = \tuple{\readset'_2, \writeset'_2, \valuset'_2} = \modla'_2 = \tuple{\readseta'_2, \writeseta'_2, \valuseta'_2}$,
+\item $\modl'_3 = \tuple{\readset'_3, \writeset'_3, \valuset'_3} = \modla'_3 = \tuple{\readseta'_3, \writeseta'_3, \valuseta'_3}$. 
+\end{itemize}
+
+We must show that these models satisfy all the properties from~\ref{i:lhsfirst} to~\ref{i:lhslast}. This is done routinely, analogously to the proof of the left-to-right direction above.
+\end{proof}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "x_dlpa4para.tex"
+%%% End:
+
+
 
 %\bibliographystyle{plainurl}
 \bibliographystyle{alpha}
