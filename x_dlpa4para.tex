@@ -776,34 +776,18 @@ will be used several times in the remainder of this work.
 %The next result says that the interpretation of formulas and programs is not sensitive to the values of propositional variables that do not occur in them, where `values' not only refers to the truth value but also to the readability and writability value. 
 
 \begin{lemma}\label{theo:irrelevantVariables}
-Let $\phi$ be a formula such that $\propsetOf \phi \cap P = \emptyset$ and
-let $ \pi$ be a program such that $\propsetOf \pi \cap P = \emptyset$. Then the following hold:
-\begin{enumerate}
-\item\label{item:addValuationFormula}
-$\tuple{\readset,\writeset,\valuset} \models \phi $ iff
-$\tuple{\readset,\writeset,\valuset\cup P} \models \phi$;
-\item\label{item:addAllFormula}
-$\tuple{\readset,\writeset,\valuset} \models \phi $ iff
-$\tuple{\readset\cup P,\writeset\cup P,\valuset} \models \phi$;
-\item\label{item:addValuationProgram}
-$\tuple{\readset,\writeset,\valuset} \intPgm \pi \tuple{\readset',\writeset',\valuset'} $ iff
-$\tuple{\readset,\writeset,\valuset\cup P} \intPgm \pi \tuple{\readset',\writeset',\valuset'\cup P} $;
-\item\label{item:addAllProgram}
-$\tuple{\readset,\writeset,\valuset} \intPgm \pi \tuple{\readset',\writeset',\valuset'} $ iff
-$\tuple{\readset\cup P,\writeset\cup P,\valuset} \intPgm \pi \tuple{\readset'\cup P,\writeset'\cup P,\valuset'} $;
-\item\label{item:subAllProgram}
-$\tuple{\readset,\writeset,\valuset} \intPgm \pi \tuple{\readset',\writeset',\valuset'} $ iff
-$\tuple{\readset\setminus P,\writeset\setminus P,\valuset\setminus P} \intPgm \pi \tuple{\readset'\setminus P,\writeset'\setminus P,\valuset'\setminus P} $.
-\end{enumerate}
+If there is $P \subseteq \propset$ such that
+$\modl_1 \modinter P = \modl_1' \modinter P$,
+$\modl_2 \modinter P = \modl_2' \modinter P$,
+$\propsetOf \phi \subseteq P$ and $\propsetOf \pi \subseteq P$ then the following hold:
+\begin{align*}
+\modl_1 \models \phi &\text{ iff } \modl_1' \models \phi \\
+\modl_1 \intPgm \pi \modl_2 &\text{ iff } \modl_1' \intPgm \pi \modl_2'
+\end{align*}
 \end{lemma}
 \begin{proof}[sketch]
-Items~\ref{item:addValuationFormula} and~\ref{item:addValuationProgram} are proved by simultaneous
+The proof is by a straightforward simultaneous
 induction on the size of $\phi$ and $\pi$.
-Items~\ref{item:addAllFormula} and~\ref{item:addAllProgram} are proved similarly.
-Item~\ref{item:subAllProgram} is proved from \ref{item:addAllProgram} by instantiating $\readset$,
-$\writeset$, $\valuset$, $\readset'$, $\writeset'$ and $\valuset'$ with respectively
-$\readset\setminus P$, $\writeset\setminus P$, $\valuset\setminus P$, $\readset'\setminus P$,
-$\writeset'\setminus P$ and $\valuset'\setminus P$.
 \end{proof}
 
 
@@ -1660,7 +1644,7 @@ is not executable in \DlpaPll: each subprogram requires writability of $\mathsf{
 Our logic \DlpaPll can therefore be expected to provide a more appropriate base for parallel planning. 
 
 The language of the extension of \Dlpa of \cite{HerzigEtal-Ijcai19} also contains an operator of inclusive nondeterministic composition, noted $\sqcup$. 
-While the standard inclusive nondeterministic composition $\pi_1 \ndet \pi_2$ of \Pdl and\DlpaPll is read 
+While the standard inclusive nondeterministic composition $\pi_1 \ndet \pi_2$ of \Pdl and \DlpaPll is read 
 ``do either $\pi_1$ or $\pi_2$'', the program $\pi_1 \sqcup \pi_2$ is read 
 ``do $\pi_1$ or $\pi_2$ \emph{or both}''. 
 It has the same semantics as $\pi_1 \ndet \pi_2 \ndet (\pi_1 \pll \pi_2)$ and hence does not add expressivity. 
